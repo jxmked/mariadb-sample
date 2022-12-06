@@ -1,0 +1,17 @@
+{
+  "name": "mariadb-sample",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:tsc": "tsc -w -p tsconfig.json",
+    "build:tsc": "tsc -p tsconfig.json --removeComments --sourceMap false",
+    "build": "npm run build:tsc"
+  },
+  "keywords": [],
+  "author": "jxmked <jamc015lol@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.9.3"
+  }
+}

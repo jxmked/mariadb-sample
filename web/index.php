@@ -1,6 +1,24 @@
 <?php error_reporting(E_ALL);
+    define("SECURITY", true);
+    
     header('Cache-Control: no-cache');
     header('Content-Type: text/html');
+    
+    require "scripts/helpers.php";
+    use helpers\Helpers;
+    
+    
+    define("ROOT", "");
+    
+    /**
+     * We can move files locally
+     * */
+    define("RESOURCE_ROOT", "https://cdn.jsdelivr.net/gh/jxmked/resources@xio/");
+    
+    /*
+    foreach ($_SERVER as $k => $v) {
+        echo $k . " : " . $v . "<br />";
+    } */
 ?>
 
 <!doctype html>
@@ -14,39 +32,50 @@
     <meta name="robots" content="index,follow">
     <meta name="referrer" content="origin">
     
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="preload" href="assets/icons/icon-v1.css" as="style" />
-    <link rel="preload" href="dist/index.css" as="style" />
-    <link rel="preload" href="https://cdn.jsdelivr.net/gh/jxmked/resources@xio/assets/fonts/montserrat/stylesheet.css" as="style" />
-    <link rel="preload" href="https://cdn.jsdelivr.net/gh/jxmked/resources@xio/assets/fonts/caviar-dreams/stylesheet.css" as="style" />
-    <link rel="preload" href="https://cdn.jsdelivr.net/gh/jxmked/resources@xio/assets/fonts/montserrat/Montserrat-Medium.woff2" as="font" crossorigin />
-    <link rel="preload" href="https://cdn.jsdelivr.net/gh/jxmked/resources@xio/assets/fonts/montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin />
+    <?php
+        $pages = array(
+            "program",
+            "intro"
+        );
+        
+        
+        if(array_search(Helpers::url_param("page", ""), $pages) === false ) {
+            
+            $link =  $_SERVER['PHP_SELF'] . "?page=intro";
+            
+            echo "<meta http-equiv=\"refresh\" content=\"2;URL=" . $link . "\" />";
+        }
+    ?>
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jxmked/resources@xio/assets/fonts/montserrat/stylesheet.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jxmked/resources@xio/assets/fonts/caviar-dreams/stylesheet.css">
-    <link rel="stylesheet" href="assets/icons/icon-v1.css">
+    <link rel="manifest" href="<?php Helpers::safe_print(ROOT); ?>site.webmanifest">
+    <link rel="preload" href="<?php Helpers::safe_print(ROOT); ?>assets/icons/icon-v1.css" as="style" />
+    <link rel="preload" href="<?php Helpers::safe_print(ROOT); ?>dist/index.css" as="style" />
+    <link rel="preload" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/montserrat/stylesheet.css" as="style" />
+    <link rel="preload" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/caviar-dreams/stylesheet.css" as="style" />
+    <link rel="preload" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/montserrat/Montserrat-Medium.woff2" as="font" crossorigin />
+    <link rel="preload" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin />
     
-    <link rel="stylesheet" href="assets/lib/reset.css">
-    <link rel="stylesheet" href="dist/index.css">
+    <link rel="stylesheet" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/montserrat/stylesheet.css">
+    <link rel="stylesheet" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/caviar-dreams/stylesheet.css">
+    <link rel="stylesheet" href="<?php Helpers::safe_print(ROOT); ?>assets/icons/icon-v1.css">
+    
+    <link rel="stylesheet" href="<?php Helpers::safe_print(ROOT); ?>assets/lib/reset.css">
+    <link rel="stylesheet" href="<?php Helpers::safe_print(ROOT); ?>dist/index.css">
+    <script type="text/javascript" src="<?php Helpers::safe_print(ROOT); ?>dist/index.js" defer></script>
     
     <meta property="og:title" content="Using MariaDB Basic Example" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="/" />
-    <meta property="og:image" content="assets/images/xio-white.webp" />
+    <meta property="og:image" content="<?php Helpers::safe_print(ROOT); ?>assets/images/xio-white.webp" />
     <meta property="og:description" content="" />
     <meta property="og:site_name" content="MariaDB sample" />
     <meta name="description" content="" />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php Helpers::safe_print(ROOT); ?>assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php Helpers::safe_print(ROOT); ?>assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?php Helpers::safe_print(ROOT); ?>assets/favicon-16x16.png">
 
     <title>MariaDB Sample</title>
-    
-    <?php
-        require "scripts/helpers.php";
-        use helpers\Helpers;
-    ?>
 </head>
 <body class="">
     <nav>
@@ -57,13 +86,27 @@
     
     
     <?php if(Helpers::url_param("page") == 'program') : ?> <!-- Methods -->
-    <div class="container">
+    <div class="container form-page">
         <div>
-            
+            <label>Your Favorite Cats</label>
+            <div>
+                <form id="add-data-form" action="/index.php?page=program" method="POST" onsubmit="return false">
+                    <div class="form-input" aria-label="Favorite name of cat">
+                        <label for="name">Name of your favorite cat: </label>
+                        <input type="text" name="name" placeholder="Name" />
+                    </div>
+                    <div class="form-input" aria-label="Color of you favorite cat">
+                        <label for="name">Color of your cat: </label>
+                        <input type="text" name="color" placeholder="Color" />
+                    </div>
+                    
+                    <input type="submit" value="Submit" />
+                </form>
+            </div>
         </div>
     </div>
     
-    <?php else : ?> <!-- Landing Page -->
+    <?php elseif(Helpers::url_param("page") == 'intro') : ?> <!-- Landing Page -->
     <div class="container">
         <div>
             <label class="header-text header-2">What you can do?</label>
@@ -76,7 +119,7 @@
             </ul>
             
             <div class="continue-link">
-                <a href="/index.php?page=program">Continue...</a>
+                <a style="font-weight:600;" rel="noopener nofollow noreferrer" href="/index.php?page=program">Continue...</a>
             </div>
         </div>
         
@@ -90,9 +133,14 @@
             <p>To start please follow some procedure here in <a href="https://github.com/jxmked/mariadb-sample/blob/xio/README.md">README.md file</a> on Github.</p>
         </div>
     </div>
+    
+    <?php else : ?> <!-- Start Up -->
+        <div class="container">
+            <div>
+                <label>Opsss... You got it!</label>
+                <p style="text-align: right;">Redirecting...</p>
+            </div>
+        </div>
     <?php endif; ?>
-    
-    
-    
 </body>
 </html>
