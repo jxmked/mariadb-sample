@@ -1,3 +1,8 @@
+<?php error_reporting(E_ALL);
+    header('Cache-Control: no-cache');
+    header('Content-Type: text/html');
+?>
+
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
@@ -36,52 +41,58 @@
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
 
-    <title>MariaDB API</title>
+    <title>MariaDB Sample</title>
+    
+    <?php
+        require "scripts/helpers.php";
+        use helpers\Helpers;
+    ?>
 </head>
 <body class="">
-
     <nav>
         <div>
-            <input type="checkbox" />
-            <div id="nav ">
-                <ul>
-                    <li>Home</li>
-                    <li></li>
-                </ul>
+            <h3>MariaDB Sample</h3>
+        </div>
+    </nav>
+    
+    
+    <?php if(Helpers::url_param("page") == 'program') : ?> <!-- Methods -->
+    <div class="container">
+        <div>
+            
+        </div>
+    </div>
+    
+    <?php else : ?> <!-- Landing Page -->
+    <div class="container">
+        <div>
+            <label class="header-text header-2">What you can do?</label>
+            <ul>
+                <li>Insert or add new data</li>
+                <li>Modify or edit data</li>
+                <li>Delete data</li>
+                <li>View saved data</li>
+                <li>Sort data</li>
+            </ul>
+            
+            <div class="continue-link">
+                <a href="/index.php?page=program">Continue...</a>
             </div>
         </div>
         
-    </nav>
-
-
-
-
-    <script type="text/javascript">
-        
-        if (!!window.EventSource) {
-            var source = new EventSource('stream.php');
-            
-            source.addEventListener('message', function(e) {
-                console.log(e.data);
-            }, false);
-            
-            source.addEventListener('open', function(e) {
-            // Connection was opened.
-                console.log("Connection has been open");
-            }, false);
-            
-            source.addEventListener('error', function(e) {
-                if (e.readyState == EventSource.CLOSED) {
-                // Connection was closed.
-                
-                    console.log("Connection was closed");
-                }
-            }, false);
-                        
-        } else {
-        // Result to xhr polling :(
-        }
-    </script>
-
+        <div style="border: none;">
+            <h4 style="white-space: normal;">What are MariaDB Sample localhosted page and what availeble feature in here?</h4>
+            <p>This is a demo of using different interfaces and porgramming languages to modify a single database.</p>
+            <p>Here in localhosted webpage, we can easily navigate in some basic functionality of a database such as add, edit, delete by clicking in available navigation.</p>
+            <p>Using PHP, we are able to create Application Program Interface (API) to handle our requests.</p>
+            <p>We are also using Asynchronous JavaScript And XML (AJAX) to process our requests without refreshing the entire page.</p>
+            <p>And also, we are going to use Python for command line interface to modify the database.</p>
+            <p>To start please follow some procedure here in <a href="https://github.com/jxmked/mariadb-sample/blob/xio/README.md">README.md file</a> on Github.</p>
+        </div>
+    </div>
+    <?php endif; ?>
+    
+    
+    
 </body>
 </html>
