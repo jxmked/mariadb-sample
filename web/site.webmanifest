@@ -1,0 +1,17 @@
+{
+    "name":"Jovan De Guia",
+    "short_name":"jxmked",
+    "icons":[{
+        "src":"assets/favicon-192x192.png",
+        "sizes":"192x192",
+        "type":"image/png"
+    }, {
+        "src":"assets/favicon-524x524.png",
+        "sizes":"524x524",
+        "type":"image/png"
+    }],
+    
+    "theme_color":"#363638",
+    "background_color":"#363638",
+    "display":"standalone"
+}
