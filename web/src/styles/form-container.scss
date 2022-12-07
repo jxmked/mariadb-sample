@@ -30,13 +30,6 @@ div.container.form-page {
         width: 95%;
         text-align: right;
         display: inline-block;
-        
-        > span {
-            display: inline-block;
-            font-weight: 500;
-            font-size: 1.5rem;
-            transform: scale(1.3);
-        }
     }
     
     
@@ -138,6 +131,25 @@ div.container.form-page {
                 
             }
         }
+
+        > tfoot {
+            > tr {
+                border-top: 1px solid var(--border-color);
+                
+                > td {
+                    padding: 10px 5px;
+                    text-align: center;
+
+                    > span {
+                        font-size: 1.6rem;
+                        color: var(--text-color);
+                        font-weight: 500;
+                    }
+                }
+            }
+        }
     }
+
+
 }
 

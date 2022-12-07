@@ -2,6 +2,7 @@
 div.container.form-page {
     
     div#add-cat-interface-dialog {
+        max-width: var(--max-width);
         position: fixed;
         top: 50%;
         left: 50%;
@@ -89,6 +90,10 @@ div.container.form-page {
                         &:before {
                             content: "Insert";
                         }
+                        &.on-progress:before {
+                            animation: insertingAnim 2s linear 0s infinite normal ;
+                            //content: "Inserting...";
+                        }
                         
                         &:hover { // Hover 
                             background-color: rgb(64, 156, 255);
@@ -124,3 +129,20 @@ div.container.form-page {
     }
     
 }
+
+@keyframes insertingAnim {
+    0% {
+        content: "Inserting";
+    }
+    33%{
+        content: "Inserting.";
+    }
+    66% {
+        content: "Inserting..";
+    }
+    100% {
+        content: "Inserting...";
+    }
+}
+
+

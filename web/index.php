@@ -19,6 +19,9 @@
     foreach ($_SERVER as $k => $v) {
         echo $k . " : " . $v . "<br />";
     } */
+
+    define("AUTO_REFRESH", false);
+
 ?>
 
 <!doctype html>
@@ -46,6 +49,10 @@
             echo "<meta http-equiv=\"refresh\" content=\"2;URL=" . $link . "\" />";
         }
     ?>
+
+    <?php if(AUTO_REFRESH) : ?>
+        <meta http-equiv="refresh" content="2;" >
+    <?php endif; ?>
     
     <link rel="manifest" href="<?php Helpers::safe_print(ROOT); ?>site.webmanifest">
     <link rel="preload" href="<?php Helpers::safe_print(ROOT); ?>assets/icons/icon-v1.css" as="style" />
@@ -92,7 +99,7 @@
         </div>
     </nav>
     
-    <div id="bg-cover" data-status="show">
+    <div id="bg-cover" data-status="hide">
         
     </div>
     
@@ -104,7 +111,7 @@
             </div>
             
             <!-- List -->
-            <label class="labeled-cats">Your Favorite Cats: <span class="icon-plus-circle" id="add-cat" alt="Add new favorite cat"></span></label>
+            <label class="labeled-cats">Your Favorite Cats:</label>
             
             <table class="cats-table">
                 <thead>
@@ -116,10 +123,11 @@
                     </tr>
                 </thead>
                 <tbody id="cat-list">
-                    <tr>
+                    <!-- Available only if we don't have any data from database -->
+                    <tr id="no-entries-dialog">
                         <td colspan="4">No entries</td>
                     </tr>
-               <!--     <tr data-item-id="123456">
+                    <tr data-item-id="123456">
                         <td>0</td>
                         <td>Louqui</td>
                         <td>White/Orange</td>
@@ -166,21 +174,29 @@
                             </div>
                         </td>
                     </tr>
-                    -->
+                    
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <span class="icon-plus-circle" id="add-cat" alt="Add new favorite cat"></span>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
             
             <!-- Add new Cat - Popup Interface Dialog -->
-            <div id="add-cat-interface-dialog">
+            <!-- We're also going to use this as our cat info editor -->
+            <div id="add-cat-interface-dialog" class="" hidden>
                 <div>
                     <label for="add-new-cat-name-input">Name of your cat:</label>
-                    <input id="add-new-ca-name-input" type="text" name="name" value="" placeholder="Name" />
+                    <input id="add-new-cat-name-input" type="text" name="name" value="" placeholder="Name" />
                     
                     <label for="add-new-cat-color-input">Color of your cat:</label>
                     <input id="add-new-cat-color-input" type="text" name="color" value="" placeholder="Color" />
                     
                     <div id="add-cat-msg-box">
-                        Opsss... Either field cannot be empty
+                        Oppsss... Either field cannot be empty
                     </div>
                     
                     <div>
@@ -190,6 +206,18 @@
                 </div>
             </div>
             
+            <!-- Delete Dialog to Continue to delete data -->
+            <div id="confirm-delete-dialog">
+                <div>
+                    <h3>You still love this cat?</h3>
+                    <h4 id="delete-cat-name">Louqui</h4>
+                    <div>
+                        <button id="delete-confirmed" class="icon-check-square"></button>
+                        <button id="delete-denied" class="icon-x-square"></button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     

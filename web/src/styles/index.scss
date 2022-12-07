@@ -15,6 +15,7 @@
     --burger-menu-open-color: rgb(255, 69, 58);
     --text-hover-transition-speed: 0.05s;
     --text-hover-transitioning: ease-in-out;
+    --max-width: 700px;
     
 }
 
@@ -117,9 +118,14 @@ div#bg-cover[data-status=show] {
     background-color: #000; // rgba(68, 68, 70, 1);
     opacity: 0.6;
     z-index: 3;
-    
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: var(--max-width);
 }
 
 @import 'form-container.scss';
 @import "add-popup.scss";
+@import "confirm-delete-dialog.scss";
+
 
