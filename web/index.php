@@ -54,14 +54,21 @@
     <link rel="preload" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/caviar-dreams/stylesheet.css" as="style" />
     <link rel="preload" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/montserrat/Montserrat-Medium.woff2" as="font" crossorigin />
     <link rel="preload" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin />
-    
+    <link rel="preload" href="<?php Helpers::safe_print(ROOT); ?>assets/vendor/require.js" as="script" />
     <link rel="stylesheet" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/montserrat/stylesheet.css">
     <link rel="stylesheet" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/caviar-dreams/stylesheet.css">
     <link rel="stylesheet" href="<?php Helpers::safe_print(ROOT); ?>assets/icons/icon-v1.css">
+    <link rel="stylesheet" href="<?php Helpers::safe_print(ROOT); ?>assets/icons/icon-v2.css">
     
     <link rel="stylesheet" href="<?php Helpers::safe_print(ROOT); ?>assets/lib/reset.css">
     <link rel="stylesheet" href="<?php Helpers::safe_print(ROOT); ?>dist/index.css">
-    <script type="text/javascript" src="<?php Helpers::safe_print(ROOT); ?>dist/index.js" defer></script>
+    
+    <script src="<?php Helpers::safe_print(ROOT); ?>assets/vendor/require.js" data-main="dist/index" type="application/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        requirejs.config({
+            waitSeconds: 120
+        });
+    </script>
     
     <meta property="og:title" content="Using MariaDB Basic Example" />
     <meta property="og:type" content="website" />
@@ -88,24 +95,75 @@
     <?php if(Helpers::url_param("page") == 'program') : ?> <!-- Methods -->
     <div class="container form-page">
         <div>
-            <div class="back-behaviour">
-                <a href="">Back...</a>
+            <div class="back-behavior">
+                <a href="/index.php?page=intro" class="icon-arrow-left" alt="back to intro page"></a>
             </div>
             
-            <label>Your Favorite Cats</label>
-            <div>
-                <form id="add-data-form" action="/index.php?page=program" method="POST" onsubmit="return false">
-                    <div class="form-input" aria-label="Favorite name of cat">
-                        <label for="name">Name of your favorite cat: </label>
-                        <input type="text" name="name" placeholder="Name" />
-                    </div>
-                    <div class="form-input" aria-label="Color of you favorite cat">
-                        <label for="name">Color of your cat: </label>
-                        <input type="text" name="color" placeholder="Color" />
-                    </div>
+            <!-- List -->
+            <label class="labeled-cats">Your Favorite Cats</label>
+            
+            <table class="cats-table">
+                <thead>
+                    <tr>
+                        <td>No.</td>
+                        <td>Name</td>
+                        <td>Color</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                <tbody id="cat-list">
+                    <tr data-item-id="123456">
+                        <td>0</td>
+                        <td>Louqui</td>
+                        <td>White/Orange</td>
+                        <td>
+                            <div>
+                                <button class="action edit-action icon-pen" data-item-id="123456"></button>
+                                <button class="action delete-action icon-trash" data-item-id="123456"></button>
+                            </div>
+                        </td>
+                    </tr>
                     
-                    <input type="submit" value="Submit" />
-                </form>
+                    <tr data-item-id="123457">
+                        <td>1</td>
+                        <td>Muning</td>
+                        <td>White/Orange</td>
+                        <td>
+                            <div>
+                                <button class="action edit-action icon-pen" data-item-id="123457"></button>
+                                <button class="action delete-action icon-trash" data-item-id="123457"></button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr data-item-id="123457">
+                        <td>1</td>
+                        <td>Muning</td>
+                        <td>White/Orange</td>
+                        <td>
+                            <div>
+                                <button class="action edit-action icon-pen" data-item-id="123457"></button>
+                                <button class="action delete-action icon-trash" data-item-id="123457"></button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr data-item-id="123457">
+                        <td>1</td>
+                        <td>Muning</td>
+                        <td>White/Orange</td>
+                        <td>
+                            <div>
+                                <button class="action edit-action icon-pen" data-item-id="123457"></button>
+                                <button class="action delete-action icon-trash" data-item-id="123457"></button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            <div>
+                
             </div>
         </div>
     </div>

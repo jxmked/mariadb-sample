@@ -100,7 +100,7 @@ body {
             align-self: center;
             -webkit-box-sizing: content-box;
             box-sizing: content-box;
-            padding: 50px;
+            padding: 30px;
             
             > div.continue-link {
                 text-align: right;
@@ -108,3 +108,7 @@ body {
         }
     }
 }
+
+
+@import 'form-container.scss';
+
