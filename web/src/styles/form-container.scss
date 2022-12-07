@@ -10,13 +10,14 @@ div.container.form-page {
     .back-behavior {
         margin: 5px;
         position: relative;
-        
+        margin-left: 0;
         a {
             font-size: 1.4rem;
             padding: 7px;
             text-decoration: none;
             outline: 1px solid var(--border-color);
             border-radius: 50%;
+            
             &:hover {
                 background-color: rgb(215, 215, 220);
             }
@@ -28,7 +29,14 @@ div.container.form-page {
         height: auto;
         width: 95%;
         text-align: right;
-        display: block;
+        display: inline-block;
+        
+        > div {
+            display: inline-block;
+            font-weight: 500;
+            font-size: 1.5rem;
+            transform: scale(1.3);
+        }
     }
     
     
@@ -81,8 +89,14 @@ div.container.form-page {
                             &:after {
                                 outline: none;
                                 border: none;
+                                
+                            }
+                            &:before {
+                                padding: 2px !important;
                             }
                             
+                            margin: 0;
+                            padding: 2px 5px;
                             border: 1px solid var(--border-color);
                             border-radius: 7px;
                             background-color: transparent;

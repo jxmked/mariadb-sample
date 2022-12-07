@@ -57,6 +57,7 @@
     <link rel="preload" href="<?php Helpers::safe_print(ROOT); ?>assets/vendor/require.js" as="script" />
     <link rel="stylesheet" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/montserrat/stylesheet.css">
     <link rel="stylesheet" href="<?php Helpers::safe_print(RESOURCE_ROOT); ?>assets/fonts/caviar-dreams/stylesheet.css">
+    
     <link rel="stylesheet" href="<?php Helpers::safe_print(ROOT); ?>assets/icons/icon-v1.css">
     <link rel="stylesheet" href="<?php Helpers::safe_print(ROOT); ?>assets/icons/icon-v2.css">
     
@@ -100,7 +101,7 @@
             </div>
             
             <!-- List -->
-            <label class="labeled-cats">Your Favorite Cats</label>
+            <label class="labeled-cats">Your Favorite Cats: <div class="icon-plus-circle" id="add-cat" alt="Add new favorite cat"></div></label>
             
             <table class="cats-table">
                 <thead>
