@@ -110,5 +110,16 @@ body {
 }
 
 
+div#bg-cover[data-status=show] {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: #000; // rgba(68, 68, 70, 1);
+    opacity: 0.6;
+    z-index: 3;
+    
+}
+
 @import 'form-container.scss';
+@import "add-popup.scss";
 

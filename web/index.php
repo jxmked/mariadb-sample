@@ -92,6 +92,9 @@
         </div>
     </nav>
     
+    <div id="bg-cover" data-status="show">
+        
+    </div>
     
     <?php if(Helpers::url_param("page") == 'program') : ?> <!-- Methods -->
     <div class="container form-page">
@@ -101,7 +104,7 @@
             </div>
             
             <!-- List -->
-            <label class="labeled-cats">Your Favorite Cats: <div class="icon-plus-circle" id="add-cat" alt="Add new favorite cat"></div></label>
+            <label class="labeled-cats">Your Favorite Cats: <span class="icon-plus-circle" id="add-cat" alt="Add new favorite cat"></span></label>
             
             <table class="cats-table">
                 <thead>
@@ -113,7 +116,10 @@
                     </tr>
                 </thead>
                 <tbody id="cat-list">
-                    <tr data-item-id="123456">
+                    <tr>
+                        <td colspan="4">No entries</td>
+                    </tr>
+               <!--     <tr data-item-id="123456">
                         <td>0</td>
                         <td>Louqui</td>
                         <td>White/Orange</td>
@@ -160,12 +166,30 @@
                             </div>
                         </td>
                     </tr>
-                    
+                    -->
                 </tbody>
             </table>
-            <div>
-                
+            
+            <!-- Add new Cat - Popup Interface Dialog -->
+            <div id="add-cat-interface-dialog">
+                <div>
+                    <label for="add-new-cat-name-input">Name of your cat:</label>
+                    <input id="add-new-ca-name-input" type="text" name="name" value="" placeholder="Name" />
+                    
+                    <label for="add-new-cat-color-input">Color of your cat:</label>
+                    <input id="add-new-cat-color-input" type="text" name="color" value="" placeholder="Color" />
+                    
+                    <div id="add-cat-msg-box">
+                        Opsss... Either field cannot be empty
+                    </div>
+                    
+                    <div>
+                        <button id="add-cat-confirmed" class="icon-check-square"></button>
+                        <button id="add-cat-denied" class="icon-x-square"></button>
+                    </div>
+                </div>
             </div>
+            
         </div>
     </div>
     
@@ -207,3 +231,5 @@
     <?php endif; ?>
 </body>
 </html>
+
+
