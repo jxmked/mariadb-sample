@@ -11,8 +11,8 @@ export const noEntriesDialog = document.getElementById("no-entries-dialog")!;
 // Add Cat Dialog
 export const addCatDialog = document.getElementById("add-cat-interface-dialog")!;
 export const addCatInputs = {
-    name: document.getElementById("add-new-cat-name-input")!,
-    color: document.getElementById("add-new-cat-color-input")!
+    name: document.getElementById("add-new-cat-name-input")! as HTMLInputElement,
+    color: document.getElementById("add-new-cat-color-input")! as HTMLInputElement
 };
 
 export const addCatMsgBox = document.getElementById("add-cat-msg-box")!;
