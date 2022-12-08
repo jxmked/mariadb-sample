@@ -1,5 +1,8 @@
 import {
     catList,
-    btnDeletetAction,
+    btnDeletetActions,
     btnEditActions
-} from ."./dom"
+} from "../dom";
+
+
+export {};
