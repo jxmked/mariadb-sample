@@ -69,6 +69,11 @@ export default class AddCat {
         this.closeEventListeners();
         btnAddCatConfirm.classList.remove("on-progress");
         addCatDialog.setAttribute("hidden", "hidden");
+        
+        // Reset
+        btnAddCatConfirm.innerText = "";
+        btnAddCatDeny.innerText = "";
+        
         this.msgBox(false);
         Cover.hide();
     }
@@ -102,6 +107,7 @@ export default class AddCat {
     }
 
     private __verifyInputs():void {
+        btnAddCatConfirm.innerText = "";
         btnAddCatConfirm.classList.add("on-progress");
         
         // Get all inputs
@@ -132,10 +138,12 @@ export default class AddCat {
                 name.focus();
             else if(! validated_color)
                 color.focus();
-            
+                
             btnAddCatConfirm.classList.remove("on-progress");
+            btnAddCatConfirm.innerText = "Insert";
             name.removeAttribute("disabled");
             color.removeAttribute("disabled");
+            
             return;
         }
 
@@ -147,13 +155,26 @@ export default class AddCat {
          * 
          */
          
-        catList.appendChild(new CatItem({
+        //btnAddCatConfirm.innerText = "Insert";
+        const item:CatItem = new CatItem({
             name: name_value,
             color: color_value,
             id:99,
             lastModified: "Jsjsjs"
-        } as CatInterface).html)
-
+        } as CatInterface);
+        
+        
+        catList.appendChild(item.html);
+        
+        
+        item.onEdit = (id:number) => {
+            alert("On Edit " + String(id))
+        };
+        
+        item.onRemove = (id) => {
+            alert("On Rmeove " + String(id))
+        }
+        
     }
 
     private __btnCatDeny():void {
