@@ -4,7 +4,7 @@
 
 
 const conn = {
-    "host": "http://localhost:8000/"
+    "host": "http://192.168.1.20:8000/"
 }
 
 

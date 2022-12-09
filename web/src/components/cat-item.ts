@@ -1,6 +1,6 @@
 
-
 /**
+
 <tr data-item-id="{id}">
     <td>{count}</td>
     <td>{name}</td>
@@ -28,7 +28,8 @@ export default class CatItem {
     private BASE:HTMLTableRowElement;
     
     private static count:number = 0;
-    
+    public myCount:number;
+
     private callbacks:{
         edit:(id:number) => void;
         remove:(id:number) => void;
@@ -43,7 +44,8 @@ export default class CatItem {
             edit:(id:number) => {},
             remove:(id:number) => {}
         };
-        
+
+        this.myCount = 0;
         // Our counting system
         CatItem.count++;
         
@@ -71,11 +73,15 @@ export default class CatItem {
     private set_count():void {
         const td:HTMLTableCellElement = document.createElement("td");
         
-        td.appendChild(document.createTextNode(ucfirst(String(CatItem.count))));
+        td.appendChild(document.createTextNode(String(this.myCount)));
         
         this.BASE.appendChild(td);
     }
     
+    set count(num:number) {
+        this.myCount = num;
+    }
+
     private set_action():void {
         const base:HTMLTableCellElement = document.createElement("td");
         const div:HTMLDivElement = document.createElement("div");

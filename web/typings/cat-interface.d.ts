@@ -4,5 +4,3 @@ interface CatInterface {
     id:number;
     lastModified:string; // Date in ctime format
 }
-
-
