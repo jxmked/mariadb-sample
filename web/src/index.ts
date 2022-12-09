@@ -1,16 +1,43 @@
 import {
     btnDeleteConfirm,
     btnDeleteDeny,
-    btnAddAction
+    btnAddAction,
+    catList
 } from './dom';
 
 import Cover from './components/bg-cover';
 import AddCat from './components/add-cat-dialog'; 
+import CatItem from './components/cat-item';
+
 
 const addcat:AddCat = new AddCat();
 btnAddAction.addEventListener("click", () => {
     addcat.activate();   
 });
+
+
+catList.appendChild(new CatItem({
+    name: "Louqui",
+    color: "White",
+    id: 8299,
+    lastModified: "Jsjsjs"
+} as CatInterface).html)
+
+catList.appendChild(new CatItem({
+    name: "Louqui",
+    color: "White",
+    id: 8299,
+    lastModified: "Jsjsjs"
+} as CatInterface).html)
+
+
+catList.appendChild(new CatItem({
+    name: "Louqui",
+    color: "White",
+    id: 8299,
+    lastModified: "Jsjsjs"
+} as CatInterface).html)
+
 
 
 

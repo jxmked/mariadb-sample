@@ -88,7 +88,7 @@ div.container.form-page {
                     
                     &#add-cat-confirmed {
                         &:before {
-                            content: "Insert";
+                            content: "";
                         }
                         &.on-progress:before {
                             animation: insertingAnim 2s linear 0s infinite normal ;
@@ -109,7 +109,7 @@ div.container.form-page {
                     &#add-cat-denied {
                         
                         &:before {
-                            content: "Cancel";
+                            content: "";
                         }
                         
                         &:hover { // Hover 

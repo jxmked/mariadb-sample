@@ -124,56 +124,10 @@
                 </thead>
                 <tbody id="cat-list">
                     <!-- Available only if we don't have any data from database -->
-                    <tr id="no-entries-dialog">
+                <!--    <tr id="no-entries-dialog">
                         <td colspan="4">No entries</td>
                     </tr>
-                    <tr data-item-id="123456">
-                        <td>0</td>
-                        <td>Louqui</td>
-                        <td>White/Orange</td>
-                        <td>
-                            <div>
-                                <button class="action edit-action icon-pen" data-item-id="123456"></button>
-                                <button class="action delete-action icon-trash" data-item-id="123456"></button>
-                            </div>
-                        </td>
-                    </tr>
-                    
-                    <tr data-item-id="123457">
-                        <td>1</td>
-                        <td>Muning</td>
-                        <td>White/Orange</td>
-                        <td>
-                            <div>
-                                <button class="action edit-action icon-pen" data-item-id="123457"></button>
-                                <button class="action delete-action icon-trash" data-item-id="123457"></button>
-                            </div>
-                        </td>
-                    </tr>
-                    
-                    <tr data-item-id="123457">
-                        <td>1</td>
-                        <td>Muning</td>
-                        <td>White/Orange</td>
-                        <td>
-                            <div>
-                                <button class="action edit-action icon-pen" data-item-id="123457"></button>
-                                <button class="action delete-action icon-trash" data-item-id="123457"></button>
-                            </div>
-                        </td>
-                    </tr>
-                    
-                    <tr data-item-id="123457">
-                        <td>1</td>
-                        <td>Muning</td>
-                        <td>White/Orange</td>
-                        <td>
-                            <div>
-                                <button class="action edit-action icon-pen" data-item-id="123457"></button>
-                                <button class="action delete-action icon-trash" data-item-id="123457"></button>
-                            </div>
-                        </td>
-                    </tr>
+                    <!-- -->
                     
                 </tbody>
                 <tfoot>
@@ -200,9 +154,10 @@
                     </div>
                     
                     <div>
-                        <button id="add-cat-confirmed" class="icon-check-square"></button>
+                        <button name="submit" id="add-cat-confirmed" class="icon-check-square"></button>
                         <button id="add-cat-denied" class="icon-x-square"></button>
                     </div>
+                    
                 </div>
             </div>
             

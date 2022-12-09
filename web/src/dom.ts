@@ -2,7 +2,7 @@
 export const bgCover = document.getElementById("bg-cover") !;
 
 
-export const catList = document.getElementById("cats-table") !;
+export const catList = document.getElementById("cat-list") !;
 export const btnDeletetActions = document.getElementsByClassName("delete-action") !;
 export const btnEditActions = document.getElementsByClassName("edit-action") !;
 export const btnAddAction = document.getElementById("add-cat")!;

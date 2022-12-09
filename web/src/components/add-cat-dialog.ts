@@ -3,16 +3,17 @@ import {
     addCatInputs,
     addCatMsgBox,
     btnAddCatConfirm,
-    btnAddCatDeny
+    btnAddCatDeny,
+    catList
 } from '../dom';
 
-import Cover from './bg-cover';
-import normalizeStr from '../helpers/string/normalize';
 
+
+import CatItem from 'cat-item';
+import Cover from './bg-cover';
+import { normalizeString } from '../helpers';
 
 const EMPTY_FIELD = "Oppsss... Either field cannot be empty and must contain only letters and/or dash '-'";
-
-
 
 export default class AddCat {
     private static hasBeenCalled:boolean = false; 
@@ -20,10 +21,6 @@ export default class AddCat {
     
     private btnCancel;
     private btnInsert;
-    
-    
-    static hakdog = 0;
-    
     
     constructor() {
         if(AddCat.hasBeenCalled)
@@ -61,6 +58,9 @@ export default class AddCat {
         Cover.show();
         
         addCatDialog.removeAttribute("hidden");
+        btnAddCatConfirm.innerText = "Insert";
+        btnAddCatDeny.innerText = "Cancel";
+        
         this.msgBox(false);
         this.openEventListeners();
     }
@@ -79,9 +79,8 @@ export default class AddCat {
         if(msg === true || msg === false) {
             // true - show
             // false - hide
-            console.log(AddCat.hakdog++)
             addCatMsgBox.style.display = (msg === true) ? "initial" : "none";
-
+            
             return;
         }
 
@@ -107,10 +106,14 @@ export default class AddCat {
         
         // Get all inputs
         const {name, color} = addCatInputs;
-
+        
+        // Hold Our inputs 
+        name.setAttribute("disabled", "disable");
+        color.setAttribute("disabled", "disable");
+        
         // Normalize
-        let name_value:string = normalizeStr(name.value);
-        let color_value:string = normalizeStr(color.value);
+        let name_value:string = normalizeString(name.value);
+        let color_value:string = normalizeString(color.value);
         
         // Validated result
         let validated_name:boolean = this.__isValidInput(name_value);
@@ -123,7 +126,7 @@ export default class AddCat {
             this.msgBox(EMPTY_FIELD);
             
             /**
-             * Add focus on either input with error
+             * Add focus on either inputs with error
              * */
             if(! validated_name)
                 name.focus();
@@ -131,6 +134,8 @@ export default class AddCat {
                 color.focus();
             
             btnAddCatConfirm.classList.remove("on-progress");
+            name.removeAttribute("disabled");
+            color.removeAttribute("disabled");
             return;
         }
 
@@ -141,6 +146,14 @@ export default class AddCat {
          * Ready to validate by our API and return the response.
          * 
          */
+         
+        catList.appendChild(new CatItem({
+            name: name_value,
+            color: color_value,
+            id:99,
+            lastModified: "Jsjsjs"
+        } as CatInterface).html)
+
     }
 
     private __btnCatDeny():void {
@@ -148,7 +161,9 @@ export default class AddCat {
         const {name, color} = addCatInputs;
         name.value = "";
         color.value = "";
-
+        name.removeAttribute("disabled");
+        color.removeAttribute("disabled");
+        
         this.deactivate();
     }
 }
