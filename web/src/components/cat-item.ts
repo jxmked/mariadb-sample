@@ -27,8 +27,8 @@ export default class CatItem {
     private last_modified_date:string;
     private BASE:HTMLTableRowElement;
     
-    private static count:number = 0;
-    public myCount:number;
+    public static count:number = 0;
+    private myCount:HTMLTableCellElement;
 
     private callbacks:{
         edit:(id:number) => void;
@@ -45,9 +45,13 @@ export default class CatItem {
             remove:(id:number) => {}
         };
 
-        this.myCount = 0;
+        this.myCount = document.createElement("td");
         // Our counting system
         CatItem.count++;
+        
+        // Initial Number
+        // Will be overwrite after dom manipulation
+        this.myCount.innerText = String(CatItem.count);
         
         this.BASE = document.createElement("tr") as HTMLTableRowElement;
         this.BASE.setAttribute("data-item-id", String(this.id));
@@ -71,15 +75,21 @@ export default class CatItem {
     }
     
     private set_count():void {
-        const td:HTMLTableCellElement = document.createElement("td");
-        
-        td.appendChild(document.createTextNode(String(this.myCount)));
-        
-        this.BASE.appendChild(td);
+        /**
+         * Makinh InnerText of this Table row accessible to modify
+         * */
+       // this.myCount.appendChild(document.createTextNode(String(this.myCount)));
+
+        this.BASE.appendChild(this.myCount);
     }
     
-    set count(num:number) {
-        this.myCount = num;
+    set numCount(num:number) {
+        /**
+         * We can update numbering system manually during 
+         * list manipulation
+         * 
+         * */
+        this.myCount.innerText = String(num);
     }
 
     private set_action():void {

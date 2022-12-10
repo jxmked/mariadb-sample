@@ -11,7 +11,28 @@ import AddCat from './components/add-cat-dialog';
 import CatItem from './components/cat-item';
 import getCats from './connect/get-cats';
 
+import CatTable from './components/cat-table';
 
+const p = require("./dom");
+
+let ctime = new Date().getTime();
+const interval = 500; // 1 second
+let diff, last;
+
+window.setInterval(() => {
+    last = new Date().getTime();
+    
+    diff = last - ctime;
+    
+    if(diff >= interval) {
+        console.log(diff);
+        ctime = last;
+    }
+}, 10)
+
+ 
+
+/*
 let item = new CatItem({
     name:"Louqui",
     color: "white",
@@ -22,15 +43,17 @@ let item = new CatItem({
 
 catList.appendChild(item)
 
-item = new CatItem({
+const ci = new CatItem({
     name:"Louqui",
     color: "white",
     id: 123,
     lastModified: "1231"
-} as CatInterface).html;
+} as CatInterface);
 
 
-catList.appendChild(item)
+catList.appendChild(ci.html)
+
+ci.numCount = 8
 
 
 btnAddAction.addEventListener("click", () => {
@@ -60,7 +83,7 @@ observer.observe(catList, {
     characterData: true
 });
 
-
+*/
 
 
 
