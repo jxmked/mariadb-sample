@@ -13,24 +13,12 @@ import getCats from './connect/get-cats';
 
 import CatTable from './components/cat-table';
 
-const p = require("./dom");
 
-let ctime = new Date().getTime();
-const interval = 500; // 1 second
-let diff, last;
+import ErrorDialog from './components/error-dialog';
 
-window.setInterval(() => {
-    last = new Date().getTime();
-    
-    diff = last - ctime;
-    
-    if(diff >= interval) {
-        console.log(diff);
-        ctime = last;
-    }
-}, 10)
-
- 
+const error = new ErrorDialog();
+error.show(3000);
+error.msg = "Hakdohsdjkfsdk dsjfklsdjfkld l hl ldslkj fhjkdh fkjdshf kjdsfh kjdfh kdsf hkjdh dh fg"
 
 /*
 let item = new CatItem({

@@ -15,6 +15,10 @@ export default class CatTable {
         loader.onload = (req) => {
             console.log(req)
         }
+
+        loader.onerror = (err) => {
+            console.log(err)
+        }
     }
     
     

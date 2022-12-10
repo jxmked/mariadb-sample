@@ -71,13 +71,6 @@
     <link rel="stylesheet" href="<?php Helpers::safe_print(ROOT); ?>assets/lib/reset.css">
     <link rel="stylesheet" href="<?php Helpers::safe_print(ROOT); ?>dist/index.css">
     
-    <script src="<?php Helpers::safe_print(ROOT); ?>assets/vendor/require.js" data-main="dist/index" type="application/javascript" charset="utf-8"></script>
-    <script type="text/javascript">
-        requirejs.config({
-            waitSeconds: 120
-        });
-    </script>
-    
     <meta property="og:title" content="Using MariaDB Basic Example" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="/" />
@@ -104,6 +97,13 @@
     </div>
     
     <?php if(Helpers::url_param("page") == 'program') : ?> <!-- Methods -->
+    <!-- Only load this scripts if we are about to use them -->
+    <script src="<?php Helpers::safe_print(ROOT); ?>assets/vendor/require.js" data-main="dist/index" type="application/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        requirejs.config({
+            waitSeconds: 120
+        });
+    </script>
     <div class="container form-page">
         <div>
             <div class="back-behavior">
@@ -127,7 +127,7 @@
                 <!--    <tr id="no-entries-dialog">
                         <td colspan="4">No entries</td>
                     </tr>
-                    <!-- -->
+                     -->
                     
                 </tbody>
                 <tfoot>
