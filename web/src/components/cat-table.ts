@@ -6,10 +6,12 @@ import {
 
 import CatItem from "./cat-item";
 import getCatList from "../connect/get-cats";
-
+import ErrorDialog from "./error-dialog";
 
 export default class CatTable {
     constructor() {
+        const edag = new ErrorDialog();
+        
         const loader = new getCatList();
         
         loader.onload = (req) => {
@@ -17,7 +19,10 @@ export default class CatTable {
         }
 
         loader.onerror = (err) => {
-            console.log(err)
+            edag.msg = err.toString();
+            edag.msg = "Please, check your API connection.";
+            
+            edag.show(5000);
         }
     }
     

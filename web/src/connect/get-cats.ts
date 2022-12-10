@@ -42,17 +42,21 @@ export default class getCats {
             method: "GET",
             cache: "no-cache"
         })
-        .then((req) => req.json())
+        // @ts-ignore
+        .then((req) => req.text())
         .then((req) => {
             this.state = "completed";
             
-            // Clone
-            this.data = Object.assign({}, req) as CatInterface[];
-            console.log(req);
+            // Much better than res.json()
+            const response:CatInterface[] = JSON.parse(req);
             
-            this.callbacks.response(req as CatInterface[]);
+            // Clone
+            this.data = Object.assign({}, response);
+            
+            this.callbacks.response(response);
         }).catch((err) => {
             this.state = "error";
+            this.data_error = err;
             this.callbacks.error(err);
         })
         

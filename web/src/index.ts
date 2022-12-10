@@ -12,14 +12,14 @@ import CatItem from './components/cat-item';
 import getCats from './connect/get-cats';
 
 import CatTable from './components/cat-table';
-
-
+new CatTable()
+/*
 import ErrorDialog from './components/error-dialog';
 
 const error = new ErrorDialog();
 error.show(3000);
 error.msg = "Hakdohsdjkfsdk dsjfklsdjfkld l hl ldslkj fhjkdh fkjdshf kjdsfh kjdfh kdsf hkjdh dh fg"
-
+*/
 /*
 let item = new CatItem({
     name:"Louqui",

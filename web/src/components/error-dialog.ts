@@ -8,7 +8,11 @@ export default class ErrorDialog {
         this.base = document.createElement("div");
         this.cover = document.createElement("div");    
         this.isDestroyed = false;
-
+        
+        /**
+         * Having too much time to enjoy writing this.
+         * Hahaha 
+         * */
         this.base.style.position = "fixed";
         this.base.style.zIndex = "9999";
         this.base.style.padding = "20px 10px 50px 10px";
@@ -29,11 +33,18 @@ export default class ErrorDialog {
         this.base.style.overflowY = "hidden"
 
         this.addCloseBtn();
-        document.body.appendChild(this.base);
+        
+        this.cover.style.backgroundColor = "#000";
+        this.cover.style.position = "fixed";
+        this.cover.style.zIndex = "9998"
+        this.cover.style.width = "100vw";
+        this.cover.style.height = "100vh";
+        this.cover.style.opacity = "0.4";
     }
 
     private remove() {
         this.base.remove();
+        this.cover.remove();
         this.isDestroyed = true;
     }
 
@@ -84,7 +95,10 @@ export default class ErrorDialog {
      * 1000 = 1 second
      */
     show(interval:number = 0):void {
-
+        
+        document.body.appendChild(this.cover);
+        document.body.appendChild(this.base);
+        
         if(interval == 0) {
             return;
         }
@@ -94,13 +108,21 @@ export default class ErrorDialog {
         
         let ival = window.setInterval(() => {
             current_time = new Date().getTime();
-
-            if((current_time - last) >= interval) {
+            
+            
+            if(this.isDestroyed) {
+                /**
+                 * Prevent Reaching the interval
+                 * if the close button has been clicked.
+                 * 
+                 * */
+                clearInterval(ival);
+            }
+            
+            if(! this.isDestroyed && (current_time - last) >= interval) {
                 // close dialog
-               // this.remove();
+                
                 this.fadeOut(this.remove.bind(this));
-                // Supposed to be use but... Never again
-                last = current_time;
                 clearInterval(ival);
             }
         }, 10);
@@ -116,7 +138,7 @@ export default class ErrorDialog {
         let ival = window.setInterval(() => {
             opa = (1 - (((new Date().getTime() - initial_time) / ErrorDialog.fadeOutInterval)))
             if(opa >= 0) {
-                this.base.style.opacity = String(opa.toFixed(2));
+                this.base.style.opacity = String(opa.toFixed(4));
             } else {
                 this.base.style.opacity = "0";
                 (callback || function(){})();
