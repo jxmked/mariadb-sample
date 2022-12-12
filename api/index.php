@@ -3,7 +3,7 @@
 header('Access-Control-Allow-Origin: *');
 header("Content-type: application/json; charset=utf-8");
 
-$connection = [
+$conn = [
     "host" => "localhost:3306",
     "user" => "root",
     "password" => "123456",
@@ -12,26 +12,36 @@ $connection = [
 ];
 
 // Initialize connection
-$requests = mysqli_connect($connection['host'], $connection['user'], $connection['password'], $connection['database']);
+$requests = mysqli_connect($conn['host'], $conn['user'], $conn['password'], $conn['database']);
 
 
 $data = [];
 $query = "";
 
+
+/**
+ * Fetch Mode
+ * */
 /**
  * Validate our last-modified input using regex
- * format: Y-M-D H-M-S
+ * format: Y-m-d H-M-S
  * */
-$pattern_last_mod = "/^(\d{4}\-\d{2}\-\d{2})\s(\d{2}:\d{2}:\d{2})$/";
-
+ //                       Y    -      m          -         <d>     <space>       00-23       :  00-59  :  00-59       
+$pattern_last_mod = "/^(\d{4})\-((0\d)|(1[0-2]))\-(([0-2]\d)|(3[0-2]))\s((([0-1]\d)|(2[0-3])):([0-5]\d):([0-5]\d))$/";
 
 if(isset($_POST['last-modified']) && ! empty($_POST['last-modified'])) {
+    /**
+     * Its okay to not to sanitize this post data
+     * We have expected value here and get validated by our RegEx
+     * */
     $lastModified = $_POST['last-modified'];
     
     if(preg_match($pattern_last_mod, $lastModified) == 0) {
         // Bad Request
         http_response_code(400);
+        header("X-DATA-STATUS: latest");
         echo "{\"status\":\"Bad Request\",\"body\":\"Invalid post data (last-modified)\"}";
+        mysqli_close($requests);
         exit();
     }
     /**
@@ -39,7 +49,7 @@ if(isset($_POST['last-modified']) && ! empty($_POST['last-modified'])) {
      * than $lastModified variable
      * */
     $ret = "SELECT * from `%s` WHERE last_modified > '%s'";
-    $query = sprintf($ret, $connection['table'], $lastModified);
+    $query = sprintf($ret, $conn['table'], $lastModified);
     
 }
 /*
@@ -54,6 +64,7 @@ if(empty($query)) {
 $result = mysqli_query($requests, $query);
 
 $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+mysqli_close($requests);
 */
 
 
