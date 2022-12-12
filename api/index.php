@@ -141,12 +141,11 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "body" => "POST data key (id) does not exists on database."
             ];
             
-            // Status Bad request
+            // Status Not Found
             helpers\print_response(404, $data);
         }
 
         // Check if name already exists in database
-        // Check if name already exists
         $result = mysqli_query($requests, sprintf("SELECT * FROM `%s` WHERE `name`='%s' AND `id`!='%s'", $conn['table'], $name, $id));
         $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -157,7 +156,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "body" => "POST data key (name) already exists on database."
             ];
             
-            // Status Bad request
+            // Status Conflicts
             helpers\print_response(409 , $data);
         }
 
@@ -178,16 +177,12 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "body" => "POST data key (name) already exists on database."
             ];
             
-            // Status Bad request
+            // Status Conflicts
             helpers\print_response(409 , $data);
         }
 
         $mode = "insert";
     }
-
-
-    // echo $query;
-    // exit();
 
     $result = mysqli_query($requests, $query);
 
@@ -202,7 +197,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data = [
             "status" => "failed",
             "mode" => $mode,
-            "code" => "409" // I don't know what to put here...
+            "code" => "409" // I don't know what to put here... Conflicts
         ];
     }
 
