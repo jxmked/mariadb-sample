@@ -144,7 +144,7 @@ export default class ErrorDialog {
                 (callback || function(){})();
                 clearInterval(ival);    
             }            
-        }, 100);
+        }, 1);
 
     }
 

@@ -23,7 +23,7 @@ USE `mariadb_sample`;
 -- Table structure for table `fav_cats`
 --
 
-CREATE TABLE `fav_cats_pair` (
+CREATE TABLE `fav_cats` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(64) DEFAULT NULL,
   `color` varchar(64) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `fav_cats_pair` (
 -- Dumping data for table `fav_cats`
 --
 
-INSERT INTO `fav_cats_pair` (`id`, `name`, `color`, `last_modified`) VALUES
+INSERT INTO `fav_cats` (`id`, `name`, `color`, `last_modified`) VALUES
 (1, 'Louqui', 'Van', '2022-12-10 10:27:25'),
 (2, 'Muning', 'Harlequin', '2022-12-10 10:27:25'),
 (3, 'Tagpi', 'Tuxedo Tabi', '2022-12-10 10:27:25');
@@ -46,7 +46,7 @@ INSERT INTO `fav_cats_pair` (`id`, `name`, `color`, `last_modified`) VALUES
 --
 -- Indexes for table `fav_cats`
 --
-ALTER TABLE `fav_cats_pair`
+ALTER TABLE `fav_cats`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`),
   ADD UNIQUE KEY `name` (`name`);
@@ -58,43 +58,6 @@ ALTER TABLE `fav_cats_pair`
 --
 -- AUTO_INCREMENT for table `fav_cats`
 --
-ALTER TABLE `fav_cats_pair`
+ALTER TABLE `fav_cats`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
-
-
-
-
-
-
-
-SELECT * FROM fav_cats WHERE NOT EXISTS (SELECT * FROM fav_cats_pair WHERE fav_cats.last_modified = fav_cats_pair.last_modified);
-
-
-   
-(SELECT last_modified, id FROM fav_cats
-    EXCEPT
-    SELECT last_modified, id FROM fav_cats_pair)  
-UNION ALL
-(   SELECT * FROM fav_cats_pair
-    EXCEPT
-    SELECT * FROM fav_cats) 
-    
-    
-    
-    
-    
-INSERT INTO fav_cats_pair (name, color,last_modified) 
-    SELECT name, color, last_modified FROM fav_cats;
-    
-    
-    
-    
-    
-    
-    
-UPDATE fav_cats_pair
-SET name = fav_cats.name, color = fav_cats.color, last_modified = fav_cats.last_modified
-FROM fav_cats_pair
-INNER JOIN fav_cats
-ON fav_cats_pair.id = fav_cats.id
