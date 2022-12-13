@@ -2,7 +2,6 @@
 namespace helpers;
 
 use Exception;
-use Normalizer;
 
 /**
  * Print JSON data and exit
