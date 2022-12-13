@@ -11,26 +11,11 @@
 header('Access-Control-Allow-Origin: *');
 
 require_once "./helpers.php";
+$requests = require_once "./connection.php";
 
 $conn = [
-    "host" => "localhost:3306",
-    "user" => "root",
-    "password" => "123456",
-    "database" => "mariadb_sample",
     "table" => "fav_cats"
 ];
-
-// Initialize connection
-$requests = mysqli_connect($conn['host'], $conn['user'], $conn['password'], $conn['database']);
-
-function atexit() {
-    global $requests;
-
-    // call before exit
-    mysqli_close($requests);
-}
-
-register_shutdown_function('atexit');
 
 // Allow numbers only from 0-999
 $pattern_id = "/^([0-9]{1,3})$/i";
