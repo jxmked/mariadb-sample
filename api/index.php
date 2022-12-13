@@ -54,7 +54,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
      */
 
     $query = sprintf("SELECT * FROM `%s`", $conn["table"]); 
-    
+
     // Get single row by id
     if(isset($_GET["id"]) && ! empty($_GET["id"])) {
         $unsafe_id = $_GET["id"];
@@ -66,7 +66,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         if(preg_match($pattern_id, $unsafe_id) === 0) {
 
             // NaN found
-            
+
             $data = [
                 "status" => "Bad Request",
                 "body" => "Parameter (id) must be a numbers (0-9) only."
@@ -78,10 +78,10 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $query = sprintf("%s WHERE id=%s", $query, $unsafe_id);
     }
-    
+
     $result = mysqli_query($requests, $query);
     $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    
+
     helpers\print_response(200, $data);
 } elseif($_SERVER['REQUEST_METHOD'] == 'POST') {
     // POST DATA
@@ -99,89 +99,123 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     $name = helpers\post_data("name");
     $color = helpers\post_data("color");
     $id = helpers\post_data("id");
-    $mode = "";
+    $mode = strtolower(helpers\post_data("mode"));
 
-    if(preg_match($pattern_regular_string, $name) === 0 || preg_match($pattern_regular_string, $color) === 0) {
+    if($mode != "delete" && (preg_match($pattern_regular_string, $name) === 0 || preg_match($pattern_regular_string, $color) === 0)) {
         // Invalid requests
-        
+
         $data = [
             "status" => "Bad Request",
             "body" => "POST data must contain `name` and `color` keys and only accepts a-z and space characters up to 64 characters are allowed."
         ];
-        
+
         // Status Bad request
         helpers\print_response(400, $data);
         exit();
     }
-    
-    $query = sprintf("INSERT INTO `%s` (`name`, `color`) VALUES ('%s', '%s')", $conn['table'] ,$name, $color);
 
-    if(! empty($id)) {
-        // Edit/Modify mode
-        
-        // Validate ID
-        if(preg_match($pattern_id, $id) === 0) {
-            // Bad requests
+    
+    switch ($mode) {
+        case 'insert':
+            // requires name, color
+
+            // Check if name already exists
+            $result = mysqli_query($requests, sprintf("SELECT * FROM `%s` WHERE `name`='%s'", $conn['table'], $name));
+            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+            if(count($data) > 0) {
+                // Already exists
+                $data = [
+                    "status" => "Conflicts",
+                    "body" => "POST data key (name) already exists on database."
+                ];
+
+                // Status Conflicts
+                helpers\print_response(409 , $data);
+            }
+
+
+            $query = sprintf("INSERT INTO `%s` (`name`, `color`) VALUES ('%s', '%s')", $conn['table'] ,$name, $color);
+
+            break;
+        case 'edit':
+        case 'modify':
+            // Edit / Modify
+
+            // Validate ID
+            if(preg_match($pattern_id, $id) === 0) {
+                // Bad requests
+                $data = [
+                    "status" => "Bad Request",
+                    "body" => "POST data key (id) should contains numbers 0-999 only."
+                ];
+
+                // Status Bad request
+                helpers\print_response(400, $data);
+            }
+
+            // Check if id does not exists in database then error
+            $result = mysqli_query($requests, sprintf("SELECT * FROM `%s` WHERE id='%s'", $conn['table'], $id));
+            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+            if(count($data) <= 0) {
+                $data = [
+                    "status" => "Not Found",
+                    "body" => "POST data key (id) does not exists on database."
+                ];
+
+                // Status Not Found
+                helpers\print_response(404, $data);
+            }
+
+            // Check if name already exists in database
+            $result = mysqli_query($requests, sprintf("SELECT * FROM `%s` WHERE `name`='%s' AND `id`!='%s'", $conn['table'], $name, $id));
+            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+            if(count($data) > 0) {
+                // Already exists
+                $data = [
+                    "status" => "Conflicts",
+                    "body" => "POST data key (name) already exists on database."
+                ];
+
+                // Status Conflicts
+                helpers\print_response(409 , $data);
+            }
+
+            $query = sprintf("UPDATE `%s` SET `name`='%s', `color`='%s', `last_modified`=current_timestamp WHERE id='%s'", $conn['table'] ,$name, $color, $id);
+
+            break;
+
+        case 'delete':
+
+            // Check if id does not exists in database then error
+            $result = mysqli_query($requests, sprintf("SELECT * FROM `%s` WHERE id='%s'", $conn['table'], $id));
+            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+            if(count($data) <= 0) {
+                $data = [
+                    "status" => "Not Found",
+                    "body" => "POST data key (id) does not exists on database."
+                ];
+
+                // Status Not Found
+                helpers\print_response(404, $data);
+            }
+
+            $query = sprintf("DELETE FROM `%s` WHERE `id`='%s'", $conn['table'], $id);
+
+            break;
+
+        default:
             $data = [
                 "status" => "Bad Request",
-                "body" => "POST data key (id) should contains number 0-999 only."
+                "body" => "No available method to perform for mode " . $mode
             ];
-            
-            // Status Bad request
+
+            // Status Bad Request
             helpers\print_response(400, $data);
-        }
-
-        // Check if id does exists in database then error
-        $result = mysqli_query($requests, sprintf("SELECT * FROM `%s` WHERE id='%s'", $conn['table'], $id));
-        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-        if(count($data) <= 0) {
-            $data = [
-                "status" => "Not Found",
-                "body" => "POST data key (id) does not exists on database."
-            ];
-            
-            // Status Not Found
-            helpers\print_response(404, $data);
-        }
-
-        // Check if name already exists in database
-        $result = mysqli_query($requests, sprintf("SELECT * FROM `%s` WHERE `name`='%s' AND `id`!='%s'", $conn['table'], $name, $id));
-        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-        if(count($data) > 0) {
-            // Already exists
-            $data = [
-                "status" => "Conflicts",
-                "body" => "POST data key (name) already exists on database."
-            ];
-            
-            // Status Conflicts
-            helpers\print_response(409 , $data);
-        }
-
-        $query = sprintf("UPDATE `%s` SET `name`='%s', `color`='%s', `last_modified`=current_timestamp WHERE id='%s'", $conn['table'] ,$name, $color, $id);
-        $mode = "update";
-
-    } else {
-        // Insert Mode
-
-        // Check if name already exists
-        $result = mysqli_query($requests, sprintf("SELECT * FROM `%s` WHERE `name`='%s'", $conn['table'], $name));
-        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-        if(count($data) > 0) {
-            // Already exists
-            $data = [
-                "status" => "Conflicts",
-                "body" => "POST data key (name) already exists on database."
-            ];
-            
-            // Status Conflicts
-            helpers\print_response(409 , $data);
-        }
-
-        $mode = "insert";
+            break;
     }
 
     $result = mysqli_query($requests, $query);
