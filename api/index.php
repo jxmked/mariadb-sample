@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * 
+ * Later, I going to try to implement registration so
+ * we can use token to verify who which data to serve
+ * and the restriction of the requests
+ * 
+ * 
+ * */
 header('Access-Control-Allow-Origin: *');
 
 require_once "./helpers.php";
@@ -87,20 +95,23 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     // POST DATA
     /**
      * Add data
-     * keys:
      *  name
      *  color
      * 
-     * optional:
-     *  if `id` key exists
-     *  automatically move to edit mode
+     * Modify/Edit Data
+     *  name
+     *  color
+     *  id
+     * 
+     * Delete
+     *  id
      */
 
     $name = helpers\post_data("name");
     $color = helpers\post_data("color");
     $id = helpers\post_data("id");
     $mode = strtolower(helpers\post_data("mode"));
-
+    
     if($mode != "delete" && (preg_match($pattern_regular_string, $name) === 0 || preg_match($pattern_regular_string, $color) === 0)) {
         // Invalid requests
 
@@ -133,7 +144,6 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
                 // Status Conflicts
                 helpers\print_response(409 , $data);
             }
-
 
             $query = sprintf("INSERT INTO `%s` (`name`, `color`) VALUES ('%s', '%s')", $conn['table'] ,$name, $color);
 
