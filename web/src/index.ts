@@ -12,7 +12,25 @@ import CatItem from './components/cat-item';
 import getCats from './connect/get-cats';
 
 import CatTable from './components/cat-table';
-new CatTable()
+import ErrorDialog from './components/error-dialog';
+
+// Start web worker
+if (window.Worker) {
+    const ct = new CatTable();
+    ct.start();
+
+} else {
+    const ed = new ErrorDialog();
+    ed.no_rm();
+    ed.msg = "Unable to run";
+    ed.msg = "Web worker is not available";
+    ed.show(0);
+}
+
+
+
+
+//new CatTable()
 /*
 import ErrorDialog from './components/error-dialog';
 

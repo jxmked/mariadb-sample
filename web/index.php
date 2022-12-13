@@ -84,6 +84,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="<?php Helpers::safe_print(ROOT); ?>assets/favicon-16x16.png">
 
     <title>MariaDB Sample</title>
+    
 </head>
 <body class="">
     <nav>

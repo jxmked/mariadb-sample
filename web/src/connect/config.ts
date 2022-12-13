@@ -3,11 +3,11 @@
  * */
 
 
+
 const conn = {
-    "host": "http://localhost:8000/"
+    "host": "http://localhost:8000/index.php"
 }
 
 
 
 export default conn;
-

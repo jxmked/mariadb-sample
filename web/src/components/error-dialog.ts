@@ -3,12 +3,14 @@ export default class ErrorDialog {
     private cover:HTMLDivElement;
     private isDestroyed:boolean;
     private static fadeOutInterval = 1000; // 3 seconds
+    private no_close_btn:boolean;
 
     constructor() {
         this.base = document.createElement("div");
         this.cover = document.createElement("div");    
         this.isDestroyed = false;
-        
+        this.no_close_btn = false;
+
         /**
          * Having too much time to enjoy writing this.
          * Hahaha 
@@ -32,8 +34,6 @@ export default class ErrorDialog {
         this.base.style.width = "85%"
         this.base.style.overflowY = "hidden"
 
-        this.addCloseBtn();
-        
         this.cover.style.backgroundColor = "#000";
         this.cover.style.position = "fixed";
         this.cover.style.zIndex = "9998"
@@ -48,6 +48,12 @@ export default class ErrorDialog {
         this.isDestroyed = true;
     }
 
+    /**
+     * No Close Button
+     */
+    public no_rm() {
+        this.no_close_btn = true;
+    }
     private addCloseBtn():void {
         const btn:HTMLButtonElement = document.createElement("button");
         btn.style.position = "absolute";
@@ -95,6 +101,9 @@ export default class ErrorDialog {
      * 1000 = 1 second
      */
     show(interval:number = 0):void {
+        if(! this.no_close_btn) {
+            this.addCloseBtn();
+        }        
         
         document.body.appendChild(this.cover);
         document.body.appendChild(this.base);
