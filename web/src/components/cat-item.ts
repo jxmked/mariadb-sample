@@ -134,8 +134,8 @@ export default class CatItem {
         base.appendChild(div);
         
         // Event handlers
-        editbtn.addEventListener("click", () => this.callbacks.edit(this._id));
-        removebtn.addEventListener("click", () => this.callbacks.remove(this._id));
+        // editbtn.addEventListener("click", () => this.callbacks.edit(this._id));
+        // removebtn.addEventListener("click", () => this.callbacks.remove(this._id));
         
         this.BASE.appendChild(base);
     }

@@ -1,12 +1,10 @@
 import {
     catList,
-    btnDeletetActions,
-    btnEditActions
 } from "../dom";
 
 import CatItem from "./cat-item";
-import ErrorDialog from "./error-dialog";
 import conn from "../connect/config";
+import { ucfirst } from "../helpers";
 
 export default class CatTable {
     fatal_stop = false;
@@ -19,11 +17,10 @@ export default class CatTable {
         stop_on_error:true
     };
     
-    private static items:{[key:number]:CatItem};
-    
+    private static items:{[key:number]:CatItem} = {};
     private callbacks:{[key:string]:Function};
-
     private static hasInit = false;
+
     constructor() {
         this.callbacks = {
             "error": () => {},
@@ -33,37 +30,49 @@ export default class CatTable {
         if(CatTable.hasInit) {
             throw new Error("Unable to reinitialize CatTable");
         }
-
     }
 
     private event_add(data:CatInterface):void {
-        const catItem = new CatItem(data);
-
-        catList.appendChild(catItem.html);
-
-        CatTable.items[data["id"]] = catItem;
-
+        CatTable.items[data["id"]] = new CatItem(data);
+        catList.appendChild(CatTable.items[data["id"]].html);
     }
     
+    private event_delete(id:number):void {
+        CatTable.items[id].html.remove();
+        delete CatTable.items[id];
+    }
+
+    private event_modify(data:CatInterface):void {
+        CatTable.items[data["id"]].name = ucfirst(data["name"]);
+        CatTable.items[data["id"]].color = ucfirst(data["color"]);
+    }
+
     listen(): void {
         CatTable.worker.addEventListener("message", (evt) => {
             switch(evt.data['type']) {
                 case 'added':
                     this.event_add(evt.data["body"]["content"] as CatInterface);
+                    this.callbacks["update"](evt.data["body"]["content"] as CatInterface);
                     this.update_num_list();
                     break;
                 
-                case 'modified':   
+                case 'modified':  
+                    this.event_modify(evt.data["body"]["content"] as CatInterface);
+                    this.callbacks["update"](evt.data["body"]["content"] as CatInterface);
                     break;
                 
                 case 'deleted':
+                    this.event_delete(evt.data["body"]["id"] as CatInterface['id']);    
+                    this.callbacks["update"](evt.data["body"]["id"] as CatInterface['id']);
                     this.update_num_list();
                     break;
                 
                 case 'error':
+                    this.callbacks["error"](evt.data);
                     break;
                     
                 default:
+                    this.callbacks["error"](evt.data);
                     console.error("Force stop! Unexpected things happpened");
             }
         })
@@ -98,7 +107,7 @@ export default class CatTable {
 
     update_num_list() {
         Object.values(CatTable.items).forEach((item, index) => {
-            console.log(index)
+            item.numCount = index + 1;
         })
     }
 }
