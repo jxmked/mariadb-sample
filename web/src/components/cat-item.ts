@@ -14,8 +14,6 @@
 </tr>
 **/
 
-
-
 import { ucfirst } from '../helpers';
 
 
@@ -49,7 +47,6 @@ export default class CatItem {
         
         this.BASE = document.createElement("tr") as HTMLTableRowElement;
         this.BASE.setAttribute("data-item-id", String(this._id));
-        
     }
     
     private set_name():void {
