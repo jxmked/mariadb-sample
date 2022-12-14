@@ -8,12 +8,13 @@
     use helpers\Helpers;
     
     
-    define("ROOT", "");
+    define("ROOT", "./");
     
     /**
      * We can move files locally
      * */
-    define("RESOURCE_ROOT", "https://cdn.jsdelivr.net/gh/jxmked/resources@xio/");
+    //define("RESOURCE_ROOT", "https://cdn.jsdelivr.net/gh/jxmked/resources@xio/");
+    define("RESOURCE_ROOT", "./");
     
     /*
     foreach ($_SERVER as $k => $v) {

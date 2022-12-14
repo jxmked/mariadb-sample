@@ -18,10 +18,30 @@ export default class CatTable {
         host: conn.host, // Set interval pulse
         stop_on_error:true
     };
-
+    
+    private static items:CatItem[] = [];
+    
     constructor() {
+    }
+    
+    listen(): void {
         CatTable.worker.addEventListener("message", (evt) => {
-            console.log(evt.data);
+            switch(evt.data['type']) {
+                case 'added':
+                    break;
+                
+                case 'modified':
+                    break;
+                
+                case 'deleted':
+                    break;
+                
+                case 'error':
+                    break;
+                    
+                default:
+                    console.error("Force stop! Unexpected things happpened");
+            }
         })
     }
 

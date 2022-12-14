@@ -24,6 +24,8 @@ let CONFIG = {
  */
 const current_data = {};
 
+let is_running = false;
+
 /**
  * Check the difference between current_data and latest fetched data
  * 
@@ -81,6 +83,7 @@ const sendMsg = function(type, msg) {
 const stop = function() { }
  
 const start = async function() {
+    
     let last = new Date().getTime();
     let response;
 
@@ -188,7 +191,9 @@ self.addEventListener("message", (e) => {
 
     switch(type) {
         case 'command':
-            if(body == 'start') {
+            if(body == 'start' && ! is_running) {
+                is_running = true;
+                
                 start();
             } else {
                 stop();

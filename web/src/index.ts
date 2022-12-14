@@ -18,6 +18,7 @@ import ErrorDialog from './components/error-dialog';
 if (window.Worker) {
     const ct = new CatTable();
     ct.start();
+    ct.listen();
 
 } else {
     const ed = new ErrorDialog();
