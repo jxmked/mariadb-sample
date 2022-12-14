@@ -1,10 +1,7 @@
-import {
-    catList,
-} from "../dom";
-
 import CatItem from "./cat-item";
 import conn from "../connect/config";
 import { ucfirst } from "../helpers";
+import { catList } from "../dom";
 
 export default class CatTable {
     fatal_stop = false;
@@ -73,6 +70,10 @@ export default class CatTable {
                     
                 default:
                     this.callbacks["error"](evt.data);
+                    CatTable.worker.postMessage({
+                        "type":"command",
+                        "body": "stop"
+                    });
                     console.error("Force stop! Unexpected things happpened");
             }
         })
@@ -106,8 +107,6 @@ export default class CatTable {
     }
 
     update_num_list() {
-        Object.values(CatTable.items).forEach((item, index) => {
-            item.numCount = index + 1;
-        })
+        Object.values(CatTable.items).forEach((item, index) => item.numCount = index + 1);
     }
 }

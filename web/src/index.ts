@@ -6,11 +6,6 @@ import {
     btnDeletetActions
 } from './dom';
 
-import Cover from './components/bg-cover';
-import AddCat from './components/add-cat-dialog'; 
-import CatItem from './components/cat-item';
-import getCats from './connect/get-cats';
-
 import CatTable from './components/cat-table';
 import ErrorDialog from './components/error-dialog';
 
@@ -19,7 +14,13 @@ if (window.Worker) {
     const ct = new CatTable();
     ct.start();
     ct.listen();
-
+    ct.onerror = (err:any) => {
+        const ed = new ErrorDialog();
+        ed.no_rm();
+        ed.msg = err["type"] + ": Does stop during runtime";
+        ed.msg = err["body"];
+        ed.show(0);    
+    }
 } else {
     const ed = new ErrorDialog();
     ed.no_rm();
