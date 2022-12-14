@@ -1,5 +1,9 @@
 <?php
+
 namespace helpers;
+
+defined("SECURITY") or die("No direct access allowed");
+
 
 use Exception;
 

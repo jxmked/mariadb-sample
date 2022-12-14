@@ -1,5 +1,7 @@
 <?php
 
+
+define("SECURITY", 1);
 /**
  * 
  * Later, I going to try to implement registration so

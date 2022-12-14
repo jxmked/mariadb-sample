@@ -1,4 +1,4 @@
-// https://stackoverflow.com/questions/1068834/object-comparison-in-javascript
+// https://stackoverflow.com/a/1144249/11481602
 
 /**
  * Returns true if both object is equal, otherwise false

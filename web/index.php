@@ -196,8 +196,8 @@
         
         <div style="border: none;">
             <h4 style="white-space: normal;">What are MariaDB Sample localhosted page and what availeble feature in here?</h4>
-            <p>This is a demo of using different interfaces and porgramming languages to modify a single database.</p>
-            <p>Here in localhosted webpage, we can easily navigate in some basic functionality of a database such as add, edit, delete by clicking in available navigation.</p>
+            <p>This is a demo of using different interfaces and programming languages to modify a single database.</p>
+            <p>Here in localhosted webpage, we can easily navigate in some basic functionality of a database such as add, edit, delete by clicking on available navigation.</p>
             <p>Using PHP, we are able to create Application Program Interface (API) to handle our requests.</p>
             <p>We are also using Asynchronous JavaScript And XML (AJAX) to process our requests without refreshing the entire page.</p>
             <p>And also, we are going to use Python for command line interface to modify the database.</p>

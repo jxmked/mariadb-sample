@@ -1,5 +1,7 @@
 <?php
 
+define("SECURITY", 1);
+
 $requests = require_once "./connection.php";
 
 $conn = [

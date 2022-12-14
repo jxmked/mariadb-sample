@@ -1,5 +1,8 @@
 <?php
 
+defined("SECURITY") or die("No direct access allowed");
+
+
 require_once "./helpers.php";
 
 $conn = [
