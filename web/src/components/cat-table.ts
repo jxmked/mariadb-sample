@@ -89,7 +89,7 @@ export default class CatTable {
 
     send_command(msg:string):void {
         CatTable.worker.postMessage({
-            "type":"message",
+            "type":"command",
             "body": msg
         });
     }

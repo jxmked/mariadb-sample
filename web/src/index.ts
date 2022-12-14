@@ -21,6 +21,14 @@ if (window.Worker) {
         ed.msg = err["body"];
         ed.show(0);    
     }
+
+    /**
+     * Automatically pause if the page has been minimized,
+     * Resume if the page is visible
+     */
+    document.addEventListener("visibilitychange", () => {
+        ct.send_command((document.hidden ? "pause" : "resume"));
+    });
 } else {
     const ed = new ErrorDialog();
     ed.no_rm();

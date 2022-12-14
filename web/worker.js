@@ -31,6 +31,7 @@ const current_data = {};
 
 let is_running = false;
 let to_stop = false;
+let hang_up = false;
 
 /**
  * Check the difference between current_data and latest fetched data
@@ -194,7 +195,7 @@ const start = async function() {
     let ival = self.setInterval(function(){
         first = new Date().getTime();
 
-        if((first - last) >= CONFIG['interval']) {
+        if( ! hang_up && (first - last) >= CONFIG['interval']) {
             (! to_stop && start());
             self.clearInterval(ival);
         }
@@ -209,26 +210,35 @@ self.addEventListener("message", (e) => {
         CONFIG = body;
         return;
     }
+    
+    if(! type == 'command') {
+        stop();
+        self.postMessage({
+            "type": "error",
+            "body": "No available method"
+        });
+        return;
+    }
 
-    switch(type) {
-        case 'command':
-            if(body == 'start' && ! is_running) {
-                is_running = true;
-                
+    switch(body) {
+        case 'start':
+            if(! is_running) {
+                is_running = true;   
                 start();
-            } 
-            if(body == 'stop') {
-                stop();
             }
-
+        break;
+        
+        case 'stop':
+            stop();
         break;
 
-        default:
-            stop();
+        case 'pause':
+            hang_up = true;
+        break;
 
-            self.postMessage({
-                "type": "error",
-                "body": "No available method"
-            });
+        case 'resume':
+            hang_up = false;
+        break;
+
     }
 })
