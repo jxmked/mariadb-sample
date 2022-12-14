@@ -1,4 +1,9 @@
 
+/**
+ * This worker is for table sync only.
+ */
+
+
 // deepCompare
 importScripts(['./deepCompare.js']);
 
@@ -25,6 +30,7 @@ let CONFIG = {
 const current_data = {};
 
 let is_running = false;
+let to_stop = false;
 
 /**
  * Check the difference between current_data and latest fetched data
@@ -80,10 +86,16 @@ const sendMsg = function(type, msg) {
     });
 } 
 
-const stop = function() { }
+const stop = function() { 
+    to_stop = true;
+}
  
 const start = async function() {
     
+    if(to_stop) {
+        return;
+    }
+
     let last = new Date().getTime();
     let response;
 
@@ -100,7 +112,16 @@ const start = async function() {
     
 
     if(response.ok) {
-        const new_data = await response.json();
+        let new_data;
+
+        try {
+            new_data = await response.json();
+        } catch(err) {
+            sendMsg("crash","unable to resolve response status");
+            stop();
+            return;
+        }
+        
         const result = check_diff(new_data);
 
         // reset
@@ -174,7 +195,7 @@ const start = async function() {
         first = new Date().getTime();
 
         if((first - last) >= CONFIG['interval']) {
-            start();
+            (! to_stop && start());
             self.clearInterval(ival);
         }
     }, CONFIG['pulse']);    
@@ -195,13 +216,16 @@ self.addEventListener("message", (e) => {
                 is_running = true;
                 
                 start();
-            } else {
+            } 
+            if(body == 'stop') {
                 stop();
             }
+
         break;
 
         default:
             stop();
+
             self.postMessage({
                 "type": "error",
                 "body": "No available method"

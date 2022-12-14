@@ -21,14 +21,15 @@ import { ucfirst } from '../helpers';
 
 export default class CatItem {
     
-    private name:string;
-    private color:string;
-    private id:number;
+    private _name:string;
+    private _color:string;
+    private _id:number;
     private last_modified_date:string;
     private BASE:HTMLTableRowElement;
     
     public static count:number = 0;
     private myCount:HTMLTableCellElement;
+    private elements:{[key:string]:HTMLTableCellElement};
 
     private callbacks:{
         edit:(id:number) => void;
@@ -36,16 +37,23 @@ export default class CatItem {
     }
     
     constructor({name, color, id, lastModified}:CatInterface) {
-        this.name = name;
-        this.color = color;
-        this.id = id;
+        this._name = name;
+        this._color = color;
+        this._id = id;
         this.last_modified_date = lastModified;
         this.callbacks = {
             edit:(id:number) => {},
             remove:(id:number) => {}
         };
-
+        
+        this.elements = {
+            "name" : document.createElement("td"),
+            "color" : document.createElement("td"),
+            "count" : document.createElement("td")
+        };
+        
         this.myCount = document.createElement("td");
+
         // Our counting system
         CatItem.count++;
         
@@ -54,22 +62,22 @@ export default class CatItem {
         this.myCount.innerText = String(CatItem.count);
         
         this.BASE = document.createElement("tr") as HTMLTableRowElement;
-        this.BASE.setAttribute("data-item-id", String(this.id));
+        this.BASE.setAttribute("data-item-id", String(this._id));
         
     }
     
     private set_name():void {
-        const td:HTMLTableCellElement = document.createElement("td");
+        const td:HTMLTableCellElement = this.elements["name"];
         
-        td.appendChild(document.createTextNode(ucfirst(this.name)));
+        td.appendChild(document.createTextNode(ucfirst(this._name)));
         
         this.BASE.appendChild(td);
     }
     
     private set_color():void {
-        const td:HTMLTableCellElement = document.createElement("td");
+        const td:HTMLTableCellElement = this.elements["color"];
         
-        td.appendChild(document.createTextNode(ucfirst(this.color)));
+        td.appendChild(document.createTextNode(ucfirst(this._color)));
         
         this.BASE.appendChild(td);
     }
@@ -78,19 +86,21 @@ export default class CatItem {
         /**
          * Makinh InnerText of this Table row accessible to modify
          * */
-       // this.myCount.appendChild(document.createTextNode(String(this.myCount)));
 
-        this.BASE.appendChild(this.myCount);
+        this.BASE.appendChild(this.elements["count"]);
     }
     
     set numCount(num:number) {
-        /**
-         * We can update numbering system manually during 
-         * list manipulation
-         * 
-         * */
-        this.myCount.innerText = String(num);
+        this.elements["count"].innerText = String(num);
     }
+
+    set name(str:string) {
+        this.elements["name"].innerText = ucfirst(str);
+    } 
+
+    set color(str:string) {
+        this.elements["color"].innerText = ucfirst(str);
+    } 
 
     private set_action():void {
         const base:HTMLTableCellElement = document.createElement("td");
@@ -108,13 +118,13 @@ export default class CatItem {
         editbtn.classList.add("edit-action");
         editbtn.classList.add("icon-pen");
         
-        editbtn.setAttribute("data-item-id", String(this.id));
+        editbtn.setAttribute("data-item-id", String(this._id));
         
         removebtn.classList.add("action");
         removebtn.classList.add("delete-action");
         removebtn.classList.add("icon-trash");
         
-        removebtn.setAttribute("data-item-id", String(this.id));
+        removebtn.setAttribute("data-item-id", String(this._id));
         
         // Construct
         
@@ -124,8 +134,8 @@ export default class CatItem {
         base.appendChild(div);
         
         // Event handlers
-        editbtn.addEventListener("click", () => this.callbacks.edit(this.id));
-        removebtn.addEventListener("click", () => this.callbacks.remove(this.id));
+        editbtn.addEventListener("click", () => this.callbacks.edit(this._id));
+        removebtn.addEventListener("click", () => this.callbacks.remove(this._id));
         
         this.BASE.appendChild(base);
     }

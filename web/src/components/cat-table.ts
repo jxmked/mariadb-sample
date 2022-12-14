@@ -19,21 +19,45 @@ export default class CatTable {
         stop_on_error:true
     };
     
-    private static items:CatItem[] = [];
+    private static items:{[key:number]:CatItem};
     
+    private callbacks:{[key:string]:Function};
+
+    private static hasInit = false;
     constructor() {
+        this.callbacks = {
+            "error": () => {},
+            "update": () => {}
+        };
+
+        if(CatTable.hasInit) {
+            throw new Error("Unable to reinitialize CatTable");
+        }
+
+    }
+
+    private event_add(data:CatInterface):void {
+        const catItem = new CatItem(data);
+
+        catList.appendChild(catItem.html);
+
+        CatTable.items[data["id"]] = catItem;
+
     }
     
     listen(): void {
         CatTable.worker.addEventListener("message", (evt) => {
             switch(evt.data['type']) {
                 case 'added':
+                    this.event_add(evt.data["body"]["content"] as CatInterface);
+                    this.update_num_list();
                     break;
                 
-                case 'modified':
+                case 'modified':   
                     break;
                 
                 case 'deleted':
+                    this.update_num_list();
                     break;
                 
                 case 'error':
@@ -43,6 +67,14 @@ export default class CatTable {
                     console.error("Force stop! Unexpected things happpened");
             }
         })
+    }
+    
+    set onupdate(callback:Function) {
+        this.callbacks["update"] = callback;
+    }
+
+    set onerror(callback:Function) {
+        this.callbacks["error"] = callback;
     }
 
     send_command(msg:string):void {
@@ -64,4 +96,9 @@ export default class CatTable {
         });
     }
 
+    update_num_list() {
+        Object.values(CatTable.items).forEach((item, index) => {
+            console.log(index)
+        })
+    }
 }
