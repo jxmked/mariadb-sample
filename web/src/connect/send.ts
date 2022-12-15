@@ -2,7 +2,7 @@ import conn from "./config";
 
 export default ({name, color}:{name:string;color:string}):Promise<{[key:string]:any}> => {
     
-    return new Promise<object>((res, rej) => {
+    return new Promise<{[key:string]:any}>((res, rej) => {
         const formData = new FormData();
         formData.append("name", name);
         formData.append("color", color);
@@ -21,10 +21,7 @@ export default ({name, color}:{name:string;color:string}):Promise<{[key:string]:
             rej(xhr.status);
         });
         
-        xhr.addEventListener("error", (err) => {
-            rej(err)
-        });
-        
+        xhr.addEventListener("error", (err) => rej(err));
         xhr.open('POST', conn['host'], true);
         xhr.send(formData);
     })

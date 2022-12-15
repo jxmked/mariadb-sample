@@ -179,3 +179,5 @@ export default class AddCat {
         this.deactivate();
     }
 }
+
+
