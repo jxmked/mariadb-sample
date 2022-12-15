@@ -110,11 +110,11 @@ export default class CatItem {
     /**
      * Set Function for Event Handlers in set actions
      * */
-    set onEdit(func:(id:number) => void) {
+    set onedit(func:(id:number) => void) {
         this.callbacks.edit = func;
     }
     
-    set onRemove(func:(id:number) => void) {
+    set onremove(func:(id:number) => void) {
         this.callbacks.remove = func;
     }
     

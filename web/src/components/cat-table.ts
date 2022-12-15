@@ -4,8 +4,6 @@ import { ucfirst } from "../helpers";
 import { catList } from "../dom";
 
 export default class CatTable {
-    fatal_stop = false;
-    
     private static worker:Worker = new Worker("./worker.js");
     private static worker_config:object = {
         interval: 1000, // 1 second / ping
@@ -14,6 +12,7 @@ export default class CatTable {
         stop_on_error:true
     };
     
+    private fatal_stop = false;
     private static items:{[key:number]:CatItem} = {};
     private callbacks:{[key:string]:Function};
     private static hasInit = false;
@@ -31,6 +30,15 @@ export default class CatTable {
 
     private event_add(data:CatInterface):void {
         CatTable.items[data["id"]] = new CatItem(data);
+        CatTable.items[data["id"]].onedit = (id:number) => {
+            console.log("Edit " + id);
+            
+        }
+        
+        CatTable.items[data["id"]].onremove = (id:number) => {
+            console.log("Remove " + id);
+            
+        }
         catList.appendChild(CatTable.items[data["id"]].html);
     }
     
@@ -44,6 +52,9 @@ export default class CatTable {
         CatTable.items[data["id"]].color = ucfirst(data["color"]);
     }
 
+    /**
+     * Listen to workers changes 
+     * */
     listen(): void {
         CatTable.worker.addEventListener("message", (evt) => {
             switch(evt.data['type']) {
@@ -69,22 +80,14 @@ export default class CatTable {
                     break;
                     
                 default:
-                    this.callbacks["error"](evt.data);
                     CatTable.worker.postMessage({
                         "type":"command",
                         "body": "stop"
                     });
-                    console.error("Force stop! Unexpected things happpened");
+                    this.callbacks["error"]("Force Stop! Unexpected things happened");
+                    console.error(evt.data);
             }
         })
-    }
-    
-    set onupdate(callback:Function) {
-        this.callbacks["update"] = callback;
-    }
-
-    set onerror(callback:Function) {
-        this.callbacks["error"] = callback;
     }
 
     send_command(msg:string):void {
@@ -105,8 +108,24 @@ export default class CatTable {
             "body": "start"
         });
     }
-
+    
+    /**
+     * Update counting number everytime we
+     * add or remove values from cat-table list
+     * */
     update_num_list() {
         Object.values(CatTable.items).forEach((item, index) => item.numCount = index + 1);
     }
+    
+    /**
+     * Callback Handler - Set method
+     * */
+    set onupdate(callback:Function) {
+        this.callbacks["update"] = callback;
+    }
+
+    set onerror(callback:Function) {
+        this.callbacks["error"] = callback;
+    }
+    
 }

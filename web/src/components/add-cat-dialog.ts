@@ -7,12 +7,10 @@ import {
     catList
 } from '../dom';
 
-
-
 import CatItem from 'cat-item';
 import Cover from './bg-cover';
 import { normalizeString } from '../helpers';
-
+import sendData from '../connect/send';
 const EMPTY_FIELD = "Oppsss... Either field cannot be empty and must contain only letters and/or dash '-'";
 
 export default class AddCat {
@@ -99,14 +97,14 @@ export default class AddCat {
     private __isValidInput(str:string):boolean {
         /**
          * 
-         * Allow letters and a single dash in between of letters
+         * Allow letters and space character
          */
-        const pattern = /^([a-zA-Z\s]+)(\-[a-zA-Z\s]+)?$/gi
+        const pattern = /^([a-zA-Z ]{1,64})$/gi
         
         return pattern.test(str);
     }
 
-    private __verifyInputs():void {
+    private async __verifyInputs():Promise<void> {
         btnAddCatConfirm.innerText = "";
         btnAddCatConfirm.classList.add("on-progress");
         
@@ -124,8 +122,6 @@ export default class AddCat {
         // Validated result
         let validated_name:boolean = this.__isValidInput(name_value);
         let validated_color:boolean = this.__isValidInput(color_value);
-        
-        //console.log(validated_name, validated_color)
         
         if(! (validated_name && validated_color)) {
             this.msgBox(true);
@@ -148,33 +144,28 @@ export default class AddCat {
         }
 
         this.msgBox(false);
-
-        // Inputs are validated
+        
         /**
-         * Ready to validate by our API and return the response.
+         * Send New Data
          * 
-         */
-         
-        //btnAddCatConfirm.innerText = "Insert";
-        const item:CatItem = new CatItem({
-            name: name_value,
-            color: color_value,
-            id:99,
-            lastModified: "Jsjsjs"
-        } as CatInterface);
-        
-        
-        catList.appendChild(item.html);
-        
-        
-        item.onEdit = (id:number) => {
-            alert("On Edit " + String(id))
-        };
-        
-        item.onRemove = (id) => {
-            alert("On Rmeove " + String(id))
-        }
-        
+         * */
+        sendData({
+            name:name_value,
+            color:color_value
+        }).then((res) => {
+            if(res.hasOwnProperty("mode") && res["mode"] == "insert" && res["status"] == "success") {
+                this.__btnCatDeny();
+                this.btnCancel();
+            } else {
+                this.msgBox("Please, fill up the form accordingly");
+                /**
+                 * Remove animating 'insert' text 
+                 * */
+                btnAddCatConfirm.classList.remove("on-progress");
+            }
+        }).catch((err) => {
+            this.msgBox(err.toString());
+        });
     }
 
     private __btnCatDeny():void {

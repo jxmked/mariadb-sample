@@ -101,7 +101,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     
     if($mode != "delete" && (preg_match($pattern_regular_string, $name) === 0 || preg_match($pattern_regular_string, $color) === 0)) {
         // Invalid requests
-
+        
         $data = [
             "status" => "Bad Request",
             "body" => "POST data must contain `name` and `color` keys and only accepts a-z and space characters up to 64 characters are allowed."

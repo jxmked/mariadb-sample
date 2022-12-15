@@ -8,6 +8,8 @@ import {
 
 import CatTable from './components/cat-table';
 import ErrorDialog from './components/error-dialog';
+import AddCatDialog from './components/add-cat-dialog';
+
 
 // Start web worker
 if (window.Worker) {
@@ -35,52 +37,23 @@ if (window.Worker) {
     ed.msg = "Unable to run";
     ed.msg = "Web worker is not available";
     ed.show(0);
+    
+    // Stop 
+    throw new Error("Unable to start. Web worker is not available");
 }
 
-
-
-
-//new CatTable()
-/*
-import ErrorDialog from './components/error-dialog';
-
-const error = new ErrorDialog();
-error.show(3000);
-error.msg = "Hakdohsdjkfsdk dsjfklsdjfkld l hl ldslkj fhjkdh fkjdshf kjdsfh kjdfh kdsf hkjdh dh fg"
-*/
-/*
-let item = new CatItem({
-    name:"Louqui",
-    color: "white",
-    id: 123,
-    lastModified: "1231"
-} as CatInterface).html;
-
-
-catList.appendChild(item)
-
-const ci = new CatItem({
-    name:"Louqui",
-    color: "white",
-    id: 123,
-    lastModified: "1231"
-} as CatInterface);
-
-
-catList.appendChild(ci.html)
-
-ci.numCount = 8
-
+const acd = new AddCatDialog();
 
 btnAddAction.addEventListener("click", () => {
-    catList.appendChild(new CatItem({
-        name:"Louqui",
-        color: "white",
-        id: 123,
-        lastModified: "1231"
-    } as CatInterface).html)
-
+    acd.activate()
 })
+
+
+
+
+
+
+/*
 
 // Create an observer instance.
 var observer = new MutationObserver(function(mutations) {

@@ -190,16 +190,12 @@ const start = async function() {
     }
 
     // setTimeout but expensive. Hahaha
-    let first = 0;
-
     let ival = self.setInterval(function(){
-        first = new Date().getTime();
-
-        if( ! hang_up && (first - last) >= CONFIG['interval']) {
+        if( ! hang_up && (new Date().getTime() - last) >= CONFIG['interval']) {
             (! to_stop && start());
             self.clearInterval(ival);
         }
-    }, CONFIG['pulse']);    
+    }, CONFIG['pulse']);
 }
 
 self.addEventListener("message", (e) => {
@@ -242,3 +238,6 @@ self.addEventListener("message", (e) => {
 
     }
 })
+
+
+
