@@ -7,7 +7,7 @@ declare global {
     }
 }
 
-export default () => {
+const idb = () => {
     try {
         return window.indexedDB ||
             window.webkitIndexedDB ||
@@ -16,4 +16,6 @@ export default () => {
             window.msIndexedDB;
     } catch (err) {}
     return;
-}
+};
+
+export default idb() as IDBFactory;

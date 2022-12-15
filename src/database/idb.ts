@@ -2,7 +2,6 @@ import __idb from './get-idb';
 
 /**
  * How to use example
- * const DB = (name:any):any => {};
  * 
  * const idb = DB("name");
  * const store = idb.store("storeName");
@@ -16,8 +15,8 @@ import __idb from './get-idb';
  * });
  * */
 
-const _open_db = (name:string) => {
-
+const DB = (name:string) => {
+console.log("asd")
 }
 
-export {};
+export default DB;

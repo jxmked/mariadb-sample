@@ -1,11 +1,4 @@
-import {
-    btnDeleteConfirm,
-    btnDeleteDeny,
-    btnAddAction,
-    catList,
-    btnDeletetActions
-} from './dom';
-
+/* import { btnAddAction } from './dom';
 import CatTable from './components/cat-table';
 import ErrorDialog from './components/error-dialog';
 import AddCatDialog from './components/add-cat-dialog';
@@ -23,10 +16,10 @@ if (window.Worker) {
         ed.show(0);
     }
 
-    /**
-     * Automatically pause if the page has been minimized,
-     * Resume if the page is visible
-     */
+    
+    // Automatically pause if the page has been minimized,
+    // Resume if the page is visible
+     
     document.addEventListener("visibilitychange", () => {
         ct.send_command((document.hidden ? "pause" : "resume"));
     });
@@ -41,13 +34,17 @@ if (window.Worker) {
     throw new Error("Unable to start. Web worker is not available");
 }
 
-/**
- * Add new Cat Data
- */
+// Add new Cat Data
 const acd = new AddCatDialog();
 
 btnAddAction.addEventListener("click", () => {
     acd.activate();
 });
 
-export {};
+export default () => {};
+ */
+
+
+import DB from "./database/idb";
+
+DB("Hakdog")
