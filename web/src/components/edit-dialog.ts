@@ -68,9 +68,9 @@ export default class EditDialog {
         EditDialog.msg_dialog.innerText = String(msg);
     }
     
-    set_btn_names({confirm, cancel}:{[key:string]:string}):void {
-        EditDialog.confirm_btn.innerText = confirm;
-        EditDialog.cancel_btn.innerText = cancel;
+    set_btn_names({confirm, cancel}:{confirm:string, cancel:string}):void {
+        EditDialog.confirm_btn!.innerText = confirm;
+        EditDialog.cancel_btn!.innerText = cancel;
     }
     
     show():void {

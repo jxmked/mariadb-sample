@@ -15,25 +15,23 @@ export default class ConfirmDeleteDialog {
     private static name_label:HTMLHeadingElement = deleteCatName as HTMLHeadingElement;
     private static btn_delete:HTMLButtonElement = btnDeleteConfirm as HTMLButtonElement;
     private static btn_deny:HTMLButtonElement = btnDeleteDeny as HTMLButtonElement;
-    private static callbacks:{[key:string]:Function} = {
+    private static callbacks:{confirm:Function, cancel:Function} = {
         "confirm":() => {},
         "cancel":() => {}
     };
     
-    constructor({name, color, id, lastModified}:CatInterface) {
-        const self = ConfirmDeleteDialog;
-        
-        if(self.is_visible) {
+    constructor({name, id}:CatInterface) {
+        if(ConfirmDeleteDialog.is_visible) {
             throw new Error("Close the dialog before reusing it");
         }
         
-        self.name_label.innerText = ucfirst(name);
-        self.dialog.setAttribute("data-id", String(id));
-        self.dialog.setAttribute("data-status", "hidden");
-        self.dialog.setAttribute("hidden", "hidden");
+        ConfirmDeleteDialog.name_label.innerText = ucfirst(name);
+        ConfirmDeleteDialog.dialog.setAttribute("data-id", String(id));
+        ConfirmDeleteDialog.dialog.setAttribute("data-status", "hidden");
+        ConfirmDeleteDialog.dialog.setAttribute("hidden", "hidden");
         
-        self.btn_delete.addEventListener("click", () => self.callbacks['confirm']());
-        self.btn_deny.addEventListener("click", () => self.callbacks['cancel']());
+        ConfirmDeleteDialog.btn_delete.addEventListener("click", () => ConfirmDeleteDialog.callbacks['confirm']());
+        ConfirmDeleteDialog.btn_deny.addEventListener("click", () => ConfirmDeleteDialog.callbacks['cancel']());
     }
     
     show():void {

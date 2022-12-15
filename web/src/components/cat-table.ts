@@ -18,11 +18,9 @@ export default class CatTable {
         stop_on_error:true
     };
     
-    private fatal_stop = false;
     private static items:{[key:CatInterface['id']]:CatItem} = {};
-    private callbacks:{[key:string]:Function};
+    private callbacks:{error:Function;update:Function};
     private static hasInit = false;
-    private static current_delete_dialog:deleteDialog;
     
     constructor() {
         this.callbacks = {
@@ -38,10 +36,10 @@ export default class CatTable {
     private event_add(data:CatInterface):void {
         CatTable.items[data["id"]] = new CatItem(data);
         
-        CatTable.items[data["id"]].onedit = this.event_edit_item.bind(this);
-        CatTable.items[data["id"]].onremove = this.event_delete_item.bind(this);
+        CatTable.items[data["id"]]!.onedit = this.event_edit_item.bind(this);
+        CatTable.items[data["id"]]!.onremove = this.event_delete_item.bind(this);
         
-        catList.appendChild(CatTable.items[data["id"]].html);
+        catList.appendChild(CatTable.items[data["id"]]!.html);
     }
     
     /**
@@ -50,7 +48,7 @@ export default class CatTable {
      * */
     
     private event_delete_item(id:CatInterface['id']):void {
-        const dd = new deleteDialog(CatTable.items[id].data);
+        const dd = new deleteDialog(CatTable.items[id]!.data);
         Cover.show();
         dd.show();
         let is_on_transac = false;
@@ -65,7 +63,7 @@ export default class CatTable {
         dd.onconfirm = () => {
             is_on_transac = true;
             
-            requestDelete(CatTable.items[id].data)
+            requestDelete(CatTable.items[id]!.data)
             .then((res) => {
                 is_on_transac = false;
                 if(res.hasOwnProperty("mode") && res["mode"] == "delete" && res["status"] == "success") {
@@ -93,8 +91,8 @@ export default class CatTable {
     }
     
     private event_edit_item(id:CatInterface['id']):void {
-        const ed = new EditDialog(CatTable.items[id].data);
-        const data = Object.assign({}, CatTable.items[id].data);
+        const ed = new EditDialog(CatTable.items[id]!.data);
+        const data = Object.assign({}, CatTable.items[id]!.data);
         let is_on_transac = false;
 
         ed.set_btn_names({
@@ -113,7 +111,7 @@ export default class CatTable {
             ed.destroy();
         }
         
-        ed.onconfirm = ({name, color}:{[key:string]:string}) => {
+        ed.onconfirm = ({name, color}:{name:string, color:string}) => {
             EditDialog.msgBox(false);
             
             if( !(validate.name(name) && validate.color(color))) {
@@ -153,13 +151,13 @@ export default class CatTable {
     }
     
     private event_delete(id:CatInterface['id']):void {
-        CatTable.items[id].html.remove();
+        CatTable.items[id]!.html.remove();
         delete CatTable.items[id];
     }
 
     private event_modify(data:CatInterface):void {
-        CatTable.items[data["id"]].name = ucfirst(data["name"]);
-        CatTable.items[data["id"]].color = ucfirst(data["color"]);
+        CatTable.items[data["id"]]!.name = ucfirst(data["name"]);
+        CatTable.items[data["id"]]!.color = ucfirst(data["color"]);
     }
 
     /**

@@ -22,7 +22,11 @@ export default class CatItem {
     private _color:string;
     private _id:number;
     private BASE:HTMLTableRowElement;    
-    private elements:{[key:string]:HTMLTableCellElement};
+    private elements:{
+        name:HTMLTableCellElement;
+        color:HTMLTableCellElement;
+        count:HTMLTableCellElement;
+    };
     
     private callbacks:{
         edit:(id:number) => void;

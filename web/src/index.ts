@@ -1,11 +1,4 @@
-import {
-    btnDeleteConfirm,
-    btnDeleteDeny,
-    btnAddAction,
-    catList,
-    btnDeletetActions
-} from './dom';
-
+import { btnAddAction } from './dom';
 import CatTable from './components/cat-table';
 import ErrorDialog from './components/error-dialog';
 import AddCatDialog from './components/add-cat-dialog';

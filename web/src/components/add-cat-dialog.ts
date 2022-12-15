@@ -7,7 +7,6 @@ const EMPTY_FIELD = "Oppsss... Either field cannot be empty and must contain onl
 
 export default class AddCat {
     private static hasBeenCalled:boolean = false; 
-    private static isOpen:boolean = false;
     
     constructor() {
         if(AddCat.hasBeenCalled)
