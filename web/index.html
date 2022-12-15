@@ -1,0 +1,110 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#2f2f34">
+    <meta name="robots" content="index,follow">
+    <meta name="referrer" content="origin">    
+    <link rel="manifest" href="./site.webmanifest">
+    <link rel="preload" href="./assets/icons/icon-v1.css" as="style" />
+    <link rel="preload" href="./dist/index.css" as="style" />
+    <link rel="preload" href="./assets/fonts/montserrat/stylesheet.css" as="style" />
+    <link rel="preload" href="./assets/fonts/caviar-dreams/stylesheet.css" as="style" />
+    <link rel="preload" href="./assets/fonts/montserrat/Montserrat-Medium.woff2" as="font" crossorigin />
+    <link rel="preload" href="./assets/fonts/montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin />
+    <link rel="preload" href="./assets/vendor/require.js" as="script" />
+    <link rel="stylesheet" href="./assets/fonts/montserrat/stylesheet.css">
+    <link rel="stylesheet" href="./assets/fonts/caviar-dreams/stylesheet.css">
+    
+    <link rel="stylesheet" href="./assets/icons/icon-v1.css">
+    <link rel="stylesheet" href="./assets/icons/icon-v2.css">
+    
+    <link rel="stylesheet" href="./assets/lib/reset.css">
+    <link rel="stylesheet" href="./dist/index.css">
+    
+    <meta property="og:title" content="Using MariaDB Basic Example" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="/" />
+    <meta property="og:image" content="./assets/images/xio-white.webp" />
+    <meta property="og:description" content="" />
+    <meta property="og:site_name" content="MariaDB sample" />
+    <meta name="description" content="" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
+
+    <title>MariaDB Sample</title>
+    
+</head>
+<body class="">
+    <nav>
+        <div>
+            <h3>MariaDB Sample</h3>
+        </div>
+    </nav>
+    <div id="bg-cover" data-status="hide">
+    </div>
+    <script src="./assets/vendor/require.js" data-main="dist/index" type="application/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        requirejs.config({
+            waitSeconds: 120
+        });
+    </script>
+    <div class="container form-page">
+        <div>
+            <div class="back-behavior">
+                <a href="/index.php?page=intro" class="icon-arrow-left" alt="back to intro page"></a>
+            </div>
+            <label class="labeled-cats">Your Favorite Cats:</label>
+            <table class="cats-table">
+                <thead>
+                    <tr>
+                        <td>No.</td>
+                        <td>Name</td>
+                        <td>Color</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                <tbody id="cat-list">
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <span class="icon-plus-circle" id="add-cat" alt="Add new favorite cat"></span>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div id="add-cat-interface-dialog" class="" hidden>
+                <div>
+                    <label for="add-new-cat-name-input">Name of your cat:</label>
+                    <input id="add-new-cat-name-input" type="text" name="name" value="" placeholder="Name" />
+                    <label for="add-new-cat-color-input">Color of your cat:</label>
+                    <input id="add-new-cat-color-input" type="text" name="color" value="" placeholder="Color" />
+                    <div id="add-cat-msg-box"></div>
+                    <div>
+                        <button name="submit" id="add-cat-confirmed" class="icon-check-square"></button>
+                        <button id="add-cat-denied" class="icon-x-square"></button>
+                    </div>
+                </div>
+            </div>
+            <div id="confirm-delete-dialog" data-status="hidden" data-id="" hidden>
+                <div>
+                    <h3>You still love this cat?</h3>
+                    <h4 id="delete-cat-name">Louqui</h4>
+                    <div>
+                        <button id="delete-confirmed" class="icon-check-square"></button>
+                        <button id="delete-denied" class="icon-x-square"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+    </body>
+</html>
+
+
