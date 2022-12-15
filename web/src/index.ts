@@ -9,7 +9,7 @@ import {
 import CatTable from './components/cat-table';
 import ErrorDialog from './components/error-dialog';
 import AddCatDialog from './components/add-cat-dialog';
-
+import getById from './connect/get-item';
 
 // Start web worker
 if (window.Worker) {

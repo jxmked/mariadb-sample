@@ -2,6 +2,8 @@ import CatItem from "./cat-item";
 import conn from "../connect/config";
 import { ucfirst } from "../helpers";
 import { catList } from "../dom";
+import cover from './bg-cover';
+import deleteDialog from './confirm-delete-dialog';
 
 export default class CatTable {
     private static worker:Worker = new Worker("./worker.js");
@@ -13,10 +15,11 @@ export default class CatTable {
     };
     
     private fatal_stop = false;
-    private static items:{[key:number]:CatItem} = {};
+    private static items:{[key:CatInterface['id']]:CatItem} = {};
     private callbacks:{[key:string]:Function};
     private static hasInit = false;
-
+    private static current_delete_dialog:deleteDialog;
+    
     constructor() {
         this.callbacks = {
             "error": () => {},
@@ -30,17 +33,36 @@ export default class CatTable {
 
     private event_add(data:CatInterface):void {
         CatTable.items[data["id"]] = new CatItem(data);
-        CatTable.items[data["id"]].onedit = (id:number) => {
-            console.log("Edit " + id);
-            
-        }
         
-        CatTable.items[data["id"]].onremove = (id:number) => {
-            console.log("Remove " + id);
-            
-        }
+        CatTable.items[data["id"]].onedit = this.event_edit_item.bind(this);
+        CatTable.items[data["id"]].onremove = this.event_delete_item.bind(this);
+        
         catList.appendChild(CatTable.items[data["id"]].html);
     }
+    
+    /**
+     * Event - Delete confirm
+     * Confirmation for deletion
+     * */
+    
+    private event_delete_item(id:CatInterface['id']):void {
+        const dd = new deleteDialog(CatTable.items[id].data);
+        dd.show()
+        
+        dd.ondeny = () => {
+            dd.hide();
+        };
+        
+        dd.onconfirm = () => {
+            
+        }
+    }
+    
+    private event_edit_item(id:CatInterface['id']):void {
+        
+    }
+    
+    
     
     private event_delete(id:number):void {
         CatTable.items[id].html.remove();

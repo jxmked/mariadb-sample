@@ -164,7 +164,7 @@
             </div>
             
             <!-- Delete Dialog to Continue to delete data -->
-            <div id="confirm-delete-dialog" data-status="hide" data-id="" hidden>
+            <div id="confirm-delete-dialog" data-status="hidden" data-id="" hidden>
                 <div>
                     <h3>You still love this cat?</h3>
                     <h4 id="delete-cat-name">Louqui</h4>
