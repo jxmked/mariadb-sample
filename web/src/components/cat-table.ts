@@ -1,9 +1,13 @@
 import CatItem from "./cat-item";
 import conn from "../connect/config";
-import { ucfirst } from "../helpers";
+import { ucfirst, cat_validator as validate } from "../helpers";
 import { catList } from "../dom";
-import cover from './bg-cover';
+import Cover from './bg-cover';
 import deleteDialog from './confirm-delete-dialog';
+import requestDelete from '../connect/delete';
+import ErrorDialog from './error-dialog';
+import EditDialog from './edit-dialog';
+import Update from '../connect/update';
 
 export default class CatTable {
     private static worker:Worker = new Worker("./worker.js");
@@ -47,24 +51,106 @@ export default class CatTable {
     
     private event_delete_item(id:CatInterface['id']):void {
         const dd = new deleteDialog(CatTable.items[id].data);
-        dd.show()
-        
+        Cover.show();
+        dd.show();
+        let is_pending = false; // Prevent deny during process
         dd.ondeny = () => {
+            if(is_pending) return;
+            
             dd.hide();
+            Cover.hide();
         };
         
         dd.onconfirm = () => {
+            is_pending = true;
             
+            requestDelete(CatTable.items[id].data)
+            .then((res) => {
+                is_pending = false;
+                if(res.hasOwnProperty("mode") && res["mode"] == "delete" && res["status"] == "success") {
+                    dd.hide();
+                    Cover.hide();
+                    
+                    return;
+                }
+                
+                throw new Error("Unexpected things happened");
+                
+            }).catch((err) => {
+                is_pending = false;
+                
+                if(err.toString() == 404) {
+                    return;
+                }
+                
+                const erd = new ErrorDialog();
+                
+                erd.msg = err.toString();
+                erd.show(3000);
+            });
         }
     }
     
     private event_edit_item(id:CatInterface['id']):void {
+        const ed = new EditDialog(CatTable.items[id].data);
+        const data = Object.assign({}, CatTable.items[id].data);
+        let is_pending = false;
+        ed.set_btn_names({
+            confirm:"Update",
+            cancel:"Cancel"
+        });
         
+        Cover.show();
+        ed.show();
+        
+        ed.oncancel = () => {
+            if(is_pending) return;
+            
+            ed.hide();
+            Cover.hide();
+            ed.destroy();
+        }
+        
+        ed.onconfirm = ({name, color}:{[key:string]:string}) => {
+            EditDialog.msgBox(false);
+            
+            if( !(validate.name(name) && validate.color(color))) {
+                EditDialog.msgBox("Fill up the form accordingly");
+                EditDialog.msgBox(true);
+                return;
+            }
+            
+            data.name = name;
+            data.color = color;
+            
+            Update(data)
+            .then((res) => {
+                is_pending = false;
+                if(res.hasOwnProperty("mode") && res["mode"] == "modify" && res["status"] == "success") {
+                    ed.hide();
+                    Cover.hide();
+                    ed.destroy();
+                    return;
+                }
+                
+                throw new Error("Unexpected things happened");
+                
+            }).catch((err) => {
+                is_pending = false;
+                
+                const erd = new ErrorDialog();
+                
+                if(err.toString() == '404') {
+                    erd.msg = "Opsss... That item doesn't exists anymore";
+                } else {
+                    erd.msg = err.toString();
+                }
+                erd.show(3000);
+            });
+        }
     }
     
-    
-    
-    private event_delete(id:number):void {
+    private event_delete(id:CatInterface['id']):void {
         CatTable.items[id].html.remove();
         delete CatTable.items[id];
     }

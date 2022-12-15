@@ -44,3 +44,22 @@ export function normalizeString(param:string|number, method:string = "NFD"):stri
 export function ucfirst(str:string):string {
     return str.substring(0,1).toUpperCase() + str.substring(1);
 }
+
+
+export const cat_validator = {
+    
+    name: (str:string):boolean => {
+        return /^([a-zA-Z ]{1,64})$/gi.test(str);
+    },
+    color: (str:string):boolean => {
+        return /^([a-zA-Z ]{1,64})$/gi.test(str);
+    }
+}
+
+
+
+
+
+
+
+

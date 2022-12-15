@@ -151,9 +151,7 @@
                     <label for="add-new-cat-color-input">Color of your cat:</label>
                     <input id="add-new-cat-color-input" type="text" name="color" value="" placeholder="Color" />
                     
-                    <div id="add-cat-msg-box">
-                        Oppsss... Either field cannot be empty
-                    </div>
+                    <div id="add-cat-msg-box"></div>
                     
                     <div>
                         <button name="submit" id="add-cat-confirmed" class="icon-check-square"></button>
