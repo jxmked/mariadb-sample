@@ -7,23 +7,6 @@ div.container.form-page {
         padding: 5px;
     }
     
-    .back-behavior {
-        margin: 5px;
-        position: relative;
-        margin-left: 0;
-        a {
-            font-size: 1.4rem;
-            padding: 7px;
-            text-decoration: none;
-            outline: 1px solid var(--border-color);
-            border-radius: 50%;
-            
-            &:hover {
-                background-color: rgb(215, 215, 220);
-            }
-        }
-    }
-    
     label.labeled-cats {
         font-size: 1.2rem;
         height: auto;
@@ -149,7 +132,5 @@ div.container.form-page {
             }
         }
     }
-
-
 }
 

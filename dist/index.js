@@ -1,4 +1,3 @@
-"use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -836,5 +835,37 @@ define("connect/get-item", ["require", "exports", "connect/config"], function (r
                 .catch(reject);
         });
     };
+});
+define("database/get-idb", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function getIDB() {
+        try {
+            if (typeof indexedDB !== 'undefined') {
+                return indexedDB;
+            }
+            if (typeof webkitIndexedDB !== 'undefined') {
+                return webkitIndexedDB;
+            }
+            if (typeof mozIndexedDB !== 'undefined') {
+                return mozIndexedDB;
+            }
+            if (typeof OIndexedDB !== 'undefined') {
+                return OIndexedDB;
+            }
+            if (typeof msIndexedDB !== 'undefined') {
+                return msIndexedDB;
+            }
+        }
+        catch (e) {
+            return;
+        }
+    }
+    var idb = getIDB();
+    exports.default = idb;
+});
+define("database/idb", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 //# sourceMappingURL=index.js.map
