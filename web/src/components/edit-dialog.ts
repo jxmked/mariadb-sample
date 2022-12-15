@@ -5,24 +5,25 @@ import {
     btnAddCatConfirm,
     btnAddCatDeny
 } from '../dom';
-import {
-    cat_validator as validate
-} from '../helpers';
 
+type ConfirmCallbackInterface = ({name,color}:{name:string, color:string}) => void;
+
+// HAHAHAHAHA
+interface EditDialogPrivateCallbackFunctionsInterface {
+    confirm:ConfirmCallbackInterface,
+    cancel:() => void;
+}
 
 export default class EditDialog {
     
     private static dialog:HTMLDivElement = <HTMLDivElement> addCatDialog;
-    private static name_input:HTMLInputElement = <HTMLInputElement> addCatInputs['name'];
-    private static color_input:HTMLInputElement = <HTMLInputElement> addCatInputs['color'];
+    public static name_input:HTMLInputElement = <HTMLInputElement> addCatInputs['name'];
+    public static color_input:HTMLInputElement = <HTMLInputElement> addCatInputs['color'];
     private static msg_dialog:HTMLDivElement = <HTMLDivElement> addCatMsgBox;
-    private static confirm_btn:HTMLButtonElement = <HTMLButtonElement> btnAddCatConfirm;
-    private static cancel_btn:HTMLButtonElement = <HTMLButtonElement> btnAddCatDeny;
+    public static confirm_btn:HTMLButtonElement = <HTMLButtonElement> btnAddCatConfirm;
+    public static cancel_btn:HTMLButtonElement = <HTMLButtonElement> btnAddCatDeny;
     private static is_open:boolean = false;
-    private static callbacks:{[key:string]:Function} = {
-        "confirm": () => {},
-        "cancel": () => {}
-    }
+    private static callbacks:EditDialogPrivateCallbackFunctionsInterface = {confirm(){}, cancel(){}};
     private static is_destroyed:boolean = true;
     
     constructor({name, id, color, lastModified}:CatInterface) {
@@ -53,7 +54,7 @@ export default class EditDialog {
         const color = EditDialog.color_input.value;
         const name = EditDialog.name_input.value;
         
-        EditDialog.callbacks['confirm']({color, name} as {[key:string]:string});
+        EditDialog.callbacks['confirm']({color, name});
     }
     
     static msgBox(msg:string|boolean):void {
@@ -84,14 +85,25 @@ export default class EditDialog {
         self.is_open = false
     }
     
-    set onconfirm(callback:Function) {
+    set onconfirm(callback:ConfirmCallbackInterface) {
         EditDialog.callbacks['confirm'] = callback;
     }
     
-    set oncancel(callback:Function) {
+    set oncancel(callback:() => void) {
         EditDialog.callbacks['cancel'] = callback;
     }
     
+    /**
+     * Allow us to trigger callbacks manually
+     */
+    cancel():void {
+        EditDialog.cc_cancel();
+    }
+    
+    confirm():void {
+        EditDialog.cc_confirm();
+    }
+
     destroy():void {
         EditDialog.confirm_btn.innerText = "";
         EditDialog.cancel_btn.innerText = "";

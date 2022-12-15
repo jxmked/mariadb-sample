@@ -1,10 +1,7 @@
 /***
  * Get item by id
- * 
  * */
-
 import conn from './config';
-
 
 export default (id:CatInterface['id']):Promise<CatInterface> => {
     
@@ -19,6 +16,3 @@ export default (id:CatInterface['id']):Promise<CatInterface> => {
         .catch(reject);
     });
 }
-
-
-

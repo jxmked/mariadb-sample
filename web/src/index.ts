@@ -9,7 +9,6 @@ import {
 import CatTable from './components/cat-table';
 import ErrorDialog from './components/error-dialog';
 import AddCatDialog from './components/add-cat-dialog';
-import getById from './connect/get-item';
 
 // Start web worker
 if (window.Worker) {
@@ -21,7 +20,7 @@ if (window.Worker) {
         ed.no_rm();
         ed.msg = err["type"] + ": Does stop during runtime";
         ed.msg = err["body"];
-        ed.show(0);    
+        ed.show(0);
     }
 
     /**
@@ -42,38 +41,13 @@ if (window.Worker) {
     throw new Error("Unable to start. Web worker is not available");
 }
 
+/**
+ * Add new Cat Data
+ */
 const acd = new AddCatDialog();
 
 btnAddAction.addEventListener("click", () => {
-    acd.activate()
-})
-
-
-
-
-
-
-/*
-
-// Create an observer instance.
-var observer = new MutationObserver(function(mutations) {
-    console.log(123123)
-    Array.from(btnDeletetActions).forEach((item) => {
-        item.addEventListener("click", () => {
-             item.parentElement?.parentElement?.parentElement?.remove();
-        })
-    });   
+    acd.activate();
 });
-
-// Pass in the target node, as well as the observer options.
-observer.observe(catList, {
-    attributes:    true,
-    childList:     true,
-    characterData: true
-});
-
-*/
-
-
 
 export {};

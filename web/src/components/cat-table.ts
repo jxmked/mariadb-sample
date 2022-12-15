@@ -53,20 +53,21 @@ export default class CatTable {
         const dd = new deleteDialog(CatTable.items[id].data);
         Cover.show();
         dd.show();
-        let is_pending = false; // Prevent deny during process
+        let is_on_transac = false;
+
         dd.ondeny = () => {
-            if(is_pending) return;
+            if(is_on_transac) return;
             
             dd.hide();
             Cover.hide();
         };
         
         dd.onconfirm = () => {
-            is_pending = true;
+            is_on_transac = true;
             
             requestDelete(CatTable.items[id].data)
             .then((res) => {
-                is_pending = false;
+                is_on_transac = false;
                 if(res.hasOwnProperty("mode") && res["mode"] == "delete" && res["status"] == "success") {
                     dd.hide();
                     Cover.hide();
@@ -77,7 +78,7 @@ export default class CatTable {
                 throw new Error("Unexpected things happened");
                 
             }).catch((err) => {
-                is_pending = false;
+                is_on_transac = false;
                 
                 if(err.toString() == 404) {
                     return;
@@ -94,7 +95,8 @@ export default class CatTable {
     private event_edit_item(id:CatInterface['id']):void {
         const ed = new EditDialog(CatTable.items[id].data);
         const data = Object.assign({}, CatTable.items[id].data);
-        let is_pending = false;
+        let is_on_transac = false;
+
         ed.set_btn_names({
             confirm:"Update",
             cancel:"Cancel"
@@ -104,7 +106,7 @@ export default class CatTable {
         ed.show();
         
         ed.oncancel = () => {
-            if(is_pending) return;
+            if(is_on_transac) return;
             
             ed.hide();
             Cover.hide();
@@ -125,7 +127,7 @@ export default class CatTable {
             
             Update(data)
             .then((res) => {
-                is_pending = false;
+                is_on_transac = false;
                 if(res.hasOwnProperty("mode") && res["mode"] == "modify" && res["status"] == "success") {
                     ed.hide();
                     Cover.hide();
@@ -136,7 +138,7 @@ export default class CatTable {
                 throw new Error("Unexpected things happened");
                 
             }).catch((err) => {
-                is_pending = false;
+                is_on_transac = false;
                 
                 const erd = new ErrorDialog();
                 

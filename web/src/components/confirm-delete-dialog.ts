@@ -51,6 +51,7 @@ export default class ConfirmDeleteDialog {
         self.dialog.setAttribute("hidden", "hidden");
         self.dialog.setAttribute("data-status", "hidden");
     }
+
     /**
      * Events
      * */
@@ -63,6 +64,3 @@ export default class ConfirmDeleteDialog {
     }
     
 }
-
-
-

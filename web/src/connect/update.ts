@@ -1,7 +1,5 @@
 import conn from './config';
 
-
-
 export default ({name, color, id}:CatInterface):Promise<{[key:string]:any}> => {
     
     return new Promise<{[key:string]:any}>((res, rej) => {
@@ -27,7 +25,5 @@ export default ({name, color, id}:CatInterface):Promise<{[key:string]:any}> => {
         xhr.addEventListener("error", (err) => rej(err));
         xhr.open('POST', conn['host'], true);
         xhr.send(formData);
-    })
+    });
 }
-
-

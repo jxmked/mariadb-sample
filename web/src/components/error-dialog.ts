@@ -54,6 +54,7 @@ export default class ErrorDialog {
     public no_rm() {
         this.no_close_btn = true;
     }
+
     private addCloseBtn():void {
         const btn:HTMLButtonElement = document.createElement("button");
         btn.style.position = "absolute";
@@ -154,8 +155,5 @@ export default class ErrorDialog {
                 clearInterval(ival);    
             }            
         }, 1);
-
     }
-
-
 }

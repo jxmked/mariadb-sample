@@ -14,10 +14,6 @@ export default class Cover {
         
     }
 
-    cover():void {
-
-    }
-
     zIndex(depth:number):void {
         if(depth < 0) {
             throw new TypeError("zIndex cannot be lessthan 0");

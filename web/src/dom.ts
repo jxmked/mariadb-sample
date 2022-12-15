@@ -1,7 +1,6 @@
 // Background hover for dialogs
 export const bgCover = document.getElementById("bg-cover") !;
 
-
 export const catList = document.getElementById("cat-list") !;
 export const btnDeletetActions = document.getElementsByClassName("delete-action") !;
 export const btnEditActions = document.getElementsByClassName("edit-action") !;
@@ -21,8 +20,6 @@ export const addCatMsgBox = document.getElementById("add-cat-msg-box")!;
 export const btnAddCatConfirm = document.getElementById("add-cat-confirmed")!;
 export const btnAddCatDeny = document.getElementById("add-cat-denied")!;
 
-
-
 // Delete Dialog
 export const deleteCatDialog = document.getElementById("confirm-delete-dialog")!;
 
@@ -33,6 +30,4 @@ export const deleteCatName = document.getElementById("delete-cat-name")!;
 export const btnDeleteConfirm = document.getElementById("delete-confirmed")!;
 export const btnDeleteDeny = document.getElementById("delete-denied")!;
 
-
 export default {};
-

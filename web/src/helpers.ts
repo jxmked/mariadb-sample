@@ -55,11 +55,3 @@ export const cat_validator = {
         return /^([a-zA-Z ]{1,64})$/gi.test(str);
     }
 }
-
-
-
-
-
-
-
-

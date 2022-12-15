@@ -1,13 +1,11 @@
 import conn from "./config";
 
 export default ({name, color}:{name:string;color:string}):Promise<{[key:string]:any}> => {
-    
     return new Promise<{[key:string]:any}>((res, rej) => {
         const formData = new FormData();
         formData.append("name", name);
         formData.append("color", color);
         formData.append("mode", "insert");
-        
         const xhr = new XMLHttpRequest();
         
         xhr.addEventListener("readystatechange", () => {
@@ -24,7 +22,5 @@ export default ({name, color}:{name:string;color:string}):Promise<{[key:string]:
         xhr.addEventListener("error", (err) => rej(err));
         xhr.open('POST', conn['host'], true);
         xhr.send(formData);
-    })
+    });
 }
-
-

@@ -1,149 +1,89 @@
-import {
-    addCatDialog,
-    addCatInputs,
-    addCatMsgBox,
-    btnAddCatConfirm,
-    btnAddCatDeny,
-    catList
-} from '../dom';
-
-import CatItem from 'cat-item';
+import EditDialog from './edit-dialog';
 import Cover from './bg-cover';
-import { normalizeString } from '../helpers';
+import { normalizeString, cat_validator as validate } from '../helpers';
 import sendData from '../connect/send';
+
 const EMPTY_FIELD = "Oppsss... Either field cannot be empty and must contain only letters and/or dash '-'";
 
 export default class AddCat {
     private static hasBeenCalled:boolean = false; 
     private static isOpen:boolean = false;
     
-    private btnCancel;
-    private btnInsert;
-    
     constructor() {
         if(AddCat.hasBeenCalled)
             throw new Error("AddCat cannot be reinitiate");
         
         AddCat.hasBeenCalled = true;
+    }
+
+    activate():void {
+        const ed = new EditDialog({name:"", color:"", id:0, lastModified:""});
+        let is_on_transac = false;
         
-        /**
-         * We are not able to actually remove the event listener
-         * if we redefine the function that we used to.
-         * */
-        this.btnCancel = this.__btnCatDeny.bind(this);
-        this.btnInsert = this.__verifyInputs.bind(this);
-    }
-
-    openEventListeners():void {
-        /**
-         * Only add event listener if the AddCat form is active.
-         * */
-        btnAddCatConfirm.addEventListener("click", this.btnInsert);
-        btnAddCatDeny.addEventListener("click",this.btnCancel);
-    }
-
-    closeEventListeners():void {
-        /**
-         * Remove event listener if we're done with AddCat form.
-         * We also use this form for another transaction.
-         * */
-        btnAddCatConfirm.removeEventListener("click", this.btnInsert);
-        btnAddCatDeny.removeEventListener("click", this.btnCancel);
-    }
-
-    activate() {
+        const oncomplete = () => {
+            is_on_transac = false;
+        };
+        
+        ed.set_btn_names({confirm:"Insert", cancel:"Cancel"});
+        
         // Highlight our form
         Cover.show();
+        ed.show();
         
-        addCatDialog.removeAttribute("hidden");
-        btnAddCatConfirm.innerText = "Insert";
-        btnAddCatDeny.innerText = "Cancel";
-        
-        this.msgBox(false);
-        this.openEventListeners();
-    }
+        ed.oncancel = () => {
+            if(is_on_transac) return;
 
-    deactivate():void {
-        this.closeEventListeners();
-        btnAddCatConfirm.classList.remove("on-progress");
-        addCatDialog.setAttribute("hidden", "hidden");
-        
-        // Reset
-        btnAddCatConfirm.innerText = "";
-        btnAddCatDeny.innerText = "";
-        
-        this.msgBox(false);
-        Cover.hide();
-    }
+            ed.hide();
+            ed.destroy();
+            Cover.hide();
 
-    private msgBox(msg:boolean|string):void {
-        addCatMsgBox.innerHTML = "";
+        };
 
-        if(msg === true || msg === false) {
-            // true - show
-            // false - hide
-            addCatMsgBox.style.display = (msg === true) ? "initial" : "none";
-            
-            return;
+        ed.onconfirm = ({name, color}) => {
+            is_on_transac = true;
+            this.__verifyInputs({name, color, ed, oncomplete});
         }
 
-        addCatMsgBox.appendChild(document.createTextNode(msg));
+
     }
 
-    /**
-     * Wait for buttons to be clicked before to verify the inputs
-     */
+    private __verifyInputs(inputs:{name:string, color:string, ed:EditDialog, oncomplete:Function}):void {
+        EditDialog.confirm_btn.innerText = "";
+        EditDialog.confirm_btn.classList.add("on-progress");
 
-    private __isValidInput(str:string):boolean {
-        /**
-         * 
-         * Allow letters and space character
-         */
-        const pattern = /^([a-zA-Z ]{1,64})$/gi
-        
-        return pattern.test(str);
-    }
-
-    private async __verifyInputs():Promise<void> {
-        btnAddCatConfirm.innerText = "";
-        btnAddCatConfirm.classList.add("on-progress");
-        
-        // Get all inputs
-        const {name, color} = addCatInputs;
-        
         // Hold Our inputs 
-        name.setAttribute("disabled", "disable");
-        color.setAttribute("disabled", "disable");
+        EditDialog.name_input.setAttribute("disabled", "disable");
+        EditDialog.color_input.setAttribute("disabled", "disable");
         
         // Normalize
-        let name_value:string = normalizeString(name.value);
-        let color_value:string = normalizeString(color.value);
+        let name_value:string = normalizeString(inputs['name']);
+        let color_value:string = normalizeString(inputs['color']);
         
         // Validated result
-        let validated_name:boolean = this.__isValidInput(name_value);
-        let validated_color:boolean = this.__isValidInput(color_value);
+        let validated_name:boolean = validate.name(name_value);
+        let validated_color:boolean = validate.color(color_value);
         
         if(! (validated_name && validated_color)) {
-            this.msgBox(true);
-            this.msgBox(EMPTY_FIELD);
+            EditDialog.msgBox(true);
+            EditDialog.msgBox(EMPTY_FIELD);
             
             /**
              * Add focus on either inputs with error
              * */
             if(! validated_name)
-                name.focus();
+                EditDialog.name_input.focus();
             else if(! validated_color)
-                color.focus();
+                EditDialog.color_input.focus();
                 
-            btnAddCatConfirm.classList.remove("on-progress");
-            btnAddCatConfirm.innerText = "Insert";
-            name.removeAttribute("disabled");
-            color.removeAttribute("disabled");
-            
+            EditDialog.confirm_btn.classList.remove("on-progress");
+            EditDialog.confirm_btn.innerText = "Insert";
+            EditDialog.name_input.removeAttribute("disabled");
+            EditDialog.color_input.removeAttribute("disabled");
+            (inputs['oncomplete']||function(){})();
             return;
         }
 
-        this.msgBox(false);
+        EditDialog.msgBox(false);
         
         /**
          * Send New Data
@@ -153,31 +93,18 @@ export default class AddCat {
             name:name_value,
             color:color_value
         }).then((res) => {
+            (inputs['oncomplete']||function(){})();
+            EditDialog.confirm_btn.classList.remove("on-progress");
+            
             if(res.hasOwnProperty("mode") && res["mode"] == "insert" && res["status"] == "success") {
-                this.__btnCatDeny();
-                this.btnCancel();
+                inputs["ed"].cancel();
             } else {
-                this.msgBox("Please, fill up the form accordingly");
-                /**
-                 * Remove animating 'insert' text 
-                 * */
-                btnAddCatConfirm.classList.remove("on-progress");
+                EditDialog.msgBox("Please, fill up the form accordingly");
             }
         }).catch((err) => {
-            this.msgBox(err.toString());
+            EditDialog.confirm_btn.classList.remove("on-progress");
+            EditDialog.msgBox(err.toString());
+            (inputs['oncomplete']||function(){})();
         });
     }
-
-    private __btnCatDeny():void {
-        // Clear inputs
-        const {name, color} = addCatInputs;
-        name.value = "";
-        color.value = "";
-        name.removeAttribute("disabled");
-        color.removeAttribute("disabled");
-        
-        this.deactivate();
-    }
 }
-
-

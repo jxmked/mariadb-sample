@@ -24,8 +24,5 @@ export default ({name, color, id}:CatInterface):Promise<{[key:string]:any}> => {
         xhr.addEventListener("error", (err) => rej(err));
         xhr.open('POST', conn['host'], true);
         xhr.send(formData);
-    })
+    });
 }
-
-
-

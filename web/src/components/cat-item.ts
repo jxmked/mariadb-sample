@@ -16,7 +16,6 @@
 
 import { ucfirst } from '../helpers';
 
-
 export default class CatItem {
     
     private _name:string;
@@ -135,6 +134,3 @@ export default class CatItem {
         return this.BASE;
     }
 }
-
-
-
