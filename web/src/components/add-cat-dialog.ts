@@ -42,8 +42,18 @@ export default class AddCat {
             is_on_transac = true;
             this.__verifyInputs({name, color, ed, oncomplete});
         }
+    }
 
+    private __disable_inputs():void {
+        EditDialog.name_input.setAttribute("disabled", "disable");
+        EditDialog.color_input.setAttribute("disabled", "disable");
+    }
 
+    private __enable_inputs(callback?:Function):void {
+        EditDialog.name_input.removeAttribute("disabled");
+        EditDialog.color_input.removeAttribute("disabled");
+        EditDialog.confirm_btn.classList.remove("on-progress");
+        (callback||function(){})();
     }
 
     private __verifyInputs(inputs:{name:string, color:string, ed:EditDialog, oncomplete:Function}):void {
@@ -51,9 +61,8 @@ export default class AddCat {
         EditDialog.confirm_btn.classList.add("on-progress");
 
         // Hold Our inputs 
-        EditDialog.name_input.setAttribute("disabled", "disable");
-        EditDialog.color_input.setAttribute("disabled", "disable");
-        
+        this.__disable_inputs();
+
         // Normalize
         let name_value:string = normalizeString(inputs['name']);
         let color_value:string = normalizeString(inputs['color']);
@@ -69,16 +78,14 @@ export default class AddCat {
             /**
              * Add focus on either inputs with error
              * */
-            if(! validated_name)
+            if(! validated_name) {
                 EditDialog.name_input.focus();
-            else if(! validated_color)
+            } else if(! validated_color) {
                 EditDialog.color_input.focus();
-                
-            EditDialog.confirm_btn.classList.remove("on-progress");
+            }
+
+            this.__enable_inputs(inputs["oncomplete"]);
             EditDialog.confirm_btn.innerText = "Insert";
-            EditDialog.name_input.removeAttribute("disabled");
-            EditDialog.color_input.removeAttribute("disabled");
-            (inputs['oncomplete']||function(){})();
             return;
         }
 
@@ -86,27 +93,21 @@ export default class AddCat {
         
         /**
          * Send New Data
-         * 
          * */
         sendData({
             name:name_value,
             color:color_value
         }).then((res) => {
-            (inputs['oncomplete']||function(){})();
-            EditDialog.confirm_btn.classList.remove("on-progress");
-            EditDialog.name_input.removeAttribute("disabled");
-            EditDialog.color_input.removeAttribute("disabled");
+            this.__enable_inputs(inputs["oncomplete"]);
+            
             if(res.hasOwnProperty("mode") && res["mode"] == "insert" && res["status"] == "success") {
                 inputs["ed"].cancel();
             } else {
                 EditDialog.msgBox("Please, fill up the form accordingly");
             }
         }).catch((err) => {
-            EditDialog.name_input.removeAttribute("disabled");
-            EditDialog.color_input.removeAttribute("disabled");
-            EditDialog.confirm_btn.classList.remove("on-progress");
+            this.__enable_inputs(inputs["oncomplete"]);
             EditDialog.msgBox(err.toString());
-            (inputs['oncomplete']||function(){})();
         });
     }
 }
