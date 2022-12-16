@@ -94,13 +94,16 @@ export default class AddCat {
         }).then((res) => {
             (inputs['oncomplete']||function(){})();
             EditDialog.confirm_btn.classList.remove("on-progress");
-            
+            EditDialog.name_input.removeAttribute("disabled");
+            EditDialog.color_input.removeAttribute("disabled");
             if(res.hasOwnProperty("mode") && res["mode"] == "insert" && res["status"] == "success") {
                 inputs["ed"].cancel();
             } else {
                 EditDialog.msgBox("Please, fill up the form accordingly");
             }
         }).catch((err) => {
+            EditDialog.name_input.removeAttribute("disabled");
+            EditDialog.color_input.removeAttribute("disabled");
             EditDialog.confirm_btn.classList.remove("on-progress");
             EditDialog.msgBox(err.toString());
             (inputs['oncomplete']||function(){})();
