@@ -146,10 +146,10 @@
             <div id="add-cat-interface-dialog" class="" hidden>
                 <div>
                     <label for="add-new-cat-name-input">Name of your cat:</label>
-                    <input id="add-new-cat-name-input" type="text" name="name" value="" placeholder="Name" autocomplete="off" />
+                    <input id="add-new-cat-name-input" type="text" name="name" value="" placeholder="Name" />
                     
                     <label for="add-new-cat-color-input">Color of your cat:</label>
-                    <input id="add-new-cat-color-input" type="text" name="color" value="" placeholder="Color" autocomplete="off"/>
+                    <input id="add-new-cat-color-input" type="text" name="color" value="" placeholder="Color" />
                     
                     <div id="add-cat-msg-box"></div>
                     
