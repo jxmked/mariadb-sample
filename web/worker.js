@@ -7,9 +7,6 @@
 // deepCompare
 importScripts(['./deepCompare.js']);
 
-
-
-
 let CONFIG = {
     "interval": 1000,
     "pulse": 10,

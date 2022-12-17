@@ -16,8 +16,6 @@ export default (id?:CatInterface['id']):Promise<CatInterface> => {
             base_url = conn['host'];
         }
         
-        
-        
         const xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
         xhr.responseType = 'text';
@@ -33,21 +31,8 @@ export default (id?:CatInterface['id']):Promise<CatInterface> => {
                 "msg":"Unable to resolve reponse status"
             });
         };
+        
         xhr.open("GET", base_url, true);
         xhr.send();
-        
-        
-        
-        
-        
-        /*
-        fetch(base_url, {
-            "method":"GET",
-            "cache":"no-cache",
-         //   "credentials":"include",
-          //  "mode": "no-cors"
-        }).then((res) => res.json())
-        .then(resolve)
-        .catch(reject); */
     });
 }
