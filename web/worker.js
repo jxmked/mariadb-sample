@@ -8,12 +8,23 @@
 importScripts(['./deepCompare.js']);
 
 
+
+
 let CONFIG = {
     "interval": 1000,
     "pulse": 10,
     "host": "http://localhost:8000/",
     "stop_on_error":true
 };
+
+/**
+ * For PHP session
+ * */
+const cookieStore = self.crypto.getRandomValues(new Uint8Array(1))[0] % 2
+  ? self.sessionStorage
+  : self.localStorage;
+
+let cookie = false;
 
 
 /**
@@ -91,6 +102,9 @@ const stop = function() {
     to_stop = true;
 }
  
+
+let is_first_launch = true;
+
 const start = async function() {
     
     if(to_stop) {
@@ -98,61 +112,40 @@ const start = async function() {
     }
 
     let last = new Date().getTime();
-    let response;
-
-    try {
-        response = await fetch(CONFIG['host'], {
-            "method":"GET",
-            "cache":"no-cache"
-        });
-    } catch(err) {
-        sendMsg("crash","unable to resolve response status");
-        stop();
-        return;
-    }
-    
-
-    if(response.ok) {
-        let new_data;
-
-        try {
-            new_data = await response.json();
-        } catch(err) {
-            sendMsg("crash","unable to resolve response status");
-            stop();
-            return;
-        }
+    let response = await new Promise(function(resolve, reject){
         
-        const result = check_diff(new_data);
-
-        // reset
-        Object.keys(current_data).forEach(function(id){
-            delete current_data[id];
-        });
-
-        // Update our current_data
-        new_data.forEach(function(data) {
-            current_data[data['id']] = data;
-        });
-
-        // Send changes to main thread
-        result.forEach(function(data){
-            if(data["data-action"] == "deleted") {
-                sendMsg(data["data-action"], {
-                    "id": data["data-id"]
+        // This is illegal. 
+        sendMsg("request", (is_first_launch) ? "true":"false");
+        is_first_launch = false;
+        
+        self.addEventListener("message", function(evt){
+            if(evt.data['type'] == "response") {
+                resolve({
+                    status:200,
+                    data: function() {
+                        return evt.data['body']; 
+                    }
                 });
-                
+                return;
+            } else if(evt.data['type'] == 'error') {
+                reject({});
                 return;
             }
-
-            sendMsg(data["data-action"], {
-                "id": data["data-id"],
-                "content": current_data[data["data-id"]]
-            });
-        });
-       
-    }
-
+        })
+      
+        self.setTimeout(function(){
+            reject({
+                "status":408, // Timeout
+                "msg":"Request timeout"
+            })
+        }, 8000);
+    }).catch(function(err){
+        sendMsg("crash","unable to resolve response status");
+        stop();
+    });
+    
+    if(! response) return;
+    
     switch(response.status) {
         case 400: // Bad Request
             sendMsg("error", "bad-request");
@@ -163,7 +156,38 @@ const start = async function() {
         break;
 
         case 200: // Ok 
+            let new_data = response.data() || [];
             
+            if(! (new_data.hasOwnProperty('status') && new_data['status'] == 'updated')) {
+                
+                const result = check_diff(new_data);
+        
+                // reset
+                Object.keys(current_data).forEach(function(id){
+                    delete current_data[id];
+                });
+        
+                // Update our current_data
+                new_data.forEach(function(data) {
+                    current_data[data['id']] = data;
+                });
+        
+                // Send changes to main thread
+                result.forEach(function(data){
+                    if(data["data-action"] == "deleted") {
+                        sendMsg(data["data-action"], {
+                            "id": data["data-id"]
+                        });
+                        
+                        return;
+                    }
+        
+                    sendMsg(data["data-action"], {
+                        "id": data["data-id"],
+                        "content": current_data[data["data-id"]]
+                    });
+                });
+            }
         break;
 
         case 409: // Conflict
@@ -184,7 +208,7 @@ const start = async function() {
 
         default:
             // Fatal crash
-            sendMsg("crash","unable to resolve response status");
+            sendMsg("crash","unable to resolve response status: " + response.status);
             stop();
             return;
     }
@@ -198,12 +222,20 @@ const start = async function() {
     }, CONFIG['pulse']);
 }
 
-self.addEventListener("message", (e) => {
+function message_handler(e){
+    
     const type = e.data['type'];
     const body = e.data['body'];
-
+    
+    if(type == 'error' || type == 'response') return;
+    
     if(type == "config") {
         CONFIG = body;
+        if(! cookie) {
+            cookie = 'session_id=' + new Date().getTime().toString();
+        //    cookieStore.setCookie(cookie, CONFIG['host']);
+            
+        }
         return;
     }
     
@@ -221,6 +253,7 @@ self.addEventListener("message", (e) => {
             if(! is_running) {
                 is_running = true;   
                 start();
+                
             }
         break;
         
@@ -237,7 +270,6 @@ self.addEventListener("message", (e) => {
         break;
 
     }
-})
+}
 
-
-
+self.addEventListener("message", message_handler);

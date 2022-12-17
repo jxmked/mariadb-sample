@@ -2,17 +2,32 @@
 
 
 define("SECURITY", 1);
-/**
- * 
- * Later, I going to try to implement registration so
- * we can use token to verify who which data to serve
- * and the restriction of the requests
- * 
- * 
- * */
-header('Access-Control-Allow-Origin: *');
+
+
+if(!isset($_SESSION)) {
+    session_save_path("./.session");
+    session_start();
+}
+
+// https://stackoverflow.com/a/1270960/11481602
+if (!isset($_SESSION['CREATED'])) {
+    $_SESSION['CREATED'] = time();
+} else if (time() - $_SESSION['CREATED'] > 1800) {
+    // session started more than 30 minutes ago
+    session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
+    $_SESSION['CREATED'] = time();  // update creation time
+}
+
+/*
+var_dump($_SERVER['REMOTE_ADDR']);
+exit(); */
+//header('Access-Control-Allow-Origin: ' . $_SERVER['REMOTE_ADDR'] . "");
+//header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:8080');
+header('Access-Control-Allow-Credentials: true');
 
 require_once "./helpers.php";
+
 $requests = require_once "./connection.php";
 
 $conn = [
@@ -72,6 +87,31 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
         $query = sprintf("%s WHERE id=%s", $query, $unsafe_id);
+    } else {
+        /**
+         * Instead of returning all data at once,
+         * why not to check if their was a changes in database?
+         * */
+        $t_result = mysqli_query($requests, "SELECT time FROM `last-update` WHERE id=1");
+        $t_data = mysqli_fetch_all($t_result, MYSQLI_ASSOC);
+        
+        if(isset($t_data[0]['time']) && !isset($_GET['notime'])) {
+            $t_time = (int) $t_data[0]['time'];
+            
+            /**
+             * Check if the user sync time is out of date
+             * */
+            if(isset($_SESSION['LAST-TIME-UPDATE'])) {
+                if((int) $_SESSION['LAST-TIME-UPDATE'] >= $t_time) {
+                    helpers\print_response(200, ["status" => "updated"]);
+                }
+            }
+            
+            /** Out of date.
+             * Update user sync time from updated time in database
+             * */
+            $_SESSION['LAST-TIME-UPDATE'] = $t_time;
+        }
     }
 
     $result = mysqli_query($requests, $query);
@@ -209,7 +249,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "status" => "Bad Request",
                 "body" => "No available method to perform for mode " . $mode
             ];
-
+            
             // Status Bad Request
             helpers\print_response(400, $data);
             break;
@@ -217,13 +257,23 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $result = mysqli_query($requests, $query);
 
-    if($result == true) {
+    if($result) {
         // Success
         $data = [
             "status" => "success",
             "mode" => $mode,
             "code" => "200"
         ];
+        
+        /**
+         * Update sync time in database in every changes we did 
+         * in the database such as add, edit and delete
+         * */
+        
+        if(in_array($mode, ["insert", "delete", "edit", "modify"])) {
+            mysqli_query($requests, sprintf("UPDATE `last-update` SET `time`='%s' WHERE id=1", microtime(true)));
+        }
+        
     } else {
         $data = [
             "status" => "failed",

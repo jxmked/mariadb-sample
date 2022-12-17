@@ -8,6 +8,7 @@ import requestDelete from '../connect/delete';
 import ErrorDialog from './error-dialog';
 import EditDialog from './edit-dialog';
 import Update from '../connect/update';
+import getCats from '../connect/get-item';
 
 export default class CatTable {
     private static worker:Worker = new Worker("./worker.js");
@@ -186,7 +187,23 @@ export default class CatTable {
                 case 'error':
                     this.callbacks["error"](evt.data);
                     break;
+                
+                case 'request':
+                    getCats(evt.data['body']).then((response) => {
+                        CatTable.worker.postMessage({
+                            "type":"response",
+                            "body":response
+                        });
+                        
+                    }).catch((err) => {
+                        console.log(err)
+                        CatTable.worker.postMessage({
+                            "type":"error",
+                            "body":"error"
+                        });
+                    });
                     
+                    break;
                 default:
                     CatTable.worker.postMessage({
                         "type":"command",
