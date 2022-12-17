@@ -1,5 +1,4 @@
 /excludes
 /web/node_modules
 /web/dist
-
-
+/api/.session/sess_*
