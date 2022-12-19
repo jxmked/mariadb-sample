@@ -27,7 +27,6 @@ class Selections:
     def __selections__(self):
         
         maxNum = 0
-        selected = None
         
         print(Selections.__line__)
         
@@ -53,14 +52,10 @@ class Selections:
         while True:
             selected = int(ConsoleIn("Number: "))
             
-            if selected is None:
-                continue
-            
             # If selected is greater than 0 AND
             # selected is Lessthan or equal to maxNum
             if selected > 0 and selected <= maxNum:
                 return selected
-        
     
     def __str__(self):
         return str(self.__selections__())

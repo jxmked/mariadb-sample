@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from dotenv import load_dotenv
 from checks import Checks
 from utils.selections import Selections
-from dynamic_config import DynamicConfig as DC
+from dynamic_config import ENV as env
 from utils.helpers import clrscr
 
+
+## Load and parse .env file
+load_dotenv(".env")
+
+
+
 class Main:
+    driver_set = ""
     
     def __init__(self):
         clrscr()
@@ -15,13 +23,13 @@ class Main:
         print("This is the Command Line Interface Created for MariaDB Sample.")
         print("")
         
-        self.intro()
-        chk = Checks()
-        chk.start()
+        Main.driver_set = self.select_driver()
+        Checks.driver_set = Main.driver_set
+        Checks.start()
         
     
     
-    def intro(self):
+    def select_driver(self):
         dm = Selections("Please, select the driver you want to use")
         dm.insert("Use MariaDB module")
         dm.insert("Use PHP API via localhost")
@@ -31,10 +39,10 @@ class Main:
         response = int(dm)
         
         if response == 1:
-            DC.set("driver", "mariadb_module")
+            return "mariadb_module"
         
         elif response == 2:
-            DC.set("driver", "php_api")
+            return "php_api"
         
         
 
