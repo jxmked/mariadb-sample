@@ -13,7 +13,7 @@ from utils.helpers import is_empty
 class Validator:
     
     __regexp_name__ = r'^[^\s]([a-zA-Z ]{2,64})$'
-    __regexp_id__ = r'^\d$'
+    __regexp_id__ = r'^\d{1,3}$'
     
     def __init__(self):
         pass
