@@ -7,7 +7,6 @@ from utils.selections import Selections
 from utils.helpers import clrscr
 from os import getenv as env
 from sys import exit
-from database import Database
 
 ## Load and parse .env file
 load_dotenv(".env")
@@ -30,7 +29,7 @@ class Main:
         Checks.start()
         
         # Begin
-        Database()
+    
         
         
     

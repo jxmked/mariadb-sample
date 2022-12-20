@@ -31,7 +31,7 @@ def flat_dict_compare(x, y):
         return False
     
     for key, value in x.items():
-        if key not in y or y[key] != value:
+        if key not in y or str(y[key]) != str(value):
             return False
     
     return True

@@ -10,7 +10,7 @@ class Database:
     def __init__(self):
         driver = Checks.call_driver()
         self.db = driver()
-        
+
     def insert(self, **args):
         name = args.get("name")
         
