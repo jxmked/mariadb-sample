@@ -12,6 +12,11 @@ class Database:
         self.db = driver()
 
     def insert(self, **args):
+        """
+        It takes a dictionary of arguments, validates them, checks if the name already exists, and then
+        inserts the record into the database
+        :return: True
+        """
         name = args.get("name")
         
         try:
@@ -30,6 +35,10 @@ class Database:
             raise Exception("Insert: Failed")
 
     def update(self, **args):
+        """
+        It updates an item in the database
+        :return: The return value is a boolean value.
+        """
         name = args.get('name')
         _id = args.get('id')
 
@@ -58,6 +67,10 @@ class Database:
             raise Exception("Update: Failed")
     
     def get(self, **args):
+        """
+        It returns all the records if the id is empty, otherwise it returns the record with the given id
+        :return: A list of dictionaries.
+        """
         _id = args.get('id')
         
         if is_empty(_id):
@@ -69,6 +82,10 @@ class Database:
         return self.db.get(_id)
     
     def delete(self, **args):
+        """
+        It deletes an item from the database if the item exists and the data matches
+        :return: The return value is a boolean value.
+        """
         _id = args.get('id')
 
         try:
@@ -92,6 +109,10 @@ class Database:
 
 
     def __param_validate__(self, **args):
+        """
+        It validates the parameters passed to the function
+        :return: The return value is a boolean value.
+        """
         if not Validator.name(args.get("name")):
             raise Exception("Invalid Name")
         
@@ -101,6 +122,13 @@ class Database:
         return True
 
     def __get_by_name__(self, name):
+        """
+        If the database has a method called get_by_name, use it. Otherwise, if the database has a method
+        called get_all, use it. Otherwise, do nothing
+        
+        :param name: The name of the item to be fetched
+        :return: A list of dictionaries.
+        """
         _id = None
 
         if hasattr(self.db, "get_by_name"):
