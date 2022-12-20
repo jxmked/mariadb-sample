@@ -154,5 +154,3 @@ class Checks:
         
         else:
             raise Exception("Driver not found")
-
-
