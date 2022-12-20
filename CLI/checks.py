@@ -3,19 +3,10 @@
 
 """
 Check modules
-
-Check MariaDB module
-    Check Database Structure
-    Must have
-      - `fav_cats` table and must have these columns
-        - id
-        - name
-        - color
-        - last_modified
-
 """
 
 from utils.helpers import random_letters
+from time import sleep
 
 class Checks:
     
@@ -39,6 +30,7 @@ class Checks:
         if hasattr(db, "structure_check"):
             if not db.structure_check():
                 print("Structure Check: Failed")
+                print("Error Level: Fatal")
         else:
             print("\n* Database Structure Check: Not Avaialable\n")
         
@@ -124,6 +116,7 @@ class Checks:
                 "error":BE
             })
         
+        # Reset to initial State
         if hasattr(db, "reset"):
             db.reset(id)
         
@@ -133,13 +126,21 @@ class Checks:
         if len(err) > 0:
             print("List of fatal problem:")
             print("")
+            
             arr = []
              
             for err_item in err:
                 print(f"On {err_item['mode']} method:")
                 print(f"  {err_item['error']}")
-            
+                
+            print("\n")
             print(("** == " * 6) + "**")
+            
+            print("Exiting...")
+        
+        print("Status: Ready")
+        sleep(1.0)
+         
     
     @staticmethod
     def call_driver():

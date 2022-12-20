@@ -13,8 +13,6 @@ Use built-in `str`, `int`, and `float` to parse the output
 """
 
 from sys import exit
-from dynamic_config import DynamicConfig
-
 
 class ConsoleIn:
     

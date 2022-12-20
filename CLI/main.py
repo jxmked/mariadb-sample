@@ -4,14 +4,10 @@
 from dotenv import load_dotenv
 from checks import Checks
 from utils.selections import Selections
-from dynamic_config import ENV as env
 from utils.helpers import clrscr
-
 
 ## Load and parse .env file
 load_dotenv(".env")
-
-
 
 class Main:
     driver_set = ""
@@ -24,9 +20,11 @@ class Main:
         print("")
         
         Main.driver_set = self.select_driver()
+        
+        print("\nDriver check: Started")
+        
         Checks.driver_set = Main.driver_set
         Checks.start()
-        
     
     
     def select_driver(self):
