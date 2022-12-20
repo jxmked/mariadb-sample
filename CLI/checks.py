@@ -144,7 +144,7 @@ class Checks:
     
     @staticmethod
     def call_driver():
-        if Checks.driver_set == "mariadb_module":
+        if Checks.driver_set == "mariadb":
             from drivers.mariadb import MariaDB
             
             return MariaDB

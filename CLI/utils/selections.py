@@ -64,3 +64,6 @@ class Selections:
     def __int__(self):
         return self.__selections__()
     
+    @property
+    def response(self):
+        return int(self)

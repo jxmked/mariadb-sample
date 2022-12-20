@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 from checks import Checks
 from utils.selections import Selections
 from utils.helpers import clrscr
-
+from os import getenv as env
+from sys import exit
 ## Load and parse .env file
 load_dotenv(".env")
 
@@ -30,18 +31,21 @@ class Main:
     def select_driver(self):
         dm = Selections("Please, select the driver you want to use")
         dm.insert("Use MariaDB module")
-        dm.insert("Use PHP API via localhost")
+        dm.insert(f"Use PHP API via {env('php_api_host')}")
         
         # Don't use int(dm) in condition
         # It will reask the same thing
-        response = int(dm)
-        
+        response = dm.response
         if response == 1:
-            return "mariadb_module"
+            return "mariadb"
         
         elif response == 2:
             return "php_api"
         
+        else:
+            print("Driver not found")
+            print("Exiting...")
+            exit(0)
         
 
 
