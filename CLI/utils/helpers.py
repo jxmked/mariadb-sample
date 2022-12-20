@@ -3,6 +3,8 @@
 
 import os
 import subprocess
+import random
+import string
 
 """
 Uppercase first letter and keep the rest
@@ -19,4 +21,7 @@ def clrscr():
     
     else: # Linux, Unix, macOS
         subprocess.check_call(["clear"], stderr=subprocess.STDOUT)
+    
+def random_letters(length=8):
+    return "".join([random.choice(string.ascii_letters) for _ in range(length)])
     

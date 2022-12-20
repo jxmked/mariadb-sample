@@ -55,6 +55,7 @@ class Selections:
             # If selected is greater than 0 AND
             # selected is Lessthan or equal to maxNum
             if selected > 0 and selected <= maxNum:
+                print(Selections.__line__)
                 return selected
     
     def __str__(self):
