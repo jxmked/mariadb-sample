@@ -25,3 +25,5 @@ def clrscr():
 def random_letters(length=8):
     return "".join([random.choice(string.ascii_letters) for _ in range(length)])
     
+def is_empty(s):
+    return s is None or len(s) == 0

@@ -10,6 +10,7 @@ This driver extends our MariaDB model
 """
 
 from model.mariadb import MariaDB as mdb_model
+import inspect
 
 class MariaDB(mdb_model):
     
@@ -18,6 +19,16 @@ class MariaDB(mdb_model):
     def __init__(self):
         super().__init__()
         self.cursor = super().open()
+        
+    
+    def get_by_name(self, name):
+        self.cursor.execute("SELECT id FROM `fav_cats` WHERE `name`=?", (name,))
+        self.commit()
+        
+        for (_id,) in self.cursor:
+            return _id
+        
+        return {}
     
     def insert(self, **args):
         name = args.get("name")
@@ -133,5 +144,6 @@ class MariaDB(mdb_model):
                     success_count += 1
                     break
         
-        return True if success_count == len(structure) else False
-        
+        return (True if success_count == len(structure) else False)
+    
+    

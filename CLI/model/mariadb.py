@@ -30,8 +30,10 @@ class MariaDB:
     
     @staticmethod
     def open():
-        if MariaDB.__conn__ is not None:
-            return MariaDB.__conn__.cursor
+        # Having a problem recalling 
+        # the cursor from static attribute
+        #if MariaDB.__conn__ is not None:
+        #    return MariaDB.__conn__.cursor
             
         try:
             MariaDB.__conn__ = mariadb.connect(**MariaDB.__config__)

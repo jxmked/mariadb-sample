@@ -146,6 +146,13 @@ class Checks:
     def call_driver():
         if Checks.driver_set == "mariadb":
             from drivers.mariadb import MariaDB
-            
             return MariaDB
+        
+        elif Checks.driver_set == "php_api":
+            from drivers.php_api import PHP_API
+            return PHP_API
+        
+        else:
+            raise Exception("Driver not found")
+
 
