@@ -13,8 +13,6 @@ def ucfirst(param):
     param = str(param)
     return f"{param[0].upper()}{param[1::]}"
 
-
-
 def clrscr():
     if os.name == "nt": # Windows
         subprocess.run("cls", shell=True)
@@ -27,3 +25,13 @@ def random_letters(length=8):
     
 def is_empty(s):
     return s is None or len(s) == 0
+
+def flat_dict_compare(x, y):
+    if len(x) != len(y):
+        return False
+    
+    for key, value in x.items():
+        if key not in y or y[key] != value:
+            return False
+    
+    return True
