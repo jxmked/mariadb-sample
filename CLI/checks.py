@@ -7,6 +7,7 @@ Check modules
 
 from utils.helpers import random_letters
 from time import sleep
+from sys import exit
 
 class Checks:
     
@@ -137,6 +138,7 @@ class Checks:
             print(("** == " * 6) + "**")
             
             print("Exiting...")
+            exit(0)
         
         print("Status: Ready")
         sleep(1.0)

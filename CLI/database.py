@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from checks import Checks
-from model.validator import Validator
+from utils.validator import Validator
 from utils.helpers import is_empty, flat_dict_compare
 
 class Database:
     
     def __init__(self):
         driver = Checks.call_driver()
-        self.db = driver()
+        self.__db__ = driver()
 
     def insert(self, **args):
         """
@@ -28,7 +28,7 @@ class Database:
             raise Exception("Name already exists.")
         
         try:
-            self.db.insert(**args)
+            self.__db__.insert(**args)
             return True
 
         except Exception:
@@ -50,7 +50,7 @@ class Database:
         if not Validator.id(_id):
             raise Exception("Invalid ID")
         
-        item = self.db.get(_id)
+        item = self.__db__.get(_id)
 
         # Check if the id does exists in database
         if item == {}:
@@ -61,7 +61,7 @@ class Database:
             raise Exception("Name already exists")
         
         try:
-            self.db.update(**args)
+            self.__db__.update(**args)
             return True
         except:
             raise Exception("Update: Failed")
@@ -74,12 +74,12 @@ class Database:
         _id = args.get('id')
         
         if is_empty(_id):
-            return self.db.get_all()
+            return self.__db__.get_all()
 
         if not Validator.id(_id):
             raise Exception("Invalid ID")
         
-        return self.db.get(_id)
+        return self.__db__.get(_id)
     
     def delete(self, **args):
         """
@@ -96,13 +96,13 @@ class Database:
         if not Validator.id(_id):
             raise Exception("Invalid ID")
         
-        item = self.db.get(_id)
+        item = self.__db__.get(_id)
 
         if not flat_dict_compare(item, args):
             raise Exception("Data mismatched")
         
         try:
-            self.db.delete(_id)
+            self.__db__.delete(_id)
             return True
         except:
             raise Exception("Delete: Failed")
@@ -129,14 +129,14 @@ class Database:
         :param name: The name of the item to be fetched
         :return: A list of dictionaries.
         """
-        _id = None
+        _id = {}
 
-        if hasattr(self.db, "get_by_name"):
-            _id = self.db.get_by_name(name)
+        if hasattr(self.__db__, "get_by_name"):
+            _id = self.__db__.get_by_name(name)
             
-        elif hasattr(self.db, "get_all"):
+        elif hasattr(self.__db__, "get_all"):
             
-            items = self.db.get_all()
+            items = self.__db__.get_all()
             
             for item in items:
                 if item.get('name').lower() == name.lower():

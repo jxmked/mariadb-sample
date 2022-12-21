@@ -10,19 +10,22 @@ This driver extends our MariaDB model
 """
 
 from model.mariadb import MariaDB as mdb_model
-import inspect
 
 class MariaDB(mdb_model):
     
-    __table__ = 'fav_cats'
-    
     def __init__(self):
         super().__init__()
+        self.__table__ = 'fav_cats'
         self.cursor = super().open()
         
-    
+    def close(self):
+        super().close()
+        
+    def reopen(self):
+        self.cursor = super().open()
+        
     def get_by_name(self, name):
-        self.cursor.execute("SELECT id FROM `fav_cats` WHERE `name`=?", (name,))
+        self.cursor.execute("SELECT id FROM ? WHERE `name`=?", (self.__table__, name,))
         self.commit()
         
         for (_id,) in self.cursor:
@@ -38,7 +41,7 @@ class MariaDB(mdb_model):
             raise Exception("MariaDB.insert should have name and color arguments")
         
         try:
-            self.cursor.execute("INSERT INTO `fav_cats` (`name`, `color`) VALUES (?, ?)", (name, color))
+            self.cursor.execute(f"INSERT INTO `{self.__table__}` (`name`, `color`) VALUES (?, ?)", (name, color))
             self.commit()
             return self.cursor.lastrowid
         except:
@@ -50,12 +53,13 @@ class MariaDB(mdb_model):
             raise Exception("MariaDB.get parameter must be an id, None given")
         
         try:
-            self.cursor.execute("SELECT id, name, color FROM `fav_cats` WHERE id=?", (_id,))
+            self.cursor.execute(f"SELECT id, name, color FROM `{self.__table__}` WHERE id=?", (_id,))
             self.commit()
             
         except:
             raise Exception("Query execution: Failed")
         
+        # Always return the first item
         for (_id_, name, color) in self.cursor:
             return {
                 "id":_id_,
@@ -67,7 +71,7 @@ class MariaDB(mdb_model):
     
     def get_all(self):
         
-        self.cursor.execute("SELECT id, name, color FROM `fav_cats`")
+        self.cursor.execute(f"SELECT id, name, color FROM `{self.__table__}`")
         self.commit()
         
         arr = []
@@ -97,7 +101,7 @@ class MariaDB(mdb_model):
             return False
             
         try:
-            self.cursor.execute("UPDATE `fav_cats` SET `name`=?, `color`=? WHERE `id` = ?", (name, color, _id))
+            self.cursor.execute(f"UPDATE `{self.__table__}` SET `name`=?, `color`=? WHERE `id` = ?", (name, color, _id))
             self.commit()
             return True
         
@@ -110,7 +114,7 @@ class MariaDB(mdb_model):
             return False
         
         try:
-            self.cursor.execute("DELETE FROM `fav_cats` WHERE `id` = ?", (_id,))
+            self.cursor.execute(f"DELETE FROM `{self.__table__}` WHERE `id` = ?", (_id,))
             self.commit()
             return True
         except:
@@ -118,7 +122,7 @@ class MariaDB(mdb_model):
         
     def reset(self, _id):
         # Revert ID
-        self.cursor.execute("ALTER TABLE `fav_cats` MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=?", (_id,))
+        self.cursor.execute(f"ALTER TABLE `{self.__table__}` MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=?", (_id,))
         
     def structure_check(self):
         """
@@ -131,7 +135,7 @@ class MariaDB(mdb_model):
             ('last_modified', 'timestamp', 'NO', '', 'current_timestamp()', '')
         ]
         
-        self.cursor.execute("DESCRIBE `fav_cats`")
+        self.cursor.execute(f"DESCRIBE `{self.__table__}`")
         self.commit()
         
         tab_structure = list(self.cursor)

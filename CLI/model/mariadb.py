@@ -8,6 +8,7 @@ Handle how our database will work
 from os import getenv as env
 from sys import exit
 import mariadb
+from atexit import register
 
 # We have namespace in python :)
 # namespace model.mariadb
@@ -30,11 +31,14 @@ class MariaDB:
     
     @staticmethod
     def open():
-        # Having a problem recalling 
-        # the cursor from static attribute
-        #if MariaDB.__conn__ is not None:
-        #    return MariaDB.__conn__.cursor
-            
+        
+        # Whenever we open
+        # Just close anything
+        register(MariaDB.close)
+        
+        if  MariaDB.__conn__ is not None and not MariaDB.__conn__._closed:
+            return MariaDB.__conn__.cursor()
+        
         try:
             MariaDB.__conn__ = mariadb.connect(**MariaDB.__config__)
             MariaDB.__conn__.auto_reconnect = True
@@ -60,6 +64,14 @@ class MariaDB:
             exit(0)
     
     @staticmethod
+    def close():
+        try:
+            if not MariaDB.__conn__._closed:
+                MariaDB.__conn__.close()
+        except:
+            pass
+    
+    @staticmethod
     def execute(*args):
         MariaDB.__conn__.cursor().execute(*args)
         
@@ -71,3 +83,5 @@ class MariaDB:
     def rollback():
         MariaDB.__conn__.rollback()
     
+
+
