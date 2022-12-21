@@ -51,4 +51,11 @@ class OptionSelection(AbstractSelections):
     
     def validator(self, callback):
         self.__callback_validator__ = callback
+        
+    def __str__(self):
+        return self.__selections__()
     
+    def __int__(self):
+        raise Exception("Invalid argument supplied in __init__")
+        
+

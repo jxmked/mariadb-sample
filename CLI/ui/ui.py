@@ -14,13 +14,15 @@ from ui.insert import UIInsert
 class UserInterface:
     
     def __init__(self):
-        clrscr()
-        print("")
-        print("These an action you can do with the program")
-        print("")
-        
-        self.menu()
-    
+        while True:
+            clrscr()
+            print("")
+            print("These an action you can do with the program")
+            print("")
+            
+            if not self.menu():
+                break
+
     def menu(self):
         
         dm = Selections("Select a program to continue")
@@ -32,10 +34,20 @@ class UserInterface:
         
         response = int(dm)
         
-        match(response):
-            case 1:
-                UIInsert()
-                
-            case 4:
-                UIView()
+        if response == 1:
+            UIInsert()
+        
+        elif response == 2:
+            pass
+        
+        elif response == 3:
+            pass
+        
+        elif response == 4:
+            UIView()
+        
+        elif response== 5:
+            return False
+        
+        return True
             

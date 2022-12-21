@@ -3,10 +3,11 @@
 
 
 from database import Database
-from utils.helpers import clrscr, get_letter
+from utils.helpers import clrscr, get_letter, get_num, is_empty
 from utils.option_selection import OptionSelection as Selections
 from model.pagination import Pagination
 from prettytable import PrettyTable
+import re
 
 class UIInsert(Database):
     
@@ -20,7 +21,7 @@ class UIInsert(Database):
         self.item_count = 0
         self.current_page = 0
         self.reload()
-        
+        self.current_item_length = 0
         has_next = True
         has_prev = False
         
@@ -34,19 +35,23 @@ class UIInsert(Database):
             print("Check the items before inserting")
             print(f"Viewing data page {self.paginate.page + 1} out of {self.item_count} items")
             
-            self.print_data(self.paginate())
-            
+            items = self.paginate()
+            self.current_item_length = len(items)
+            self.print_data(items)
             print("")
             
-            has_prev = False if self.current_page == 0 else True
-            has_next = not ((1 + self.current_page) * UIInsert.per_page) >= self.item_count
+            has_prev = not self.current_page == 0 
+            has_next = not ((1 + self.current_page) * UIInsert.per_page) > self.item_count
             
             act = self.action(has_next, has_prev)
             
             # switch
             # match is not a switch
-            if act == "refresh": # Refresh
+            if act == "reload": # Refresh
                 self.reload()
+            
+            elif act == "insert": # Open insert form
+                pass
             
             elif act == "next": # Next
                 self.paginate.next()
@@ -54,9 +59,12 @@ class UIInsert(Database):
             elif act == "prevous": # Prevous
                 self.paginate.prev()
                 
-            else: # Back
+            elif act == "back":
                 break
-        
+            
+            else:
+                pass
+            
         return
             
     def reload(self):
@@ -69,6 +77,9 @@ class UIInsert(Database):
         pass
     
     def __action_selection_validator(self, max_item, value):
+        
+        if not re.match(r'^([0-9a-zA-Z]+)$', value):
+            return False
         
         # Check if the value is a number
         # If a number, the user intended to do navigate
@@ -83,12 +94,17 @@ class UIInsert(Database):
         # If not a number, the user intended to do something
         # In table
         
+        num = get_num(value)
         
+        if num > 0 and num <= self.current_item_length:
+            return True
         
-        
+        return False
         
     def action(self, has_next, has_prev):
-        dm = Selections("Use letters to access the table\n  and use the numbers to navigate")
+        dm = Selections()
+        
+        dm.validator(self.__action_selection_validator)
         
         dm.insert("Refresh")
         dm.insert("Insert")
@@ -100,14 +116,21 @@ class UIInsert(Database):
             dm.insert("Prevous")
         
         dm.insert("Back")
+        response = str(dm)
         
-        return str(dm).lower()
+        # Check if its a number
+        try:
+            return dm.menus[int(response) - 1].lower()
+        except:
+            pass
+        
+        return response.lower()
     
     def print_data(self, items):
         table = PrettyTable()
         table.field_names = ["#", "Name", "Color"]
         
-        table.align['#'] = "c"
+        table.align['#.'] = "c"
         table.align["Name"] = "c"
         table.align["Color"] = "c"
         
