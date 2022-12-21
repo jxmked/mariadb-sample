@@ -47,7 +47,7 @@ class UIInsert(Database):
             
             # switch
             # match is not a switch
-            if act == "reload": # Refresh
+            if act == "refresh": # Refresh
                 self.reload()
             
             elif act == "insert": # Open insert form
