@@ -59,7 +59,8 @@ class Selections:
                 return selected
     
     def __str__(self):
-        return str(self.__selections__())
+        response = self.__selections__()
+        return self.menus[response - 1]
         
     def __int__(self):
         return self.__selections__()

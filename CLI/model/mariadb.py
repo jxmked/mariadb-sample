@@ -29,6 +29,11 @@ class MariaDB:
     def __init__(self):
         pass
     
+    @property
+    @staticmethod
+    def db_type():
+        return "sql"
+    
     @staticmethod
     def open():
         
