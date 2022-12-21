@@ -9,6 +9,7 @@ User Interface
 from utils.selections import Selections
 from utils.helpers import clrscr
 from ui.view import UIView
+from ui.insert import UIInsert
 
 class UserInterface:
     
@@ -32,5 +33,9 @@ class UserInterface:
         response = int(dm)
         
         match(response):
+            case 1:
+                UIInsert()
+                
             case 4:
                 UIView()
+            

@@ -35,3 +35,23 @@ def flat_dict_compare(x, y):
             return False
     
     return True
+
+# Source: https://chat.openai.com/chat
+# Sorry for this. Hahaha
+def get_letter(num, lowercase=False):
+    letters = ''
+    letter_index = (97 if lowercase else 65)
+    while num > 0:
+        num -= 1
+        letters = chr(letter_index + num % 26) + letters
+        num //= 26
+    return letters
+
+# Source: https://chat.openai.com/chat
+# Sorry for this. Hahaha: 
+def get_num(letters):
+    num = 0
+    letter_index = (97 if ord(letters[:1:]) >= 97 else 65)
+    for letter in letters:
+        num = (num * 26 + ord(letter) - letter_index) + 1
+    return num

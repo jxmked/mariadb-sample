@@ -59,3 +59,5 @@ class ConsoleIn:
             except ValueError:
                 pass
     
+    def __call__(self):
+        return self.__str__()

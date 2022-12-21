@@ -4,9 +4,11 @@
 from checks import Checks
 from utils.validator import Validator
 from utils.helpers import is_empty, flat_dict_compare
+from abc import ABC, abstractmethod
 
-class Database:
+class Database(ABC):
     
+    @abstractmethod
     def __init__(self):
         driver = Checks.call_driver()
         self.__db__ = driver()

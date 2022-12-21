@@ -12,6 +12,8 @@ from ui.ui import UserInterface
 ## Load and parse .env file
 load_dotenv(".env")
 
+from utils.option_selection import OptionSelection as OptSel
+
 class Main:
     driver_set = ""
     
@@ -31,9 +33,6 @@ class Main:
         
         # Begin
         UserInterface()
-        
-        
-    
     
     def select_driver(self):
         dm = Selections("Please, select the driver you want to use")
