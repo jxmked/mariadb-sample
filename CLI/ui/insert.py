@@ -3,8 +3,9 @@
 
 
 from database import Database
-from utils.helpers import clrscr, get_letter, get_num, is_empty
+from utils.helpers import clrscr, get_letter, get_num
 from utils.option_selection import OptionSelection as MultiSelections
+from utils.selections import Selections
 from model.pagination import Pagination
 from prettytable import PrettyTable
 import re
@@ -77,25 +78,34 @@ class UIInsert(Database):
             else:
                 item_index = get_num(act)
                 
-                self.on_select(items[item_index])
+                self.on_select(items[item_index - 1])
                 pass
             
         return
     
-    def __insert_form_callback(self, name):
-        _id = self.__get_by_name__(name)
-        
-        return _id == {}
+
     
     def on_select(self, item):
         # Handle events after selecting 
         # an item
-        ViewData(item)
+
+        while True:
+            clrscr()
+
+            print("Item Selected")
+            print("")
+            ViewData(item)
+            print("")
+
+            dm = Selections("  Any action?")
+            dm.insert("Modify")
+            dm.insert("Delete")
+            dm.insert("Back")
+
+            response = dm.response
+
+            
         
-        
-        
-        input()
-        pass
     
     def insert_data(self):
         clrscr()
@@ -119,7 +129,7 @@ class UIInsert(Database):
         clrscr()
         
         print("New Data has been inserted")
-        
+         
         ViewData(response)
         
         print("")
@@ -144,7 +154,7 @@ class UIInsert(Database):
         # Did I made a mistake? =(
         if not re.match(r'^([0-9]+|[a-zA-Z]+)$', value):
             return False
-        
+        # 
         # Check if the value is a number
         # If a number, the user intended to do navigate
         try:
@@ -203,3 +213,7 @@ class UIInsert(Database):
         
         print(table)
         
+    def __insert_form_callback(self, name):
+        _id = self.__get_by_name__(name)
+        
+        return _id == {}
