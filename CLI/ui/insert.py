@@ -4,13 +4,15 @@
 
 from database import Database
 from utils.helpers import clrscr, get_letter, get_num, is_empty
-from utils.option_selection import OptionSelection as Selections
+from utils.option_selection import OptionSelection as MultiSelections
 from model.pagination import Pagination
 from prettytable import PrettyTable
 import re
 from ui.insert_form import InsertForm
 from ui.view_data import ViewData
 from utils.console_in import ConsoleIn
+from ui.empty_rows import EmptyRows
+
 
 class UIInsert(Database):
     
@@ -19,13 +21,13 @@ class UIInsert(Database):
     def __init__(self):
         super().__init__()
         
-        self.data = self.get()
+        self.data = []
         self.paginate = None
         self.item_count = 0
         self.current_page = 0
         self.reload()
         self.current_item_length = 0
-        has_next = True
+        has_next = False
         has_prev = False
         
         while True:
@@ -36,14 +38,20 @@ class UIInsert(Database):
             
             self.intro()
             
-            print("Check the items before inserting")
-            print(f"Viewing data page {self.paginate.page + 1} out of {self.item_count} items")
-            
-            items = self.paginate()
-            self.current_item_length = len(items)
-            self.print_data(items)
-            print("")
-            
+            if self.item_count <= 0:
+                EmptyRows()
+                
+            else:
+                print("Check the items before inserting")
+                print(f"Viewing data page {self.paginate.page + 1} out of {self.item_count} items")
+                
+                items = self.paginate()
+                
+                self.current_item_length = len(items)
+                
+                self.print_data(items)
+                print("")
+                
             has_prev = not self.current_page == 0 
             has_next = not ((1 + self.current_page) * UIInsert.per_page) > self.item_count
             
@@ -67,13 +75,27 @@ class UIInsert(Database):
                 break
             
             else:
+                item_index = get_num(act)
+                
+                self.on_select(items[item_index])
                 pass
             
         return
+    
     def __insert_form_callback(self, name):
         _id = self.__get_by_name__(name)
         
         return _id == {}
+    
+    def on_select(self, item):
+        # Handle events after selecting 
+        # an item
+        ViewData(item)
+        
+        
+        
+        input()
+        pass
     
     def insert_data(self):
         clrscr()
@@ -144,7 +166,7 @@ class UIInsert(Database):
         return False
         
     def action(self, has_next, has_prev):
-        dm = Selections()
+        dm = MultiSelections()
         
         dm.validator(self.__action_selection_validator)
         

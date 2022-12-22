@@ -99,7 +99,7 @@ class Checks:
             """
             all_item = db.get_all()
             
-            if not len(all_item) > 1:
+            if not len(all_item) > 0:
                 raise Exception("Empty database. Expected atleast one item")
             
             item1 = db.get(id)

@@ -12,7 +12,8 @@ class Database(ABC):
     def __init__(self):
         driver = Checks.call_driver()
         self.__db__ = driver()
-
+    
+    
     def insert(self, **args):
         """
         It takes a dictionary of arguments, validates them, checks if the name already exists, and then

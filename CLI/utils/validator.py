@@ -6,7 +6,6 @@
 
 """
 
-
 import re
 from utils.helpers import is_empty
 

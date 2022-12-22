@@ -17,7 +17,8 @@ class UserInterface:
         while True:
             clrscr()
             print("")
-            print("These an action you can do with the program")
+            print("This is a selection of action you")
+            print("  can do with the program")
             print("")
             
             if not self.menu():
@@ -50,4 +51,4 @@ class UserInterface:
             return False
         
         return True
-            
+
