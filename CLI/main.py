@@ -21,7 +21,7 @@ class Main:
         clrscr()
         
         print(" ~ Greetings ~ ")
-        print("This is the Command Line Interface Created for MariaDB Sample.")
+        print("This is the Command Line Interface\n  Created for MariaDB Sample.")
         print("")
         
         Main.driver_set = self.select_driver()
@@ -37,7 +37,7 @@ class Main:
     def select_driver(self):
         dm = Selections("Please, select the driver you want to use")
         dm.insert("Use MariaDB module")
-        dm.insert(f"Use PHP API via {env('php_api_host')}")
+        dm.insert(f"Use REST API via {env('php_api_host')}")
         
         # Don't use int(dm) in condition
         # It will reask the same thing

@@ -8,6 +8,9 @@ from utils.option_selection import OptionSelection as Selections
 from model.pagination import Pagination
 from prettytable import PrettyTable
 import re
+from ui.insert_form import InsertForm
+from ui.view_data import ViewData
+from utils.console_in import ConsoleIn
 
 class UIInsert(Database):
     
@@ -32,6 +35,7 @@ class UIInsert(Database):
             clrscr()
             
             self.intro()
+            
             print("Check the items before inserting")
             print(f"Viewing data page {self.paginate.page + 1} out of {self.item_count} items")
             
@@ -51,7 +55,7 @@ class UIInsert(Database):
                 self.reload()
             
             elif act == "insert": # Open insert form
-                pass
+                self.insert_data()
             
             elif act == "next": # Next
                 self.paginate.next()
@@ -66,7 +70,44 @@ class UIInsert(Database):
                 pass
             
         return
-            
+    def __insert_form_callback(self, name):
+        _id = self.__get_by_name__(name)
+        
+        return _id == {}
+    
+    def insert_data(self):
+        clrscr()
+        new_data = InsertForm(self.__insert_form_callback)
+        response = new_data.response
+        
+        if response == {}:
+            print("")
+            print("Transaction cancelled")
+            str(ConsoleIn("Press enter to continue..."))
+            return 
+        
+        try:
+            response['id'] = self.insert(**response)
+        
+        except:
+            print("An error occured during inserting")
+            print("Please, try again...")
+            return
+        
+        clrscr()
+        
+        print("New Data has been inserted")
+        
+        ViewData(response)
+        
+        print("")
+        
+        str(ConsoleIn("Press enter to continue..."))
+        
+        # Auto reload during update
+        self.reload()
+        
+    
     def reload(self):
         self.data = self.get()
         self.item_count = len(self.data)
@@ -78,7 +119,8 @@ class UIInsert(Database):
     
     def __action_selection_validator(self, max_item, value):
         
-        if not re.match(r'^([0-9a-zA-Z]+)$', value):
+        # Did I made a mistake? =(
+        if not re.match(r'^([0-9]+|[a-zA-Z]+)$', value):
             return False
         
         # Check if the value is a number

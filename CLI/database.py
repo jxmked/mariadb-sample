@@ -30,8 +30,7 @@ class Database(ABC):
             raise Exception("Name already exists.")
         
         try:
-            self.__db__.insert(**args)
-            return True
+            return self.__db__.insert(**args)
 
         except Exception:
             raise Exception("Insert: Failed")

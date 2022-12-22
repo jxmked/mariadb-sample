@@ -25,7 +25,7 @@ class MariaDB(mdb_model):
         self.cursor = super().open()
         
     def get_by_name(self, name):
-        self.cursor.execute("SELECT id FROM ? WHERE `name`=?", (self.__table__, name,))
+        self.cursor.execute(f"SELECT id FROM {self.__table__} WHERE `name`=?", (name,))
         self.commit()
         
         for (_id,) in self.cursor:
