@@ -103,19 +103,15 @@ class UIInsert(Database):
             dm.insert("Back")
 
             response = dm.response
-
             
-        
-    
+            
     def insert_data(self):
         clrscr()
         new_data = InsertForm(self.__insert_form_callback)
         response = new_data.response
         
         if response == {}:
-            print("")
-            print("Transaction cancelled")
-            str(ConsoleIn("Press enter to continue..."))
+            # Transaction Cancelled
             return 
         
         try:

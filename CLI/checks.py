@@ -141,7 +141,7 @@ class Checks:
             exit(0)
         
         print("Status: Ready")
-        sleep(1.0)
+        #sleep(1.0)
          
     
     @staticmethod
