@@ -17,8 +17,9 @@ class Pagination:
     @property
     def page(self):
         return self.__current_page__
-        
-    def __call__(self):
+    
+    @property
+    def current_data(self):
         count = self.__count__
         cur_page = self.__current_page__
         
@@ -31,4 +32,7 @@ class Pagination:
             pass
         
         return []
+
+    def __call__(self):
+        return self.current_data
 
