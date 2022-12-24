@@ -5,9 +5,11 @@
 Print Selection
 """
 
+from abc import ABC, abstractmethod
+
 from utils.console_in import ConsoleIn
 from utils.helpers import ucfirst
-from abc import ABC, abstractmethod
+
 
 class Selections(ABC):
 

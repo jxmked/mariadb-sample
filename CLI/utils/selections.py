@@ -7,6 +7,7 @@ Print Selection
 
 from abstract_classes.selections import Selections as AbstractSelections
 
+
 class Selections(AbstractSelections):
 
     def __init__(self, desc=None, allow_overflow=False):

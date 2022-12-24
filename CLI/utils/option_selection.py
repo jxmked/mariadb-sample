@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from utils.console_in import ConsoleIn
 from abstract_classes.selections import Selections as AbstractSelections
+from utils.console_in import ConsoleIn
 from utils.helpers import ucfirst
+
 
 class OptionSelection(AbstractSelections):
 

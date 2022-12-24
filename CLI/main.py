@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from dotenv import load_dotenv
-from checks import Checks
-from utils.selections import Selections
-from utils.helpers import clrscr
 from os import getenv as env
 from sys import exit
+
+from checks import Checks
+from dotenv import load_dotenv
 from ui.ui import UserInterface
+from utils.helpers import clrscr
+from utils.selections import Selections
 
 ## Load and parse .env file
 load_dotenv(".env")
 
 from utils.option_selection import OptionSelection as OptSel
+
 
 class Main:
     driver_set = ""

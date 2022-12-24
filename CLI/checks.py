@@ -5,9 +5,11 @@
 Check modules
 """
 
-from utils.helpers import random_letters
-from time import sleep
 from sys import exit
+from time import sleep
+
+from utils.helpers import random_letters
+
 
 class Checks:
 

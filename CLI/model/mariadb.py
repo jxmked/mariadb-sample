@@ -5,10 +5,11 @@
 Handle how our database will work 
 """
 
+from atexit import register
 from os import getenv as env
 from sys import exit
+
 import mariadb
-from atexit import register
 
 # We have namespace in python :)
 # namespace model.mariadb

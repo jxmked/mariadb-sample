@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import os
-import subprocess
 import random
 import string
+import subprocess
 
 """
 Uppercase first letter and keep the rest

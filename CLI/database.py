@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from checks import Checks
+from utils.helpers import flat_dict_compare, is_empty
 from utils.validator import Validator
-from utils.helpers import is_empty, flat_dict_compare
+
 
 class Database:
 

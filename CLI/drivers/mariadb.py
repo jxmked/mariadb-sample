@@ -11,6 +11,7 @@ This driver extends our MariaDB model
 
 from model.mariadb import MariaDB as mdb_model
 
+
 class MariaDB(mdb_model):
 
     def __init__(self):

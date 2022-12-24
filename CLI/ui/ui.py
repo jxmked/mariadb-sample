@@ -11,13 +11,15 @@ import re
 from database import Database
 from model.pagination import Pagination
 from prettytable import PrettyTable
+from ui.form_action.insert import Insert
+from ui.form_action.modify import Modify
 from ui.snippets.empty_rows import EmptyRow
 from ui.snippets.view_data import ViewData
 from utils.helpers import clrscr, get_letter, get_num, premes
 from utils.option_selection import OptionSelection as MultiSelections
 from utils.selections import Selections
-from ui.form_action.insert import Insert
-from ui.form_action.modify import Modify
+
+
 class UserInterface:
 
     def __init__(self):
