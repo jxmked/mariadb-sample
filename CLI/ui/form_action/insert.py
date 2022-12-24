@@ -6,7 +6,6 @@ from utils.console_in import ConsoleIn
 from utils.helpers import clrscr, premes
 from utils.validator import Validator
 
-
 class Insert:
 
     __line__ = "<" + ("-+" * 11) + "->"

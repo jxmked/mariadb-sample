@@ -13,6 +13,6 @@ class Delete:
 
 
 
-    def __init__(self) -> None:
-        
+    def __init__(self, db:Database, _id) -> None:
+        self.db = db
         pass

@@ -14,7 +14,7 @@ from atexit import register
 # namespace model.mariadb
 
 class MariaDB:
-    
+
     __config__ = {
         "host":env('mariadb_host'),
         "port":int(env('mariadb_port')),
@@ -23,32 +23,32 @@ class MariaDB:
         "database":str(env('mariadb_db')),
         "ssl": True
     }
-    
+
     __conn__ = None
-    
+
     def __init__(self):
         pass
-    
+
     @property
     @staticmethod
     def db_type():
         return "sql"
-    
+
     @staticmethod
     def open():
-        
+
         # Whenever we open
         # Just close anything
         register(MariaDB.close)
-        
+
         if  MariaDB.__conn__ is not None and not MariaDB.__conn__._closed:
             return MariaDB.__conn__.cursor()
-        
+
         try:
             MariaDB.__conn__ = mariadb.connect(**MariaDB.__config__)
             MariaDB.__conn__.auto_reconnect = True
             return MariaDB.__conn__.cursor()
-            
+
         except mariadb.Error as e:
             print("\n\n")
             print("Opening Database: Failed")
@@ -58,7 +58,7 @@ class MariaDB:
             print("Exiting...")
             print("")
             exit(0)
-        
+
         except mariadb.OperationalError:
             print("\n\n")
             print("No database service are available")
@@ -67,7 +67,7 @@ class MariaDB:
             print("Exiting...")
             print("")
             exit(0)
-    
+
     @staticmethod
     def close():
         try:
@@ -75,18 +75,15 @@ class MariaDB:
                 MariaDB.__conn__.close()
         except:
             pass
-    
+
     @staticmethod
     def execute(*args):
         MariaDB.__conn__.cursor().execute(*args)
-        
+
     @staticmethod
     def commit():
         MariaDB.__conn__.commit()
-        
+
     @staticmethod
     def rollback():
         MariaDB.__conn__.rollback()
-    
-
-

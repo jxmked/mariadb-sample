@@ -73,7 +73,7 @@ class UserInterface:
 
                 if self.current_item_length == self.per_page:
                     pages_item_count = (self.paginate.page + 1) * self.current_item_length
-                
+
                 else:
                     pages_item_count = ((self.paginate.page) * self.per_page) + self.current_item_length
 
@@ -114,7 +114,7 @@ class UserInterface:
 
             try:
                 self.on_select(items[item_index - 1])
-                
+
                 # Messages can be from Insert, Modify, Delete
                 if premes():
                     preserve_message = premes(True)
