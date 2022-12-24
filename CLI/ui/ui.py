@@ -11,6 +11,7 @@ import re
 from database import Database
 from model.pagination import Pagination
 from prettytable import PrettyTable
+from ui.form_action.delete import Delete
 from ui.form_action.insert import Insert
 from ui.form_action.modify import Modify
 from ui.snippets.empty_rows import EmptyRow
@@ -158,6 +159,7 @@ class UserInterface:
                 pass
 
             case "delete":
+                Delete(self.db, item)
                 pass
 
     """
@@ -251,7 +253,7 @@ class UserInterface:
         """
         num = get_num(value)
 
-        if num > 0 and num <= self.current_item_length:
+        if num > 0 and num <= len(self.paginate.current_data):
             return True
 
         return False

@@ -93,7 +93,7 @@ class Database:
         except BaseException as BE:
             raise BE
 
-        if not Validator.id(_id):
+        if not Validator.id(str(_id)):
             raise Exception("Invalid ID")
 
         item = self.__db__.get(_id)

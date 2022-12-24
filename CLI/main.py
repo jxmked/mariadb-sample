@@ -13,9 +13,6 @@ from utils.selections import Selections
 ## Load and parse .env file
 load_dotenv(".env")
 
-from utils.option_selection import OptionSelection as OptSel
-
-
 class Main:
     driver_set = ""
 
