@@ -9,7 +9,7 @@ User Interface
 from utils.selections import Selections
 from utils.helpers import clrscr
 from ui.view import UIView
-from ui.insert import UIInsert
+from ui.components.insert import UIInsert
 
 class UserInterface:
     

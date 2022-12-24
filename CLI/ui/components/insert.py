@@ -1,13 +1,25 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8
+# -*- coding: utf-8 -*-
 
-from utils.console_in import ConsoleIn
-from ui.empty_rows import EmptyRows
-from ui.insert_form import InsertForm
+
+import re
+from prettytable import PrettyTable
+
+from database import Database
+from utils.helpers import clrscr, get_letter, get_num
+from utils.option_selection import OptionSelection as MultiSelections
+from utils.selections import Selections
+from model.pagination import Pagination
+from ui.display.insert_form import InsertForm
 from ui.view_data import ViewData
+from utils.console_in import ConsoleIn
+from ui.display.empty_rows import EmptyRows
 
-class UIModify:
 
+class Insert(Database):
+    
+    per_page = 15
+    
     def __init__(self):
         super().__init__()
         
@@ -15,8 +27,11 @@ class UIModify:
         self.paginate = None
         self.item_count = 0
         self.current_page = 0
-        self.reload()
         self.current_item_length = 0
+        self.reload()
+        self.start()
+
+    def start(self):
         has_next = False
         has_prev = False
         
@@ -32,7 +47,7 @@ class UIModify:
                 EmptyRows()
                 
             else:
-                print("Select an item to modify")
+                print("Check the items before inserting")
                 print(f"Viewing data page {self.paginate.page + 1} out of {self.item_count} items")
                 
                 items = self.paginate()
@@ -43,7 +58,7 @@ class UIModify:
                 print("")
                 
             has_prev = not self.current_page == 0 
-            has_next = not ((1 + self.current_page) * UIInsert.per_page) > self.item_count
+            has_next = not ((1 + self.current_page) * Insert.per_page) > self.item_count
             
             act = self.action(has_next, has_prev)
             
@@ -51,6 +66,9 @@ class UIModify:
             # match is not a switch
             if act == "refresh": # Refresh
                 self.reload()
+            
+            elif act == "insert": # Open insert form
+                self.insert_data()
             
             elif act == "next": # Next
                 self.paginate.next()
@@ -125,7 +143,7 @@ class UIModify:
     def reload(self):
         self.data = self.get()
         self.item_count = len(self.data)
-        self.paginate = Pagination(self.data, UIInsert.per_page, self.current_page)
+        self.paginate = Pagination(self.data, Insert.per_page, self.current_page)
         
     
     def intro(self):
@@ -199,5 +217,3 @@ class UIModify:
         _id = self.__get_by_name__(name)
         
         return _id == {}
-
-

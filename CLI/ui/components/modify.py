@@ -1,24 +1,16 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
+# -*- coding: utf-8
 
 from database import Database
-from utils.helpers import clrscr, get_letter, get_num
-from utils.option_selection import OptionSelection as MultiSelections
-from utils.selections import Selections
 from model.pagination import Pagination
-from prettytable import PrettyTable
-import re
-from ui.insert_form import InsertForm
-from ui.view_data import ViewData
 from utils.console_in import ConsoleIn
-from ui.empty_rows import EmptyRows
+from ui.display.empty_rows import EmptyRows
+from ui.display.insert_form import InsertForm
+from ui.view_data import ViewData
+from utils.helpers import clrscr, get_num, get_letter
 
+class Modify:
 
-class UIInsert(Database):
-    
-    per_page = 15
-    
     def __init__(self):
         super().__init__()
         
@@ -26,8 +18,13 @@ class UIInsert(Database):
         self.paginate = None
         self.item_count = 0
         self.current_page = 0
-        self.reload()
         self.current_item_length = 0
+        
+        self.reload()
+        
+        self.start()
+
+    def start(self):
         has_next = False
         has_prev = False
         
@@ -43,7 +40,7 @@ class UIInsert(Database):
                 EmptyRows()
                 
             else:
-                print("Check the items before inserting")
+                print("Select an item to modify")
                 print(f"Viewing data page {self.paginate.page + 1} out of {self.item_count} items")
                 
                 items = self.paginate()
@@ -54,7 +51,7 @@ class UIInsert(Database):
                 print("")
                 
             has_prev = not self.current_page == 0 
-            has_next = not ((1 + self.current_page) * UIInsert.per_page) > self.item_count
+            has_next = not ((1 + self.current_page) * Modify.per_page) > self.item_count
             
             act = self.action(has_next, has_prev)
             
@@ -62,9 +59,6 @@ class UIInsert(Database):
             # match is not a switch
             if act == "refresh": # Refresh
                 self.reload()
-            
-            elif act == "insert": # Open insert form
-                self.insert_data()
             
             elif act == "next": # Next
                 self.paginate.next()
@@ -76,18 +70,16 @@ class UIInsert(Database):
                 break
             
             else:
+                # Get the selected item
                 item_index = get_num(act)
-                
                 self.on_select(items[item_index - 1])
-                pass
-            
+
         return
     
 
     
     def on_select(self, item):
-        # Handle events after selecting 
-        # an item
+        # Our OnClick event
 
         while True:
             clrscr()
@@ -97,14 +89,14 @@ class UIInsert(Database):
             ViewData(item)
             print("")
 
-            dm = Selections("  Any action?")
+            dm = ("  Any action?")
             dm.insert("Modify")
             dm.insert("Delete")
             dm.insert("Back")
 
             response = dm.response
             
-            
+    
     def insert_data(self):
         clrscr()
         new_data = InsertForm(self.__insert_form_callback)
@@ -139,7 +131,7 @@ class UIInsert(Database):
     def reload(self):
         self.data = self.get()
         self.item_count = len(self.data)
-        self.paginate = Pagination(self.data, UIInsert.per_page, self.current_page)
+        self.paginate = Pagination(self.data, Modify.per_page, self.current_page)
         
     
     def intro(self):
@@ -213,3 +205,5 @@ class UIInsert(Database):
         _id = self.__get_by_name__(name)
         
         return _id == {}
+
+
