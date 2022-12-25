@@ -1,18 +1,66 @@
 <?php
 define("SECURITY", 1);
 
+/**
+ * Load and parse dotenv file.
+ * 
+ * Use getenv() to get value from dotenv file
+ *  */
+$env_file = './.env';
+
+if (file_exists($env_file) || is_readable($env_file)) {
+    $__env__ = parse_ini_file($env_file);
+
+    if(count($__env__) < 1) {
+        die("Failed to load env file");
+    }
+
+    /**
+     * Using extract, it will create a local variables with 
+     * <name from env file> as variable name containing its values
+     */
+    array_walk($__env__, function($v, $k){
+        //$_ENV[$k] = $v;
+        // I hate you PHP
+        putenv(sprintf("%s=%s", $k, $v));
+    });
+} else {
+    die("Failed to load env file");
+}
 
 /**
- * 
- * Later, I going to try to implement registration so
- * we can use token to verify who which data to serve
- * and the restriction of the requests
- * 
- * 
+ * Sooner, I'll try to implement web registration user interface that
+ * will gave user a token to use to have more rates.
+ * Atleast, I'll try. I'm not sure
  * */
+
 header('Access-Control-Allow-Origin: *');
 
+require_once "./database.php";
 require_once "./helpers.php";
+require_once "./rating.php";
+
+// Open connection
+use db\Database;
+use rate_limit\RateLimiting;
+
+$__db__ = new Database();
+$__db__->open_connection();
+
+new RateLimiting();
+
+
+echo RateLimiting::$USER_ID;
+echo PHP_EOL;
+
+echo RateLimiting::has_access() ? 'Has access' : 'No access';
+echo PHP_EOL;
+echo RateLimiting::$USER_ID;
+
+RateLimiting::rated();
+
+exit();
+
 $requests = require_once "./connection.php";
 
 $conn = [
