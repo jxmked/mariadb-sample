@@ -2,10 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Dec 10, 2022 at 12:40 PM
--- Server version: 10.9.4-MariaDB
--- PHP Version: 8.1.13
+-- Host: localhost
+-- Generation Time: Dec 25, 2022 at 07:29 AM
+-- Server version: 10.10.2-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -14,8 +14,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `mariadb_sample`
 --
-CREATE DATABASE IF NOT EXISTS `mariadb_sample` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `mariadb_sample`;
 
 -- --------------------------------------------------------
 
@@ -39,6 +37,19 @@ INSERT INTO `fav_cats` (`id`, `name`, `color`, `last_modified`) VALUES
 (2, 'Muning', 'Harlequin', '2022-12-10 10:27:25'),
 (3, 'Tagpi', 'Tuxedo Tabi', '2022-12-10 10:27:25');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rate-limit`
+--
+
+CREATE TABLE `rate-limit` (
+  `id` int(20) UNSIGNED NOT NULL,
+  `remote-addr` varchar(20) DEFAULT NULL,
+  `last-usage` int(20) NOT NULL,
+  `time-start` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -52,6 +63,13 @@ ALTER TABLE `fav_cats`
   ADD UNIQUE KEY `name` (`name`);
 
 --
+-- Indexes for table `rate-limit`
+--
+ALTER TABLE `rate-limit`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `remote-addr` (`remote-addr`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -59,5 +77,11 @@ ALTER TABLE `fav_cats`
 -- AUTO_INCREMENT for table `fav_cats`
 --
 ALTER TABLE `fav_cats`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `rate-limit`
+--
+ALTER TABLE `rate-limit`
+  MODIFY `id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
