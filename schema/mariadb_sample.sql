@@ -77,7 +77,7 @@ ALTER TABLE `rate-limit`
 -- AUTO_INCREMENT for table `fav_cats`
 --
 ALTER TABLE `fav_cats`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `rate-limit`
