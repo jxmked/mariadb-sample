@@ -1,31 +1,60 @@
 <?php
 define("SECURITY", 1);
 
+/**
+ * Load and parse dotenv file.
+ * 
+ * Use getenv() to get value from dotenv file
+ *  */
+$env_file = './.env';
+
+if (file_exists($env_file) || is_readable($env_file)) {
+    $__env__ = parse_ini_file($env_file);
+
+    if(count($__env__) < 1) {
+        die("Failed to load env file");
+    }
+
+    /**
+     * Using extract, it will create a local variables with 
+     * <name from env file> as variable name containing its values
+     */
+    array_walk($__env__, function($v, $k){
+        //$_ENV[$k] = $v;
+        // I hate you PHP
+        putenv(sprintf("%s=%s", $k, $v));
+    });
+} else {
+    die("Failed to load env file");
+}
 
 /**
- * 
- * Later, I going to try to implement registration so
- * we can use token to verify who which data to serve
- * and the restriction of the requests
- * 
- * 
+ * Sooner, I'll try to implement web registration user interface that
+ * will gave user a token to use to have more rates.
+ * Atleast, I'll try. I'm not sure
  * */
+
 header('Access-Control-Allow-Origin: *');
 
+require_once "./database.php";
 require_once "./helpers.php";
-$requests = require_once "./connection.php";
+require_once "./rating.php";
+require_once "./cat-list.php";
+require_once "./validator.php";
 
-$conn = [
-    "table" => "fav_cats"
-];
+// Open connection
+use db\Database;
+use rate_limit\RateLimiting;
+use table\CatList;
+use rules\Validator;
 
-// Allow numbers only from 0-999
-$pattern_id = "/^([0-9]{1,3})$/i";
+$__db__ = new Database();
+$__db__->open_connection();
 
-// Allow a-z case insensitive and a space only like " ". Hahaha
-// Does not allow string leading by spaces
-$pattern_regular_string = "/^[^\s]([a-zA-Z ]{1,64})$/i";
+$cats = new CatList();
 
+$requests = "";
+$query = "";
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Return all data from database
     // Return data by id
@@ -48,17 +77,12 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
      *       May slow the performance of the application
      */
 
-    $query = sprintf("SELECT * FROM `%s`", $conn["table"]); 
-
     // Get single row by id
     if(isset($_GET["id"]) && ! empty($_GET["id"])) {
         $unsafe_id = $_GET["id"];
         $unsafe_id =  trim($unsafe_id);
 
-        // Since we expected the input (id) to be numbers only
-        // and exit if input (id) does not meet the expectation,
-        // We are able to not to sanitize it to prevent SQL Injection
-        if(preg_match($pattern_id, $unsafe_id) === 0) {
+        if(! Validator::id($unsafe_id)) {
 
             // NaN found
 
@@ -70,14 +94,21 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
             // Status Bad request
             helpers\print_response(400, $data);
         }
-
-        $query = sprintf("%s WHERE id=%s", $query, $unsafe_id);
+        
+        $response = $cats->get($unsafe_id);
+    } else {
+        $response = $cats->get();
     }
-
-    $result = mysqli_query($requests, $query);
-    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
+    
+    // Remove pair if the keys we're numbers
+    
+    $data = array_map(function($tobetrim){
+        return array_filter($tobetrim, function($key){
+            return ! is_numeric($key);
+        }, ARRAY_FILTER_USE_KEY);
+    }, $response);
     helpers\print_response(200, $data);
+    
 } elseif($_SERVER['REQUEST_METHOD'] == 'POST') {
     // POST DATA
     /**
@@ -93,13 +124,16 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
      * Delete
      *  id
      */
+     
+    new RateLimiting();
 
     $name = helpers\post_data("name");
     $color = helpers\post_data("color");
     $id = helpers\post_data("id");
     $mode = strtolower(helpers\post_data("mode"));
+    $result = [];
     
-    if($mode != "delete" && (preg_match($pattern_regular_string, $name) === 0 || preg_match($pattern_regular_string, $color) === 0)) {
+    if($mode != "delete" && (! Validator::name($name) || ! Validator::name($color))) {
         // Invalid requests
         
         $data = [
@@ -109,19 +143,26 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         // Status Bad request
         helpers\print_response(400, $data);
-        exit();
     }
 
+    /**
+     * Check if we have access to lodify the array
+     * */
+    
+    if(! RateLimiting::has_access()) {
+        $data = [
+            "status" => "Too many requests",
+            "body" => "You have exceeded your rate limit. Try again later."
+        ];
+        
+        helpers\print_response(429, $data);
+    }
     
     switch ($mode) {
         case 'insert':
             // requires name, color
 
-            // Check if name already exists
-            $result = mysqli_query($requests, sprintf("SELECT * FROM `%s` WHERE `name`='%s'", $conn['table'], $name));
-            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-            if(count($data) > 0) {
+            if(count($cats->get_by_name($name)) > 0) {
                 // Already exists
                 $data = [
                     "status" => "Conflicts",
@@ -131,16 +172,18 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
                 // Status Conflicts
                 helpers\print_response(409 , $data);
             }
-
-            $query = sprintf("INSERT INTO `%s` (`name`, `color`) VALUES ('%s', '%s')", $conn['table'] ,$name, $color);
-
+            
+            $result = $cats->insert([
+                "name" => $name,
+                "color" => $color
+            ]);
             break;
         case 'edit':
         case 'modify':
             // Edit / Modify
 
             // Validate ID
-            if(preg_match($pattern_id, $id) === 0) {
+            if(! Validator::id($id)) {
                 // Bad requests
                 $data = [
                     "status" => "Bad Request",
@@ -150,47 +193,27 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
                 // Status Bad request
                 helpers\print_response(400, $data);
             }
-
-            // Check if id does not exists in database then error
-            $result = mysqli_query($requests, sprintf("SELECT * FROM `%s` WHERE id='%s'", $conn['table'], $id));
-            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-            if(count($data) <= 0) {
+            
+            if(! $cats->on_modify_validation($id, $name)){
                 $data = [
-                    "status" => "Not Found",
-                    "body" => "POST data key (id) does not exists on database."
+                    "status" => "Bad Request",
+                    "body" => "POST data key (id) does not exists or key (name) already registered on database."
                 ];
 
-                // Status Not Found
-                helpers\print_response(404, $data);
+                // Status Not Found or duplicated name
+                helpers\print_response(404, $data); 
             }
 
-            // Check if name already exists in database
-            $result = mysqli_query($requests, sprintf("SELECT * FROM `%s` WHERE `name`='%s' AND `id`!='%s'", $conn['table'], $name, $id));
-            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-            if(count($data) > 0) {
-                // Already exists
-                $data = [
-                    "status" => "Conflicts",
-                    "body" => "POST data key (name) already exists on database."
-                ];
-
-                // Status Conflicts
-                helpers\print_response(409 , $data);
-            }
-
-            $query = sprintf("UPDATE `%s` SET `name`='%s', `color`='%s', `last_modified`=current_timestamp WHERE id='%s'", $conn['table'] ,$name, $color, $id);
-
+            $result = $cats->update([
+                "name" => $name,
+                "color" => $color,
+                "id" => $id
+            ]);
             break;
 
         case 'delete':
 
-            // Check if id does not exists in database then error
-            $result = mysqli_query($requests, sprintf("SELECT * FROM `%s` WHERE id='%s'", $conn['table'], $id));
-            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-            if(count($data) <= 0) {
+            if(count($cats->get($id)) <= 0) {
                 $data = [
                     "status" => "Not Found",
                     "body" => "POST data key (id) does not exists on database."
@@ -199,9 +222,9 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
                 // Status Not Found
                 helpers\print_response(404, $data);
             }
-
-            $query = sprintf("DELETE FROM `%s` WHERE `id`='%s'", $conn['table'], $id);
-
+            
+            $result = $cats->delete($id);
+            
             break;
 
         default:
@@ -214,8 +237,6 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
             helpers\print_response(400, $data);
             break;
     }
-
-    $result = mysqli_query($requests, $query);
 
     if($result == true) {
         // Success
@@ -234,7 +255,10 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $code = $data["code"];
     unset($data["code"]);
-
+    
+    // Success or fail
+    RateLimiting::rated();
+    
     helpers\print_response($code, $data);
 }
 

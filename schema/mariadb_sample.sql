@@ -46,9 +46,9 @@ INSERT INTO `fav_cats` (`id`, `name`, `color`, `last_modified`) VALUES
 CREATE TABLE `rate-limit` (
   `id` int(20) UNSIGNED NOT NULL,
   `remote-addr` varchar(20) DEFAULT NULL,
-  `last-usage` int(20) NOT NULL,
-  `time-start` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+  `current-usage` int(20) NOT NULL,
+  `time-start` int(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci
 
 --
 -- Indexes for dumped tables
