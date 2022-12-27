@@ -162,7 +162,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         case 'insert':
             // requires name, color
 
-            if($cats->get_by_name($name)) {
+            if(count($cats->get_by_name($name)) > 0) {
                 // Already exists
                 $data = [
                     "status" => "Conflicts",
