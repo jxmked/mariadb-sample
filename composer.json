@@ -1,5 +1,8 @@
 {
     "require-dev": {
         "phpstan/phpstan": "^1.9"
+    },
+    "scripts": {
+        "analyze:api": "php ./vendor/bin/phpstan analyze --level=3 ./api"
     }
 }
