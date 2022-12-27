@@ -56,7 +56,9 @@ final class RateLimiting {
     private static $timeout = 1; // minutes
 
     public static $USER_ID; // Will be fetch from database
-
+    
+    private static $is_validated = false;
+    
     public function __construct() {
         RateLimiting::$LIMIT = getenv("rate_limit");
 
@@ -74,6 +76,11 @@ final class RateLimiting {
          * Will check if user has record.
          * Then check if has accesability
          */
+         
+        if( RateLimiting::$is_validated)
+            return;
+            
+         RateLimiting::$is_validated = true;
 
          // bindParam is for (values) only
         Database::prepare(sprintf("SELECT `current-usage`, `time-start`, `id` FROM `%s` WHERE `remote-addr` = :rem_addr",  RateLimiting::$rate_limiting_table));

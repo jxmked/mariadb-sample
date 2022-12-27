@@ -58,10 +58,12 @@ final class Database {
     }
 
     public static function execute($args = []) {
-        // We cannot add try-catch block here
-        // May confuse if the error is not shown
-        Database::$stmt->execute($args);
-        return Database::$stmt->fetchAll();
+        try {
+            Database::$stmt->execute($args);
+            return Database::$stmt->fetchAll();
+        } catch(Exception $err) {
+            throw $err;
+        }
     }
     
     public static function stmt(){

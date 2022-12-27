@@ -13,7 +13,27 @@ class Validator {
     }
 
     public static function name($str) {
+        if(empty($str)) {
+            throw new Error("Validator->name cannot be empty");
+        }
         
+        if(! is_string($str)) {
+            throw new Error("Validator->name should be a string");
+        }
+        
+        return preg_match(Validator::$regex_name, $str);
+    }
+    
+    public static function id($id) {
+        if(empty($id)) {
+            throw new Error("Validator->id cannot be empty");
+        }
+        
+        if(! is_int($id)) {
+            throw new Error("Validator->id should be an integer");
+        }
+        
+        return preg_match(Validator::$regex_id, $id);
     }
 }
 

@@ -39,25 +39,19 @@ header('Access-Control-Allow-Origin: *');
 require_once "./database.php";
 require_once "./helpers.php";
 require_once "./rating.php";
+require_once "./cat-table.php";
+require_once "./get-cats.php";
 
 // Open connection
 use db\Database;
 use rate_limit\RateLimiting;
-
+use table\CatTable;
+use cats\GetCats;
 $__db__ = new Database();
 $__db__->open_connection();
 
 new RateLimiting();
 
-
-echo RateLimiting::$USER_ID;
-echo PHP_EOL;
-
-echo RateLimiting::has_access() ? 'Has access' : 'No access';
-echo PHP_EOL;
-echo RateLimiting::$USER_ID;
-
-RateLimiting::rated();
 
 exit();
 
