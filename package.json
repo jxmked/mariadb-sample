@@ -15,7 +15,9 @@
     
     "serve:web": "php -S localhost:8080 -t ./web",
     "serve:api": "php -S localhost:8000 -t ./api",
-    "serve": "concurrently --raw \"npm run serve:web\" \"npm run serve:api\""
+    "serve": "concurrently --raw \"npm run serve:web\" \"npm run serve:api\"",
+    
+    "analyze:api": "php ./vendor/bin/phpstan analyze --level=3 ./api"
     
   },
   "keywords": [],
