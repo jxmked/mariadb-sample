@@ -27,7 +27,7 @@ final class RateLimiting {
      * This should be unique since it will hold user accesability. 
      * Can be from IP address $_SERVER['REMOTE_ADDR']
      */
-    private static $USER_ADDR;
+    private static string $USER_ADDR;
 
     /**
      * Each user will have <LIMIT> per given time
@@ -39,25 +39,25 @@ final class RateLimiting {
      * 
      * Will be fetch from env file
      */
-    private static $LIMIT;
+    private static string|bool $LIMIT;
 
     // Database table
-    private static $rate_limiting_table = "rate-limit";
+    private static string $rate_limiting_table = "rate-limit";
 
     /**
      * User able to modify the database?
      * Insert, Modify, Delete
      */
-    private static $has_access = false;
+    private static bool $has_access = false;
 
     /**
      * Automatically reset the rate-usage of the user in this interval
      */
-    private static $timeout = 1; // minutes
+    private static int $timeout = 1; // minutes
 
-    public static $USER_ID; // Will be fetch from database
+    public static string $USER_ID; // Will be fetch from database
     
-    private static $is_validated = false;
+    private static bool $is_validated = false;
     
     public function __construct() {
         RateLimiting::$LIMIT = getenv("rate_limit");
@@ -71,7 +71,7 @@ final class RateLimiting {
         $this->validate();
     }
 
-    private function validate() {
+    private function validate() : void {
         /**
          * Will check if user has record.
          * Then check if has accesability
@@ -112,7 +112,7 @@ final class RateLimiting {
     }
 
     
-    private function register() {
+    private function register() : bool {
         Database::reset();
         /**
          * Database time is not match with PHP time
@@ -136,7 +136,7 @@ final class RateLimiting {
         return (Database::stmt()->rowCount() > 0);
     }
     
-    private function reset() {
+    private function reset() : bool {
         Database::reset();
 
         /**
@@ -159,11 +159,11 @@ final class RateLimiting {
         return (Database::stmt()->rowCount() > 0);
     }
 
-    public static function has_access(){
+    public static function has_access() : bool {
         return RateLimiting::$has_access;
     }
 
-    public static function rated() {
+    public static function rated() : void {
         Database::reset();
 
         // Decrease current-usage by 1 if remote-addr is match and current-usage is

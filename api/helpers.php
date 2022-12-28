@@ -10,7 +10,11 @@ use Exception;
 /**
  * Print JSON data and exit
  */
-function print_response($status, $data) {
+ 
+/**
+ * @param array<string,string|int> $data
+ */
+function print_response(int $status, $data) : void {
     header("Content-type: application/json; charset=utf-8");
     
     if (ob_get_contents()) ob_end_clean();
@@ -26,12 +30,14 @@ function print_response($status, $data) {
 /**
  * Get raw data from POST method array
  */
-function post_data($index) {
+function post_data(string $index) : string  {
     try {
         if(isset($_POST[$index]) && ! empty($_POST[$index])) {
             $unsafe_str = trim($_POST[$index]);
             
-            return preg_replace("/\s+/", " ", $unsafe_str);
+            $res = preg_replace("/\s+/", " ", (string) $unsafe_str);
+            
+            return $res ? $res : "";
         }
     } catch(Exception $err) {}
     return "";
