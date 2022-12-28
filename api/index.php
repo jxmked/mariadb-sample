@@ -11,6 +11,9 @@ $env_file = './.env';
 if (file_exists($env_file) || is_readable($env_file)) {
     $__env__ = parse_ini_file($env_file);
 
+    if($__env__ === false)
+        $__env__ = [];
+
     if(count($__env__) < 1) {
         die("Failed to load env file");
     }
@@ -31,6 +34,8 @@ if (file_exists($env_file) || is_readable($env_file)) {
 /**
  * Sooner, I'll try to implement web registration user interface that
  * will gave user a token to use to have more rates.
+ * I will also try to learn and use Hack for better typings but for now....
+ * 
  * Atleast, I'll try. I'm not sure
  * */
 
@@ -55,6 +60,7 @@ $cats = new CatList();
 
 $requests = "";
 $query = "";
+
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Return all data from database
     // Return data by id
@@ -75,6 +81,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
      *   ; downsides...
      *       May consume a lot of internet usage
      *       May slow the performance of the application
+     *       Every requests requires to access database
      */
 
     // Get single row by id
@@ -83,16 +90,11 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         $unsafe_id =  trim($unsafe_id);
 
         if(! Validator::id($unsafe_id)) {
-
-            // NaN found
-
-            $data = [
+            // Status Bad request
+            helpers\print_response(400, [
                 "status" => "Bad Request",
                 "body" => "Parameter (id) must be a numbers (0-9) only."
-            ];
-
-            // Status Bad request
-            helpers\print_response(400, $data);
+            ]);
         }
         
         $response = $cats->get($unsafe_id);
@@ -100,15 +102,18 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         $response = $cats->get();
     }
     
-    // Remove pair if the keys we're numbers
+    // Remove pair if key is a numbers
     
-    $data = array_map(function($tobetrim){
+    $response = array_map(function($tobetrim){
         return array_filter($tobetrim, function($key){
             return ! is_numeric($key);
         }, ARRAY_FILTER_USE_KEY);
     }, $response);
-    helpers\print_response(200, $data);
     
+    if(count($response) > 0)
+        helpers\print_response(200, $response);
+    
+    helpers\print_response(200, []);
 } elseif($_SERVER['REQUEST_METHOD'] == 'POST') {
     // POST DATA
     /**
@@ -134,28 +139,22 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     $result = [];
     
     if($mode != "delete" && (! Validator::name($name) || ! Validator::name($color))) {
-        // Invalid requests
-        
-        $data = [
+        // Status Bad request
+        helpers\print_response(400, [
             "status" => "Bad Request",
             "body" => "POST data must contain `name` and `color` keys and only accepts a-z and space characters up to 64 characters are allowed."
-        ];
-
-        // Status Bad request
-        helpers\print_response(400, $data);
+        ]);
     }
 
     /**
-     * Check if we have access to lodify the array
+     * Check if we have access to modify the array
      * */
     
     if(! RateLimiting::has_access()) {
-        $data = [
+        helpers\print_response(429, [
             "status" => "Too many requests",
             "body" => "You have exceeded your rate limit. Try again later."
-        ];
-        
-        helpers\print_response(429, $data);
+        ]);
     }
     
     switch ($mode) {
@@ -165,11 +164,11 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
             if(count($cats->get_by_name($name)) > 0) {
                 // Already exists
                 $data = [
-                    "status" => "Conflicts",
+                    "status" => "Conflict",
                     "body" => "POST data key (name) already exists on database."
                 ];
 
-                // Status Conflicts
+                // Status Conflict
                 helpers\print_response(409 , $data);
             }
             
@@ -178,30 +177,26 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "color" => $color
             ]);
             break;
+
         case 'edit':
         case 'modify':
             // Edit / Modify
 
             // Validate ID
             if(! Validator::id($id)) {
-                // Bad requests
-                $data = [
+                // Status Bad request
+                helpers\print_response(400, [
                     "status" => "Bad Request",
                     "body" => "POST data key (id) should contains numbers 0-999 only."
-                ];
-
-                // Status Bad request
-                helpers\print_response(400, $data);
+                ]);
             }
             
             if(! $cats->on_modify_validation($id, $name)){
-                $data = [
+                // Status Not Found or duplicated name
+                helpers\print_response(404, [
                     "status" => "Bad Request",
                     "body" => "POST data key (id) does not exists or key (name) already registered on database."
-                ];
-
-                // Status Not Found or duplicated name
-                helpers\print_response(404, $data); 
+                ]); 
             }
 
             $result = $cats->update([
@@ -214,13 +209,11 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         case 'delete':
 
             if(count($cats->get($id)) <= 0) {
-                $data = [
+                // Status Not Found
+                helpers\print_response(404, [
                     "status" => "Not Found",
                     "body" => "POST data key (id) does not exists on database."
-                ];
-
-                // Status Not Found
-                helpers\print_response(404, $data);
+                ]);
             }
             
             $result = $cats->delete($id);
@@ -228,13 +221,11 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
             break;
 
         default:
-            $data = [
+            // Status Bad Request
+            helpers\print_response(400, [
                 "status" => "Bad Request",
                 "body" => "No available method to perform for mode " . $mode
-            ];
-
-            // Status Bad Request
-            helpers\print_response(400, $data);
+            ]);
             break;
     }
 
@@ -253,7 +244,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         ];
     }
 
-    $code = $data["code"];
+    $code = (int) $data["code"];
     unset($data["code"]);
     
     // Success or fail

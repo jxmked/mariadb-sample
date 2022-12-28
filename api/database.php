@@ -10,10 +10,10 @@ use Exception;
 use PDO;
 
 final class Database {
-    private static $requests;
+    private static PDO $requests;
     private static $stmt;
 
-    private $DNS;
+    private string $DNS;
     private $credentials = [];
 
     public function __construct($config=[]) {
