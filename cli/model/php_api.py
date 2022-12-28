@@ -18,52 +18,12 @@ class PHP_API:
     def __init__(self):
         if not PHP_API.__url__:
             PHP_API.__url__ = "http://localhost:8000"
-        
     
     @property
     @staticmethod
     def db_type():
         return "restapi"
-    
-    @staticmethod
-    def __get_requests__(url):
-        ret = {}
-        # https://stackoverflow.com/a/16511493/11481602
-        try:
-            req = requests.get(
-                url, 
-                timeout=PHP_API.__request_timeout__
-            )
-            
-            req.raise_for_status()
-            
-            ret["status"] = req.status_code
-            ret["body"] = req.text
-        
-        except requests.exceptions.Timeout:
-            # 408 Request Timeout
-            ret["status"] = 408
-            ret["body"] = "Request Timeout"
-        
-        except requests.exceptions.ConnectionError:
-            # 502 Bad Gateway
-            
-            ret["status"] = 502
-            ret["body"] = "Bad Gateway"
-            
-        except requests.exceptions.HTTPError:
-            # 400 Bad Request
-            
-            # Can't figure out what kind of error to show
-            ret["status"] = 400
-            ret["body"] = "Bad Requests"
-            
-        except requests.exceptions.RequestException:
-            print("Fatal error")
-            exit(0)
-        
-        return ret
-    
+
     @staticmethod
     def get_param(**attr):
         _id = str(attr.get("id"))
@@ -77,7 +37,13 @@ class PHP_API:
         addr = f"{PHP_API.__url__}"
         
         return PHP_API.__get_requests__(addr)
-    
+
+    @staticmethod
+    def send_data(**attr):
+        addr = f"{PHP_API.__url__}"
+        
+        return PHP_API.__send_requests__(addr, **attr)
+
     @staticmethod
     def __send_requests__(url, **attr):
         ret = {}
@@ -121,16 +87,42 @@ class PHP_API:
             exit(0)
         
         return ret
-    
+
     @staticmethod
-    def send_data(**attr):
-        addr = f"{PHP_API.__url__}"
+    def __get_requests__(url):
+        ret = {}
+        # https://stackoverflow.com/a/16511493/11481602
+        try:
+            req = requests.get(
+                url, 
+                timeout=PHP_API.__request_timeout__
+            )
+            
+            req.raise_for_status()
+            
+            ret["status"] = req.status_code
+            ret["body"] = req.text
         
-        return PHP_API.__send_requests__(addr, **attr)
+        except requests.exceptions.Timeout:
+            # 408 Request Timeout
+            ret["status"] = 408
+            ret["body"] = "Request Timeout"
+        
+        except requests.exceptions.ConnectionError:
+            # 502 Bad Gateway
+            
+            ret["status"] = 502
+            ret["body"] = "Bad Gateway"
+            
+        except requests.exceptions.HTTPError:
+            # 400 Bad Request
 
-x = PHP_API()
+            # Can't figure out what kind of error to show
+            ret["status"] = 400
+            ret["body"] = "Bad Requests"
 
-print(
-x.send_data(id="229", color="hakdog", name="fukc", mode="modify")
+        except requests.exceptions.RequestException:
+            print("Fatal error")
+            exit(0)
 
-)
+        return ret
