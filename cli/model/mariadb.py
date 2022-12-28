@@ -37,7 +37,7 @@ class MariaDB:
 
     @staticmethod
     def open():
-
+        print("open");
         # Whenever we open
         # Just close anything
         register(MariaDB.close)
