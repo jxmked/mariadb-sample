@@ -42,8 +42,11 @@ class Main:
         dm.insert("Use MariaDB module")
         dm.insert(f"Use REST API via {env('php_api_host')}")
         
-        # Having an error from server
-        #dm.insert("Use Hosted REST API via 000Webhost")
+        # If you cannot access this.
+        # Your IP is probably block by their servers
+        # Like mine =(
+        # Use VPN instead
+        dm.insert("Use Hosted REST API via 000Webhost")
         
         # Don't use int(dm) in condition
         # It will reask the same thing

@@ -15,7 +15,6 @@ class PHP_API:
     __request_timeout__ = 5 # seconds
     
     def __init__(self):
-        print("Php Api Model init")
         pass
     
     

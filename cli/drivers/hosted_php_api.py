@@ -86,8 +86,18 @@ class Hosted_PHP_API(phpapi_model):
     def get_all(self):
         # Fetch all data and return
         response = super(Hosted_PHP_API, Hosted_PHP_API).get_all()
-        return json.loads(response['body'])
-
+        try:
+            return json.loads(response['body'])
+        except:
+            print("")
+            print("Your IP address probably block by 000webhost servers")
+            print("Try to use different IP address or use VPN to access")
+            print("")
+            
+            print(f"Server response {response['body']}")
+            
+            exit()
+            
     def update(self, **args):
         _id = args.get("id")
         name = args.get("name")
