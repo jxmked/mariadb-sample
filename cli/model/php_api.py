@@ -112,10 +112,8 @@ class PHP_API:
             req.raise_for_status()
             
             ret["status"] = req.status_code
-            #ret["body"] = req.text
-            print(req.text)
-            exit()
-        
+            ret["body"] = req.text
+
         except requests.exceptions.Timeout as rt:
             # 408 Request Timeout
             ret["status"] = 408

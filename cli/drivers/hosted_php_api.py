@@ -86,9 +86,6 @@ class Hosted_PHP_API(phpapi_model):
     def get_all(self):
         # Fetch all data and return
         response = super(Hosted_PHP_API, Hosted_PHP_API).get_all()
-        print(response)
-        
-        exit()
         return json.loads(response['body'])
 
     def update(self, **args):
