@@ -3,7 +3,7 @@
 
 from os import getenv as env
 from sys import exit
-
+from time import sleep
 from checks import Checks
 from dotenv import load_dotenv
 from ui.ui import UserInterface
@@ -25,19 +25,26 @@ class Main:
 
         Main.driver_set = self.select_driver()
 
-        print("\nDriver check: Started")
-
         Checks.driver_set = Main.driver_set
-        Checks.start()
-
+        #Checks.start()
+        
+        print("Driver checker is not available")
+        #sleep(1.0)
+        
+        
+        driver = Checks.call_driver()
         # Begin
+        
         UserInterface()
 
     def select_driver(self):
         dm = Selections("Please, select the driver you want to use")
         dm.insert("Use MariaDB module")
         dm.insert(f"Use REST API via {env('php_api_host')}")
-
+        
+        # Having an error from server
+        #dm.insert("Use Hosted REST API via 000Webhost")
+        
         # Don't use int(dm) in condition
         # It will reask the same thing
         response = dm.response
@@ -46,7 +53,10 @@ class Main:
 
         elif response == 2:
             return "php_api"
-
+        
+        elif response == 3:
+            return "hosted_php_api"
+        
         else:
             print("Driver not found")
             print("Exiting...")

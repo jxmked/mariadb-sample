@@ -7,6 +7,7 @@ define("SECURITY", 1);
  * Use getenv() to get value from dotenv file
  *  */
 $env_file = './.env';
+$db_config = [];
 
 if (file_exists($env_file) || is_readable($env_file)) {
     $__env__ = parse_ini_file($env_file);
@@ -27,6 +28,9 @@ if (file_exists($env_file) || is_readable($env_file)) {
         // I hate you PHP
         putenv(sprintf("%s=%s", $k, $v));
     });
+    
+    
+    
 } else {
     die("Failed to load env file");
 }
@@ -42,21 +46,28 @@ if (file_exists($env_file) || is_readable($env_file)) {
 header('Access-Control-Allow-Origin: *');
 
 require_once "./database.php";
+
+// Initiate and set Database Credentials and connections
+$db_config['user'] = getenv('mariadb_user');
+$db_config['pwd'] = getenv('mariadb_pwd');
+$db_config['host'] = getenv('mariadb_host');
+$db_config['port'] = getenv('mariadb_port');
+$db_config['dbname'] = getenv('mariadb_db');
+
+$__db__ = new db\Database($db_config);
+$__db__->open_connection();
+
+
 require_once "./helpers.php";
 require_once "./rating.php";
 require_once "./cat-list.php";
 require_once "./validator.php";
 
-// Open connection
-use db\Database;
-use rate_limit\RateLimiting;
 use table\CatList;
 use rules\Validator;
 
-$__db__ = new Database();
-$__db__->open_connection();
-
 $cats = new CatList();
+new rate_limit\RateLimiting();
 
 $requests = "";
 $query = "";
@@ -129,9 +140,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
      * Delete
      *  id
      */
-     
-    new RateLimiting();
-
+    
     $name = helpers\post_data("name");
     $color = helpers\post_data("color");
     $id = helpers\post_data("id");
@@ -150,7 +159,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
      * Check if we have access to modify the array
      * */
     
-    if(! RateLimiting::has_access()) {
+    if(! rate_limit\RateLimiting::has_access()) {
         helpers\print_response(429, [
             "status" => "Too many requests",
             "body" => "You have exceeded your rate limit. Try again later."
@@ -248,7 +257,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     unset($data["code"]);
     
     // Success or fail
-    RateLimiting::rated();
+    rate_limit\RateLimiting::rated();
     
     helpers\print_response($code, $data);
 }

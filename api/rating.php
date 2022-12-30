@@ -60,12 +60,12 @@ final class RateLimiting {
     private static bool $is_validated = false;
     
     public function __construct() {
-        RateLimiting::$LIMIT = getenv("rate_limit");
+        self::$LIMIT = getenv("rate_limit");
 
         // Once set, there is no turning back. =)
-        if(empty(RateLimiting::$USER_ADDR)) {
+        if(empty(self::$USER_ADDR)) {
             // remote addr should be hash and not encoded 
-            RateLimiting::$USER_ADDR = base64_encode($_SERVER['REMOTE_ADDR']);
+            self::$USER_ADDR = $_SERVER['REMOTE_ADDR'];
         }
 
         $this->validate();
@@ -77,30 +77,30 @@ final class RateLimiting {
          * Then check if has accesability
          */
          
-        if( RateLimiting::$is_validated)
+        if( self::$is_validated)
             return;
             
-         RateLimiting::$is_validated = true;
+         self::$is_validated = true;
 
          // bindParam is for (values) only
-        Database::prepare(sprintf("SELECT `current-usage`, `time-start`, `id` FROM `%s` WHERE `remote-addr` = :rem_addr",  RateLimiting::$rate_limiting_table));
+        Database::prepare(sprintf("SELECT `current-usage`, `time-start`, `id` FROM `%s` WHERE `remote-addr` = :rem_addr",  self::$rate_limiting_table));
         
         $response = Database::execute([
-            "rem_addr" => RateLimiting::$USER_ADDR
+            "rem_addr" => self::$USER_ADDR
         ]);
         
         if(count($response) > 0) { // Registered
             $stats = $response[0];
 
-            RateLimiting::$USER_ID = $stats['id'];
+            self::$USER_ID = $stats['id'];
 
-            if($stats["current-usage"] == 0 && ($stats['time-start'] + (RateLimiting::$timeout * 60)) >= (int) time()) {
+            if($stats["current-usage"] == 0 && ($stats['time-start'] + (self::$timeout * 60)) >= (int) time()) {
                 // User is out of usage and time-start + interval is above current time
-                RateLimiting::$has_access = false;
+                self::$has_access = false;
                 return;
             }
 
-            if (($stats['time-start'] + (RateLimiting::$timeout * 60)) <= (int) time()) {
+            if (($stats['time-start'] + (self::$timeout * 60)) <= (int) time()) {
                 // Reset if time-start + interval is under current time
                 if(! $this->reset()) die("ERROR-SYS-101");
             }
@@ -108,7 +108,7 @@ final class RateLimiting {
             if(! $this->register()) die("ERROR-SYS-100");
         }
 
-        RateLimiting::$has_access = true;
+        self::$has_access = true;
     }
 
     
@@ -118,16 +118,16 @@ final class RateLimiting {
          * Database time is not match with PHP time
          * I don't know why. Maybe in database time is set to differ timezone?
          */
-        Database::prepare(sprintf("INSERT INTO `%s` (`remote-addr`, `current-usage`, `time-start`) VALUES (:rem_addr, :rate, :new_time)",  RateLimiting::$rate_limiting_table));
+        Database::prepare(sprintf("INSERT INTO `%s` (`remote-addr`, `current-usage`, `time-start`) VALUES (:rem_addr, :rate, :new_time)",  self::$rate_limiting_table));
         
         try {
             Database::execute([
-                "rem_addr" => RateLimiting::$USER_ADDR,
-                "rate" => RateLimiting::$LIMIT,
+                "rem_addr" => self::$USER_ADDR,
+                "rate" => self::$LIMIT,
                 "new_time" => time()
             ]);
             
-            RateLimiting::$USER_ID = Database::requests()->lastInsertId();
+            self::$USER_ID = Database::requests()->lastInsertId();
             
         } catch(PDOException $err) {
             return false;
@@ -143,12 +143,12 @@ final class RateLimiting {
          * Set current usage to max
          * Set time-start to current time
          */
-        Database::prepare(sprintf("UPDATE `%s` SET `current-usage`=:rate, `time-start`=:new_time WHERE `id`=:id",  RateLimiting::$rate_limiting_table));
+        Database::prepare(sprintf("UPDATE `%s` SET `current-usage`=:rate, `time-start`=:new_time WHERE `id`=:id",  self::$rate_limiting_table));
 
         try {
             Database::execute([
-                "id" => RateLimiting::$USER_ID,
-                "rate" => RateLimiting::$LIMIT,
+                "id" => self::$USER_ID,
+                "rate" => self::$LIMIT,
                 "new_time" => time()
             ]);
 
@@ -160,7 +160,7 @@ final class RateLimiting {
     }
 
     public static function has_access() : bool {
-        return RateLimiting::$has_access;
+        return self::$has_access;
     }
 
     public static function rated() : void {
@@ -168,16 +168,16 @@ final class RateLimiting {
 
         // Decrease current-usage by 1 if remote-addr is match and current-usage is
         // greater than 0
-        Database::prepare(sprintf("UPDATE `%s` SET  `current-usage` = `current-usage` - 1 WHERE `id` = :id AND `current-usage` > 0", RateLimiting::$rate_limiting_table));
+        Database::prepare(sprintf("UPDATE `%s` SET  `current-usage` = `current-usage` - 1 WHERE `id` = :id AND `current-usage` > 0", self::$rate_limiting_table));
         Database::execute([
-            "id" => RateLimiting::$USER_ID
+            "id" => self::$USER_ID
         ]);
 
         // Check if some rows has been affected
         // If row has been affected, the user is 
         // still has access to modify the array
 
-        RateLimiting::$has_access = (Database::stmt()->rowCount() > 0) ? true : false;
+        self::$has_access = (Database::stmt()->rowCount() > 0) ? true : false;
     }
 }
 ?>

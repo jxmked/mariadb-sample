@@ -4,5 +4,8 @@
     },
     "scripts": {
         "analyze:api": "php ./vendor/bin/phpstan analyze --level=3 ./api"
+    },
+    "require": {
+        "codeless/scriptjoiner": "^0.1.0"
     }
 }
