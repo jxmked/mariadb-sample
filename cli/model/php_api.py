@@ -11,13 +11,21 @@ from sys import exit
 from json import loads
 
 class PHP_API:
-    
-    __url__ = env('php_api_host')
+    __url__ = ""
     __request_timeout__ = 5 # seconds
     
     def __init__(self):
-        if not PHP_API.__url__:
-            PHP_API.__url__ = "http://localhost:8000"
+        print("Php Api Model init")
+        pass
+    
+    
+    @staticmethod
+    def url(param=None):
+        # Im having a problem when using setter and getter
+        # for this
+        if param:
+            PHP_API.__url__ = param
+        return PHP_API.__url__
     
     @property
     @staticmethod
@@ -60,16 +68,16 @@ class PHP_API:
             ret["status"] = req.status_code
             ret["body"] = req.text
         
-        except requests.exceptions.Timeout:
+        except requests.exceptions.Timeout as rt:
             # 408 Request Timeout
             ret["status"] = 408
-            ret["body"] = "Request Timeout"
+            ret["body"] = rt
         
-        except requests.exceptions.ConnectionError:
+        except requests.exceptions.ConnectionError as bg:
             # 502 Bad Gateway
             
             ret["status"] = 502
-            ret["body"] = "Bad Gateway"
+            ret["body"] = bg
             
         except requests.exceptions.HTTPError as br:
             # 400 Bad Request
@@ -82,8 +90,11 @@ class PHP_API:
             ret["status"] = 400
             ret["body"] = br
             
-        except requests.exceptions.RequestException:
+        #except requests.exceptions.RequestException:
+        except BaseException as be:
             print("Fatal error")
+            print("")
+            print(be)
             exit(0)
         
         return ret
@@ -101,28 +112,33 @@ class PHP_API:
             req.raise_for_status()
             
             ret["status"] = req.status_code
-            ret["body"] = req.text
+            #ret["body"] = req.text
+            print(req.text)
+            exit()
         
-        except requests.exceptions.Timeout:
+        except requests.exceptions.Timeout as rt:
             # 408 Request Timeout
             ret["status"] = 408
-            ret["body"] = "Request Timeout"
+            ret["body"] = rt
         
-        except requests.exceptions.ConnectionError:
+        except requests.exceptions.ConnectionError as bg:
             # 502 Bad Gateway
             
             ret["status"] = 502
-            ret["body"] = "Bad Gateway"
+            ret["body"] = bg
             
-        except requests.exceptions.HTTPError:
+        except requests.exceptions.HTTPError as br:
             # 400 Bad Request
 
             # Can't figure out what kind of error to show
             ret["status"] = 400
-            ret["body"] = "Bad Requests"
+            ret["body"] = br
 
-        except requests.exceptions.RequestException:
+        #except requests.exceptions.RequestException:
+        except BaseException as be:
             print("Fatal error")
+            print("")
+            print(be)
             exit(0)
 
         return ret

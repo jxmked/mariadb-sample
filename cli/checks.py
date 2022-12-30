@@ -20,6 +20,9 @@ class Checks:
 
     @staticmethod
     def start():
+        
+        print("\nDriver check: Started")
+
         # Check for Fatal Problems
 
         driver = Checks.call_driver()
@@ -151,8 +154,13 @@ class Checks:
             return MariaDB
 
         elif Checks.driver_set == "php_api":
-            from drivers.php_api import PHP_API
-            return PHP_API
+            from drivers.local_php_api import Local_PHP_API
+            return Local_PHP_API
 
+        elif Checks.driver_set == "hosted_php_api":
+            from drivers.hosted_php_api import Hosted_PHP_API
+            return Hosted_PHP_API
+            
         else:
-            raise Exception("Driver not found")
+            #raise Exception("Driver not found")
+            print(f"Driver not found: {Checks.driver_set}")
