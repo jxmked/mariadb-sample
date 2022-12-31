@@ -32,34 +32,46 @@ class SimpleJSONDB:
 
     def insert_data(self, _id, **attr):
         # Our id should be an integer
-        self.instance.data[_id] = attr
+        self.instance.data[str(_id)] = attr
 
     def get_data(self):
         return self.instance.data
 
-    def update_data(self, _id, **attr):
+    def update_data(self, **attr):
         # Validate the id if foes exists, else raise an error
+        
         try:
-            if self.get_all()[_id] is None:
-                raise KeyError()
-
+            _id = str(attr.get("id"))
+            
+            if _id not in self.instance.data.keys():
+                raise KeyError("Key not exists")
+            
             self.instance.data[_id] = attr
             return True
 
-        except KeyError:
-            print("Idkdjd")
-            exit()
+        except KeyError as ke:
             raise Exception('ID does not exists')
+        
+        except BaseException as be:
+            pass
+        
+        except:
+            pass
+        
         return False
 
     def delete_data(self, _id):
 
         try:
-            if self.get_all()[_id] is None:
+            if str(_id) not in self.instance.data.keys():
                 raise KeyError()
 
-            del self.instance.data[_id]
+            del self.instance.data[str(_id)]
             return True
-        except KeyError:
+
+        except KeyError as ke:
             raise Exception('ID does not exists')
+        
+        except BaseException as be:
+            pass
         return False

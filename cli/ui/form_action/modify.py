@@ -95,7 +95,6 @@ class Modify:
 
         except BaseException as be:
             raise be
-            pass
 
         return {}
 

@@ -86,16 +86,13 @@ class JSONDB:
         if self.get(_id) == {}:
             return False
 
-       # try:
+        try:
             # Do simple update 
-        self.__db__.update_data(_id, **args)
-        return True
-
-       # except BaseException as be: 
-       #     print(be)
-       #     exit()
-       #     pass
-        return True
+            self.__db__.update_data(**args)
+            return True
+        except BaseException as be: 
+            pass
+        
         raise Exception("Modify execution: Failed")
 
     def delete(self, _id):
@@ -105,12 +102,8 @@ class JSONDB:
 
         try:
             # Do simple delete 
-            args = {
-                'mode' : 'delete',
-                'id' : _id
-            }
-            
-            super(Local_PHP_API, Local_PHP_API).send_data(**args)
+            self.__db__.delete_data(_id)
             return True
         except:
             raise Exception("Trim execution: Failed")
+        return False
