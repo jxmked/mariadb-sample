@@ -28,9 +28,6 @@ if (file_exists($env_file) || is_readable($env_file)) {
         // I hate you PHP
         putenv(sprintf("%s=%s", $k, $v));
     });
-    
-    
-    
 } else {
     die("Failed to load env file");
 }

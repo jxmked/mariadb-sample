@@ -39,7 +39,7 @@ final class RateLimiting {
      * 
      * Will be fetch from env file
      */
-    private static string|bool $LIMIT;
+    private static string $LIMIT;
 
     // Database table
     private static string $rate_limiting_table = "rate-limit";
@@ -60,7 +60,7 @@ final class RateLimiting {
     private static bool $is_validated = false;
     
     public function __construct() {
-        self::$LIMIT = getenv("rate_limit");
+        self::$LIMIT = (string) getenv("rate_limit");
 
         // Once set, there is no turning back. =)
         if(empty(self::$USER_ADDR)) {
@@ -123,7 +123,7 @@ final class RateLimiting {
         try {
             Database::execute([
                 "rem_addr" => self::$USER_ADDR,
-                "rate" => self::$LIMIT,
+                "rate" => (int) self::$LIMIT,
                 "new_time" => time()
             ]);
             
@@ -148,7 +148,7 @@ final class RateLimiting {
         try {
             Database::execute([
                 "id" => self::$USER_ID,
-                "rate" => self::$LIMIT,
+                "rate" => (int) self::$LIMIT,
                 "new_time" => time()
             ]);
 

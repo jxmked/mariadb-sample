@@ -1,14 +1,21 @@
 #!/usr/bin/bash
 
+# I create this script specially for Termux user
+# and also expecting to be able to run in Linux
+# or other environment that fully support this
+# bash script. 
+# 
+
+
 # Contains basic installation of packages
 # and sub packages/module or library
 
 function is_installed() {
-    echo $(dpkg-query -W -f='${Status}' ${1} 2>/dev/null | grep -c "ok installed")
+    echo $(dpkg-query -W -f='${Status}' ${1} 2>/dev/null | grep -c "ok installed");
 }
 
 function install_package() {
-    apt-get install $1 -y
+    apt-get install $1 -y;
 }
 
 
@@ -16,11 +23,11 @@ function install_package() {
 # Setup python
 
 function install_python_module() {
-    python -m pip install $1
+    python -m pip install $1;
 }
 
 if [[ $(is_installed 'python') == 0 ]]; then
-    install_package 'python'
+    install_package 'python';
 fi
 
 # Read 'requirements.txt' and install
@@ -34,7 +41,7 @@ done < 'requirements.txt';
 # Setup Php
 
 if [[ $(is_installed 'php') == 0 ]]; then 
-    install_package 'php'
+    install_package 'php';
 fi
 
 # Done
@@ -69,7 +76,7 @@ fi
 # Install MariaDB
 
 if [[ $(is_installed 'mariadb') == 0 ]]; then
-    install_package 'mariadb'
+    install_package 'mariadb';
 fi
 
 

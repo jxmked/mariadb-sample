@@ -4,6 +4,7 @@
 from os import getenv as env
 from sys import exit
 from time import sleep
+
 from checks import Checks
 from dotenv import load_dotenv
 from ui.ui import UserInterface

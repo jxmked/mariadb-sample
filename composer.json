@@ -3,7 +3,7 @@
         "phpstan/phpstan": "^1.9"
     },
     "scripts": {
-        "analyze:api": "php ./vendor/bin/phpstan analyze --level=3 ./api"
+        "analyze:api": "php ./vendor/bin/phpstan analyze --level=5 ./api"
     },
     "require": {
         "codeless/scriptjoiner": "^0.1.0"
