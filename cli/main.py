@@ -28,9 +28,8 @@ class Main:
         Checks.driver_set = Main.driver_set
         #Checks.start()
         
-        print("Driver checker is not available")
+        print("Driver checker is currently not available")
         #sleep(1.0)
-        
         
         driver = Checks.call_driver()
         # Begin
@@ -47,10 +46,12 @@ class Main:
         # Like mine =(
         # Use VPN instead
         dm.insert("Use Hosted REST API via 000Webhost")
+        dm.insert("Use JSON as Database")
         
         # Don't use int(dm) in condition
         # It will reask the same thing
         response = dm.response
+        
         if response == 1:
             return "mariadb"
 
@@ -59,6 +60,9 @@ class Main:
         
         elif response == 3:
             return "hosted_php_api"
+        
+        elif response == 4:
+            return "jsondb"
         
         else:
             print("Driver not found")

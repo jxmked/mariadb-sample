@@ -41,6 +41,8 @@ class Modify:
             premes("Item updated\n Refresh to take changes")
 
         except BaseException as be:
+            print(be)
+            exit()
             raise Exception("An error occured during updating\n  Please, try again")
 
     """

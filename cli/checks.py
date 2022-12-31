@@ -160,7 +160,11 @@ class Checks:
         elif Checks.driver_set == "hosted_php_api":
             from drivers.hosted_php_api import Hosted_PHP_API
             return Hosted_PHP_API
-            
+        
+        elif Checks.driver_set == "jsondb":
+            from drivers.jsondb import JSONDB
+            return JSONDB
+        
         else:
             #raise Exception("Driver not found")
             print(f"Driver not found: {Checks.driver_set}")
