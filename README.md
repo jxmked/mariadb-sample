@@ -1,29 +1,27 @@
 # mariadb-sample
-Using single DB server for multiple application. Demo. 
 
+Using single database to sync two interfaces (Web, CLI). 
 
+## Requirements
+ 
+**Environments and module/libraries**
+
+  - Atleast `Python` 3.10
+  - Atleast `PHP` 8.0
+  - Atleast `NodeJS` 16.18
+  - Atleast `mariadb` 10.9
+
+---
+
+### Installation
+ 
+ You can execute `$ bash install.sh` to automatically install some required
+ packages, modules, sub modules and library.
+ 
+ > Note: If you are new to MariaDB, you need 
+ 
 ## Start up
 
-Setup your db config
 
-`git clone https://github.com/jxmked/mariadb-sample`
-
-`cd mariadb-sample`
-
-`php -S localhost:8080 -t web/` - Start Web Server
-
-
-## Installation & Setup
-
- - Install `php` in your terminal
- - Install `nodejs` and `npm` in your terminal
- - Install `python` in your terminal
-
-**Build JavaScript and CSS using NPM**
- > We are not able to use binary links outside of Termux data folder 
- > so we need to install all dependency globally first.
- 
- - `npm install --global`
- - `npm run build`
 
 
