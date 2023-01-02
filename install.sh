@@ -30,11 +30,8 @@ if [[ $(is_installed 'python') == 0 ]]; then
     install_package 'python';
 fi
 
-# Read 'requirements.txt' and install
-while read line; do
-    install_python_module "${line}";
-done < 'requirements.txt';
-
+# Install python dependencies 
+python -m pip install -r "requirements.txt";
 # done
 
 
