@@ -11,7 +11,7 @@ class Insert:
 
     __line__ = "<" + ("-+" * 11) + "->"
 
-    def __init__(self, database:Database):
+    def __init__(self, database: Database):
         self.db = database
 
         clrscr()
@@ -23,7 +23,7 @@ class Insert:
         if response == {}:
             # Transaction Cancelled
             premes("Transaction cancelled")
-            return 
+            return
 
         try:
             response['id'] = self.db.insert(**response)
@@ -35,11 +35,12 @@ class Insert:
     """
     Our form
     """
+
     def get_name(self):
         while True:
             response = str(ConsoleIn("Name: ")).strip()
 
-            if response == '0': # Cancelled
+            if response == '0':  # Cancelled
                 raise Exception("back")
 
             if Validator.name(response):
@@ -74,8 +75,8 @@ class Insert:
             print(self.__line__)
 
             return {
-                "name":name,
-                "color":color
+                "name": name,
+                "color": color
             }
         except SystemExit as se:
             raise se

@@ -55,7 +55,7 @@ class UserInterface:
                 "insert": self.insert_data
             }
 
-            # Update our current page 
+            # Update our current page
             self.current_page = self.paginate.page
 
             clrscr()
@@ -66,7 +66,7 @@ class UserInterface:
                 print("")
                 print(preserve_message)
                 print("")
-                preserve_message = None # Reset
+                preserve_message = None  # Reset
 
             if self.item_count <= 0:
                 EmptyRow()
@@ -75,12 +75,15 @@ class UserInterface:
                 self.current_item_length = len(self.paginate.current_data)
 
                 if self.current_item_length == self.per_page:
-                    pages_item_count = (self.paginate.page + 1) * self.current_item_length
+                    pages_item_count = (
+                        self.paginate.page + 1) * self.current_item_length
 
                 else:
-                    pages_item_count = ((self.paginate.page) * self.per_page) + self.current_item_length
+                    pages_item_count = (
+                        (self.paginate.page) * self.per_page) + self.current_item_length
 
-                print(f"Viewing data {pages_item_count} out of {self.item_count} items")
+                print(
+                    f"Viewing data {pages_item_count} out of {self.item_count} items")
 
                 items = self.paginate()
 
@@ -91,8 +94,9 @@ class UserInterface:
                 print("")
 
             # Check if we can do next or previous the table
-            has_prev = not self.current_page == 0 
-            has_next = not ((1 + self.current_page) * self.per_page) > self.item_count
+            has_prev = not self.current_page == 0
+            has_next = not ((1 + self.current_page) *
+                            self.per_page) > self.item_count
 
             # Input
             response = self.action(has_next, has_prev)
@@ -110,7 +114,7 @@ class UserInterface:
                 # Messages can be from Insert, Modify, Delete
                 if premes():
                     preserve_message = premes(True)
-                continue 
+                continue
 
             # Get the selected item
             item_index = get_num(response)
@@ -127,6 +131,7 @@ class UserInterface:
     """
     Handle selected item from
     """
+
     def on_select(self, item):
         # Try to fetch it from database
         # To prevent other error like
@@ -165,6 +170,7 @@ class UserInterface:
     """
     Handle selection from navigation
     """
+
     def action(self, has_next, has_prev):
         ms = MultiSelections()
 
@@ -203,7 +209,8 @@ class UserInterface:
         table.align["Color"] = "c"
 
         for k, item in enumerate(items):
-            table.add_row([get_letter(k + 1), item.get("name"), item.get("color")])
+            table.add_row(
+                [get_letter(k + 1), item.get("name"), item.get("color")])
 
         print(table)
 
@@ -217,6 +224,7 @@ class UserInterface:
         it is an item from the table?
         it is an action from navigation?
     """
+
     def __action_selection_validator(self, max_item, value):
         """
         Return false if the input is a special characters

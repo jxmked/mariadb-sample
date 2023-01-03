@@ -3,10 +3,10 @@
     --text-color: rgb(52, 52, 54);
     --text-color-hard: rgb(36, 36, 38);
     --title-text-color: rgb(28, 28, 39);
-    --border-color:  rgb(172, 172, 174);
+    --border-color: rgb(172, 172, 174);
     --default-font-family: "Montserrat", "Caviar Dreams", "Sans-Serif";
-    
-    
+
+
     /**
      * Navigation Bar
      * */
@@ -16,7 +16,7 @@
     --text-hover-transition-speed: 0.05s;
     --text-hover-transitioning: ease-in-out;
     --max-width: 700px;
-    
+
 }
 
 .header-text {
@@ -39,8 +39,8 @@ body {
     white-space: nowrap;
     display: flex;
     flex-direction: column;
-   // justify-content: center;
-   // align-items: center;
+    // justify-content: center;
+    // align-items: center;
 }
 
 body {
@@ -52,7 +52,7 @@ body {
         text-indent: 1rem;
         line-height: 1.3rem;
     }
-    
+
     nav {
         /** Nav - Title Page **/
         margin: none;
@@ -64,12 +64,12 @@ body {
         border-bottom: 1px solid var(--border-color);
         box-sizing: border-box;
         width: 100%;
-        
-        > div {
+
+        >div {
             width: 100%;
             height: 100%;
-            
-            > h3 {
+
+            >h3 {
                 width: inherit;
                 height: inherit;
                 font-size: 1.2rem;
@@ -82,9 +82,9 @@ body {
             }
         }
     }
-    
+
     /** Container - Content **/
-    > div.container {
+    >div.container {
         min-height: 90px;
         width: 100%;
         display: flex;
@@ -93,8 +93,8 @@ body {
         margin: 2.3rem 0 0 0;
         -webkit-box-sizing: content-box;
         box-sizing: content-box;
-        
-        > div {
+
+        >div {
             border: 1px solid var(--border-color);
             height: auto;
             width: auto;
@@ -102,8 +102,8 @@ body {
             -webkit-box-sizing: content-box;
             box-sizing: content-box;
             padding: 30px;
-            
-            > div.continue-link {
+
+            >div.continue-link {
                 text-align: right;
             }
         }
@@ -127,5 +127,3 @@ div#bg-cover[data-status=show] {
 @import 'form-container.scss';
 @import "add-popup.scss";
 @import "confirm-delete-dialog.scss";
-
-

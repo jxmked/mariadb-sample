@@ -265,5 +265,3 @@ http_response_code(401);
 echo "FAILED TO RESPONSE";
 
 exit();
-
-?>

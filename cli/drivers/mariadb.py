@@ -26,7 +26,8 @@ class MariaDB(mdb_model):
         self.cursor = super().open()
 
     def get_by_name(self, name):
-        self.cursor.execute(f"SELECT id FROM {self.__table__} WHERE `name`=?", (name,))
+        self.cursor.execute(
+            f"SELECT id FROM {self.__table__} WHERE `name`=?", (name,))
         self.commit()
 
         for (_id,) in self.cursor:
@@ -39,10 +40,12 @@ class MariaDB(mdb_model):
         color = args.get("color")
 
         if None in [name, color]:
-            raise Exception("MariaDB.insert should have name and color arguments")
+            raise Exception(
+                "MariaDB.insert should have name and color arguments")
 
         try:
-            self.cursor.execute(f"INSERT INTO `{self.__table__}` (`name`, `color`) VALUES (?, ?)", (name, color))
+            self.cursor.execute(
+                f"INSERT INTO `{self.__table__}` (`name`, `color`) VALUES (?, ?)", (name, color))
             self.commit()
             return self.cursor.lastrowid
         except:
@@ -54,7 +57,8 @@ class MariaDB(mdb_model):
             raise Exception("MariaDB.get parameter must be an id, None given")
 
         try:
-            self.cursor.execute(f"SELECT id, name, color FROM `{self.__table__}` WHERE id=?", (_id,))
+            self.cursor.execute(
+                f"SELECT id, name, color FROM `{self.__table__}` WHERE id=?", (_id,))
             self.commit()
 
         except:
@@ -63,9 +67,9 @@ class MariaDB(mdb_model):
         # Always return the first item
         for (_id_, name, color) in self.cursor:
             return {
-                "id":_id_,
-                "name":name,
-                "color":color
+                "id": _id_,
+                "name": name,
+                "color": color
             }
 
         return {}
@@ -79,9 +83,9 @@ class MariaDB(mdb_model):
 
         for (_id, name, color) in self.cursor:
             arr.append({
-                "id":_id,
-                "name":name,
-                "color":color,
+                "id": _id,
+                "name": name,
+                "color": color,
             })
 
         return arr
@@ -92,17 +96,20 @@ class MariaDB(mdb_model):
         color = args.get("color")
 
         if _id is None:
-            raise Exception("MariaDB.update parameter must be an id, None given")
+            raise Exception(
+                "MariaDB.update parameter must be an id, None given")
 
         if None in [_id, name, color]:
-                raise Exception("MariaDB.update should have id, name and color arguments")
+            raise Exception(
+                "MariaDB.update should have id, name and color arguments")
 
-        # Check if id does exist 
+        # Check if id does exist
         if self.get(_id) == {}:
             return False
 
         try:
-            self.cursor.execute(f"UPDATE `{self.__table__}` SET `name`=?, `color`=? WHERE `id` = ?", (name, color, _id))
+            self.cursor.execute(
+                f"UPDATE `{self.__table__}` SET `name`=?, `color`=? WHERE `id` = ?", (name, color, _id))
             self.commit()
             return True
 
@@ -115,7 +122,8 @@ class MariaDB(mdb_model):
             return False
 
         try:
-            self.cursor.execute(f"DELETE FROM `{self.__table__}` WHERE `id` = ?", (_id,))
+            self.cursor.execute(
+                f"DELETE FROM `{self.__table__}` WHERE `id` = ?", (_id,))
             self.commit()
             return True
         except:
@@ -123,7 +131,8 @@ class MariaDB(mdb_model):
 
     def reset(self, _id):
         # Revert ID
-        self.cursor.execute(f"ALTER TABLE `{self.__table__}` MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=?", (_id,))
+        self.cursor.execute(
+            f"ALTER TABLE `{self.__table__}` MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=?", (_id,))
 
     def structure_check(self):
         """

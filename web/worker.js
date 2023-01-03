@@ -1,29 +1,28 @@
 
 /**
- * This worker is for table sync only.
+ * This Webworker is to Synchronize our table in main thread.
+ * 
+ * How it works?
+ * 
+ * Its like magic!!!
  */
 
-
-// deepCompare
 importScripts(['./deepCompare.js']);
-
 
 let CONFIG = {
     "interval": 1000,
     "pulse": 10,
     "host": "http://localhost:8000/",
-    "stop_on_error":true
+    "stop_on_error": true
 };
-
 
 /**
  * Interface
  * 
- * { [id:string]:{
+ * { [key:string]:{
  *  name:string;
  *  color:string;
  *  last_modified:string;
- * 
  *  } 
  * }
  */
@@ -38,7 +37,7 @@ let hang_up = false;
  * 
  * @param {object} new_data 
  */
-const check_diff = function(new_data) {
+const check_diff = function (new_data) {
     const old_data = Object.assign({}, current_data);
 
     /**
@@ -46,12 +45,12 @@ const check_diff = function(new_data) {
      */
     const result = [];
 
-    Object.values(new_data).forEach(function(new_single_data){
+    Object.values(new_data).forEach(function (new_single_data) {
         let id = new_single_data['id'];
 
-        if(old_data.hasOwnProperty(id)) {
+        if (old_data.hasOwnProperty(id)) {
             // Compare
-            if(! deepCompare(new_single_data, old_data[id])) {
+            if (!deepCompare(new_single_data, old_data[id])) {
                 // Modified
                 result.push({
                     "data-id": id,
@@ -69,10 +68,10 @@ const check_diff = function(new_data) {
             });
         }
     });
-    
+
     // Extract all keys The rest of the old_data 
     // Those keys are no longer exists in our database
-    return result.concat(Object.keys(old_data).map(function(id){
+    return result.concat(Object.keys(old_data).map(function (id) {
         return {
             "data-id": id,
             "data-action": "deleted"
@@ -80,20 +79,20 @@ const check_diff = function(new_data) {
     }));
 }
 
-const sendMsg = function(type, msg) {
+const sendMsg = function (type, msg) {
     self.postMessage({
         "type": type,
         "body": msg
     });
-} 
+}
 
-const stop = function() { 
+const stop = function () {
     to_stop = true;
 }
- 
-const start = async function() {
-    
-    if(to_stop) {
+
+const start = async function () {
+
+    if (to_stop) {
         return;
     }
 
@@ -102,46 +101,45 @@ const start = async function() {
 
     try {
         response = await fetch(CONFIG['host'], {
-            "method":"GET",
-            "cache":"no-cache"
+            "method": "GET",
+            "cache": "no-cache"
         });
-    } catch(err) {
-        sendMsg("crash","unable to resolve response status");
+    } catch (err) {
+        sendMsg("crash", "unable to resolve response status");
         stop();
         return;
     }
-    
 
-    if(response.ok) {
+    if (response.ok) {
         let new_data;
 
         try {
             new_data = await response.json();
-        } catch(err) {
-            sendMsg("crash","unable to resolve response status");
+        } catch (err) {
+            sendMsg("crash", "unable to resolve response status");
             stop();
             return;
         }
-        
+
         const result = check_diff(new_data);
 
         // reset
-        Object.keys(current_data).forEach(function(id){
+        Object.keys(current_data).forEach(function (id) {
             delete current_data[id];
         });
 
         // Update our current_data
-        new_data.forEach(function(data) {
+        new_data.forEach(function (data) {
             current_data[data['id']] = data;
         });
 
         // Send changes to main thread
-        result.forEach(function(data){
-            if(data["data-action"] == "deleted") {
+        result.forEach(function (data) {
+            if (data["data-action"] == "deleted") {
                 sendMsg(data["data-action"], {
                     "id": data["data-id"]
                 });
-                
+
                 return;
             }
 
@@ -150,49 +148,49 @@ const start = async function() {
                 "content": current_data[data["data-id"]]
             });
         });
-       
+
     }
 
-    switch(response.status) {
+    switch (response.status) {
         case 400: // Bad Request
             sendMsg("error", "bad-request");
-            if(CONFIG['stop_on_error']) {
+            if (CONFIG['stop_on_error']) {
                 stop();
                 return;
             }
-        break;
+            break;
 
         case 200: // Ok 
-            
-        break;
+
+            break;
 
         case 409: // Conflict
             sendMsg("error", "conflict");
-            if(CONFIG['stop_on_error']) {
+            if (CONFIG['stop_on_error']) {
                 stop();
                 return;
             }
-        break;
+            break;
 
         case 404: // Not Found
             sendMsg("error", "not-found");
-            if(CONFIG['stop_on_error']) {
+            if (CONFIG['stop_on_error']) {
                 stop();
                 return;
             }
-        break;
+            break;
 
         default:
             // Fatal crash
-            sendMsg("crash","unable to resolve response status");
+            sendMsg("crash", "unable to resolve response status");
             stop();
             return;
     }
 
     // setTimeout but expensive. Hahaha
-    let ival = self.setInterval(function(){
-        if( ! hang_up && (new Date().getTime() - last) >= CONFIG['interval']) {
-            (! to_stop && start());
+    let ival = self.setInterval(function () {
+        if (!hang_up && (new Date().getTime() - last) >= CONFIG['interval']) {
+            (!to_stop && start());
             self.clearInterval(ival);
         }
     }, CONFIG['pulse']);
@@ -202,12 +200,12 @@ self.addEventListener("message", (e) => {
     const type = e.data['type'];
     const body = e.data['body'];
 
-    if(type == "config") {
+    if (type == "config") {
         CONFIG = body;
         return;
     }
-    
-    if(! type == 'command') {
+
+    if (!type == 'command') {
         stop();
         self.postMessage({
             "type": "error",
@@ -216,28 +214,25 @@ self.addEventListener("message", (e) => {
         return;
     }
 
-    switch(body) {
+    switch (body) {
         case 'start':
-            if(! is_running) {
-                is_running = true;   
+            if (!is_running) {
+                is_running = true;
                 start();
             }
-        break;
-        
+            break;
+
         case 'stop':
             stop();
-        break;
+            break;
 
         case 'pause':
             hang_up = true;
-        break;
+            break;
 
         case 'resume':
             hang_up = false;
-        break;
+            break;
 
     }
 })
-
-
-

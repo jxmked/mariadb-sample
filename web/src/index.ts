@@ -8,7 +8,7 @@ if (window.Worker) {
     const ct = new CatTable();
     ct.start();
     ct.listen();
-    ct.onerror = (err:any) => {
+    ct.onerror = (err: any) => {
         const ed = new ErrorDialog();
         ed.no_rm();
         ed.msg = err["type"] + ": Does stop during runtime";
@@ -29,7 +29,7 @@ if (window.Worker) {
     ed.msg = "Unable to run";
     ed.msg = "Web worker is not available";
     ed.show(0);
-    
+
     // Stop 
     throw new Error("Unable to start. Web worker is not available");
 }
@@ -43,4 +43,4 @@ btnAddAction.addEventListener("click", () => {
     acd.activate();
 });
 
-export {};
+export { };

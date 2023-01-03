@@ -13,6 +13,6 @@ class Selections(AbstractSelections):
     def __init__(self, desc=None, allow_overflow=False):
         super().__init__(desc, allow_overflow)
 
-    #@override
+    # @override
     def __selections__(self):
         return super().__selections__()

@@ -1,29 +1,30 @@
 div.container.form-page {
-    
+
     width: 99%;
 
-    > div {
+    >div {
         width: 90%;
         padding: 5px;
     }
-    
+
     .back-behavior {
         margin: 5px;
         position: relative;
         margin-left: 0;
+
         a {
             font-size: 1.4rem;
             padding: 7px;
             text-decoration: none;
             outline: 1px solid var(--border-color);
             border-radius: 50%;
-            
+
             &:hover {
                 background-color: rgb(215, 215, 220);
             }
         }
     }
-    
+
     label.labeled-cats {
         font-size: 1.2rem;
         height: auto;
@@ -31,82 +32,92 @@ div.container.form-page {
         text-align: right;
         display: inline-block;
     }
-    
-    
+
+
     table.cats-table {
         width: 100%;
         margin-top: 10px;
-        border-top:1px solid var(--border-color);
+        border-top: 1px solid var(--border-color);
         border-collapse: collapse;
-        
-        > thead {
+
+        >thead {
             font-size: 1rem;
             font-weight: 500;
-            border-bottom:1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
             border-collapse: collapse;
             text-align: center;
-            > tr {
-               > td:first-child,
-                 td:last-child {
-                   padding: 0;
-                   margin: 0;
-               }
+
+            >tr {
+
+                >td:first-child,
+                td:last-child {
+                    padding: 0;
+                    margin: 0;
+                }
             }
         }
-        
-        > tbody {
-            > tr {
+
+        >tbody {
+            >tr {
                 font-size: 0.9rem;
                 font-weight: 500;
-                
-                > td {
+
+                >td {
                     padding: 4px 0;
                     text-align: center;
-                    
+
                     &:first-child,
                     &:last-child {
                         text-align: center;
                     }
-                    
-                    &:nth-child(2), // Name
-                    &:nth-child(3) /** Color **/ { 
+
+                    &:nth-child(2),
+                    // Name
+                    &:nth-child(3)
+
+                    /** Color **/
+                        {
                         overflow: hidden;
                     }
-                    
+
                     &:not(:last-child) {
                         border-right: 1px solid var(--border-color);
                     }
+
                     &:last-child {
                         button {
+
                             &:before,
                             &:after {
                                 outline: none;
                                 border: none;
-                                
+
                             }
+
                             &:before {
                                 padding: 2px !important;
                             }
-                            
+
                             margin: 0;
                             padding: 2px 5px;
                             border: 1px solid var(--border-color);
                             border-radius: 7px;
                             background-color: transparent;
                         }
-                        
+
                         button.delete-action {
                             color: rgb(255, 79, 68);
-                            
+
                             &:hover {
                                 background-color: rgb(255, 79, 68);
                                 color: var(--bg-color);
                             }
                         }
-                        
+
                         button.edit-action {
                             color: rgb(0, 113, 164);
                             margin-right: 7px;
+
                             &:hover {
                                 background-color: rgb(0, 113, 164);
                                 color: var(--bg-color);
@@ -114,7 +125,7 @@ div.container.form-page {
                         }
                     }
                 }
-                
+
                 /**
                  * Events
                  * */
@@ -123,24 +134,25 @@ div.container.form-page {
                         background-color: rgb(235, 235, 240);
                     }
                 }
+
                 &:hover {
-                    > td {
+                    >td {
                         background-color: rgb(209, 209, 214) !important;
                     }
-                } 
-                
+                }
+
             }
         }
 
-        > tfoot {
-            > tr {
+        >tfoot {
+            >tr {
                 border-top: 1px solid var(--border-color);
-                
-                > td {
+
+                >td {
                     padding: 10px 5px;
                     text-align: center;
 
-                    > span {
+                    >span {
                         font-size: 1.6rem;
                         color: var(--text-color);
                         font-weight: 500;
@@ -152,4 +164,3 @@ div.container.form-page {
 
 
 }
-

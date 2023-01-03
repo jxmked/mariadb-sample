@@ -42,4 +42,3 @@ function post_data(string $index) : string  {
     } catch(Exception $err) {}
     return "";
 }
-?>

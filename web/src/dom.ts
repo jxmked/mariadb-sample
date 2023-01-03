@@ -1,9 +1,9 @@
 // Background hover for dialogs
-export const bgCover = document.getElementById("bg-cover") !;
+export const bgCover = document.getElementById("bg-cover")!;
 
-export const catList = document.getElementById("cat-list") !;
-export const btnDeletetActions = document.getElementsByClassName("delete-action") !;
-export const btnEditActions = document.getElementsByClassName("edit-action") !;
+export const catList = document.getElementById("cat-list")!;
+export const btnDeletetActions = document.getElementsByClassName("delete-action")!;
+export const btnEditActions = document.getElementsByClassName("edit-action")!;
 export const btnAddAction = document.getElementById("add-cat")!;
 export const noEntriesDialog = document.getElementById("no-entries-dialog")!;
 
@@ -12,7 +12,7 @@ export const addCatDialog = document.getElementById("add-cat-interface-dialog")!
 export const addCatInputs = {
     name: document.getElementById("add-new-cat-name-input")! as HTMLInputElement,
     color: document.getElementById("add-new-cat-color-input")! as HTMLInputElement
-}; 
+};
 
 export const addCatMsgBox = document.getElementById("add-cat-msg-box")!;
 

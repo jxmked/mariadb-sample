@@ -1,6 +1,5 @@
-
 div.container.form-page {
-    
+
     div#add-cat-interface-dialog {
         max-width: var(--max-width);
         position: fixed;
@@ -8,27 +7,27 @@ div.container.form-page {
         left: 50%;
         transform: translate(-50%, -50%);
         padding: 30px 20px;
-        
+
         border-radius: 15px;
         background-color: var(--bg-color);
         border: 1px solid var(--border-color);
-       // box-shadow: var(--box-shadow-1);
+        // box-shadow: var(--box-shadow-1);
         z-index: 4;
         width: 80%;
-        
-        > div {
+
+        >div {
             display: flex;
             flex-direction: column;
-            
-            > label {
+
+            >label {
                 padding: 3px 0 4px 0;
                 font-weight: 500;
                 text-indent: 0.7rem;
                 line-height: 1.7rem;
                 color: var(--text-color);
                 font-family: var(--default-font-family);
-                
-                & + input {
+
+                &+input {
                     background-color: transparent;
                     border: 1px solid var(--border-color);
                     margin-bottom: 10px;
@@ -38,17 +37,17 @@ div.container.form-page {
                     outline: none;
                     border-radius: 7px;
                     padding: 7px;
-                    
-                    
-                    
+
+
+
                     &:hover {
                         border-color: rgb(142, 142, 147);
-                        
+
                     }
                 }
             }
-            
-            > div#add-cat-msg-box {
+
+            >div#add-cat-msg-box {
                 font-weight: 500;
                 font-size: .9rem;
                 color: rgb(255, 59, 48);
@@ -57,12 +56,13 @@ div.container.form-page {
                 white-space: normal;
                 padding: 8px;
             }
-            
-            > div:last-child {
+
+            >div:last-child {
                 margin-top: 16px;
                 position: static;
-                
-                > button {
+
+                >button {
+
                     // reset
                     &:before,
                     &:after,
@@ -71,12 +71,12 @@ div.container.form-page {
                         border: none;
                         color: var(--text-color);
                     }
-                    
+
                     &:before {
                         font-size: 1rem;
                         font-weight: 500;
                     }
-                    
+
                     border: 1px solid var(--border-color) !important;
                     padding: 0.5rem;
                     display: inline-block;
@@ -85,64 +85,70 @@ div.container.form-page {
                     background-color: var(--bg-color);
                     border-radius: 14px;
                     //box-sizing: border-box;
-                    
+
                     &#add-cat-confirmed {
                         &:before {
                             content: "";
                         }
+
                         &.on-progress:before {
-                            animation: insertingAnim 2s linear 0s infinite normal ;
+                            animation: insertingAnim 2s linear 0s infinite normal;
                             //content: "Inserting...";
                         }
-                        
-                        &:hover { // Hover 
+
+                        &:hover {
+                            // Hover 
                             background-color: rgb(64, 156, 255);
                             --text-color: var(--bg-color);
                         }
-                        
-                        &:active { // Clicked
+
+                        &:active {
+                            // Clicked
                             background-color: rgb(10, 132, 255);
                             --text-color: var(--bg-color);
                         }
                     }
-                    
+
                     &#add-cat-denied {
-                        
+
                         &:before {
                             content: "";
                         }
-                        
-                        &:hover { // Hover 
+
+                        &:hover {
+                            // Hover 
                             background-color: rgb(255, 105, 97);
                             --text-color: var(--bg-color);
                         }
-                        
-                        &:active { // Clicked
+
+                        &:active {
+                            // Clicked
                             background-color: rgb(255, 79, 68);
                             --text-color: var(--bg-color);
                         }
                     }
-                    
+
                 }
             }
         }
     }
-    
+
 }
 
 @keyframes insertingAnim {
     0% {
         content: "Inserting";
     }
-    33%{
+
+    33% {
         content: "Inserting.";
     }
+
     66% {
         content: "Inserting..";
     }
+
     100% {
         content: "Inserting...";
     }
 }
-
-

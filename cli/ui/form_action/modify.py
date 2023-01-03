@@ -12,7 +12,7 @@ class Modify:
 
     __line__ = "<" + ("-+" * 11) + "->"
 
-    def __init__(self, database:Database, args):
+    def __init__(self, database: Database, args):
         self.db = database
         self.data = args
 
@@ -31,7 +31,7 @@ class Modify:
         if response == {}:
             # Transaction Cancelled
             premes("Transaction cancelled")
-            return 
+            return
 
         try:
             response['id'] = self.data.get('id')
@@ -43,16 +43,18 @@ class Modify:
         except BaseException as be:
             print(be)
             exit()
-            raise Exception("An error occured during updating\n  Please, try again")
+            raise Exception(
+                "An error occured during updating\n  Please, try again")
 
     """
     Our form
     """
+
     def get_name(self):
         while True:
             response = str(ConsoleIn("Name: ")).strip()
 
-            if response == '0': # Cancelled
+            if response == '0':  # Cancelled
                 raise Exception("Transaction cancelled")
 
             if Validator.name(response):
@@ -87,8 +89,8 @@ class Modify:
             print(self.__line__)
 
             return {
-                "name":name,
-                "color":color
+                "name": name,
+                "color": color
             }
         except SystemExit as se:
             raise se

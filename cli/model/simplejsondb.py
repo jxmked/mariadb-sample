@@ -10,17 +10,19 @@ and treat it like a database but it json format
 from simplejsondb import Database
 import os
 
-    # Our id should be an integer
-    # Validate the from driver before reaching
-    # this database
+# Our id should be an integer
+# Validate the from driver before reaching
+# this database
+
 
 class SimpleJSONDB:
-    
+
     __default_path__ = "databases"
     __db_filename__ = "mariadb_sample"
-    
+
     def __init__(self):
-        filename = os.path.join(SimpleJSONDB.__default_path__, SimpleJSONDB.__db_filename__)
+        filename = os.path.join(
+            SimpleJSONDB.__default_path__, SimpleJSONDB.__db_filename__)
 
         self.instance = Database(filename, default=dict())
 
@@ -39,25 +41,25 @@ class SimpleJSONDB:
 
     def update_data(self, **attr):
         # Validate the id if foes exists, else raise an error
-        
+
         try:
             _id = str(attr.get("id"))
-            
+
             if _id not in self.instance.data.keys():
                 raise KeyError("Key not exists")
-            
+
             self.instance.data[_id] = attr
             return True
 
         except KeyError as ke:
             raise Exception('ID does not exists')
-        
+
         except BaseException as be:
             pass
-        
+
         except:
             pass
-        
+
         return False
 
     def delete_data(self, _id):
@@ -71,7 +73,7 @@ class SimpleJSONDB:
 
         except KeyError as ke:
             raise Exception('ID does not exists')
-        
+
         except BaseException as be:
             pass
         return False

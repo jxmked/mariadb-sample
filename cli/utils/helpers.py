@@ -9,24 +9,30 @@ import subprocess
 """
 Uppercase first letter and keep the rest
 """
+
+
 def ucfirst(param):
     param = str(param)
     return f"{param[0].upper()}{param[1::]}"
 
+
 def clrscr():
-    if os.name == "nt": # Windows
+    if os.name == "nt":  # Windows
         subprocess.run("cls", shell=True)
 
-    else: # Linux, Unix, macOS
+    else:  # Linux, Unix, macOS
         subprocess.check_call(["clear"], stderr=subprocess.STDOUT)
+
 
 def random_letters(length=8):
     return "".join([random.choice(string.ascii_letters) for _ in range(length)])
 
+
 def is_empty(s):
     # if isinstance(s, int):
-    #     return s == 0 
+    #     return s == 0
     return s is None or len(s) == 0
+
 
 def flat_dict_compare(x, y):
     if len(x) != len(y):
@@ -40,6 +46,8 @@ def flat_dict_compare(x, y):
 
 # Source: https://chat.openai.com/chat
 # Sorry for this. Hahaha
+
+
 def get_letter(num, lowercase=False):
     letters = ''
     letter_index = (97 if lowercase else 65)
@@ -50,7 +58,9 @@ def get_letter(num, lowercase=False):
     return letters
 
 # Source: https://chat.openai.com/chat
-# Sorry for this. Hahaha: 
+# Sorry for this. Hahaha:
+
+
 def get_num(letters):
     num = 0
     letter_index = (97 if ord(letters[:1:]) >= 97 else 65)
@@ -61,7 +71,9 @@ def get_num(letters):
 # Preserve message for later use
 # Return true if has message otherwise false
 # Automatically reset after return the preserve message
-def premes(msg = None):
+
+
+def premes(msg=None):
     if msg is True:
         pre_mes = os.environ.get("__premes_msg__")
         os.environ["__premes_msg__"] = "False"

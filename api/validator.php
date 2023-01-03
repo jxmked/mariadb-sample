@@ -20,5 +20,3 @@ final class Validator {
         return preg_match(self::$regex_id, (string) $id) == true;
     }
 }
-
-?>

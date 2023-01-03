@@ -56,7 +56,7 @@ class Database:
         if item == {}:
             raise Exception("Item not found")
 
-        # Name already exists 
+        # Name already exists
         if self.__get_by_name__(name).get('id') not in [None, _id]:
             raise Exception("Name already exists")
 

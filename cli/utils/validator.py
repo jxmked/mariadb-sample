@@ -15,6 +15,7 @@ class Validator:
     __regexp_name__ = r"^[a-zA-Z]+( [a-zA-Z]+)*$"
     __regexp_id__ = r'^\d{1,3}$'
     __regexp_letters__ = r'^[a-zA-Z]+$'
+
     def __init__(self):
         pass
 

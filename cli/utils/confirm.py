@@ -3,6 +3,7 @@
 
 from utils.console_in import ConsoleIn
 
+
 class Confirm:
     __line__ = ("*~" * 20) + "*"
 

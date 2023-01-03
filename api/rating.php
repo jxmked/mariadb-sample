@@ -180,4 +180,3 @@ final class RateLimiting {
         self::$has_access = (Database::stmt()->rowCount() > 0) ? true : false;
     }
 }
-?>

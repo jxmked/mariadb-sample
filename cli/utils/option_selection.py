@@ -15,7 +15,8 @@ class OptionSelection(AbstractSelections):
     def __selections__(self):
 
         if self.__callback_validator__ is None:
-            raise Exception("Cannot call OptionSelection.__selections__ without passing a callback function in validator method")
+            raise Exception(
+                "Cannot call OptionSelection.__selections__ without passing a callback function in validator method")
 
         maxNum = 0
 

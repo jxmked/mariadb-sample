@@ -76,6 +76,3 @@ final class Database {
         return self::$requests;
     }
 }
-
-
-?>

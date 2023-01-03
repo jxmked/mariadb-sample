@@ -8,7 +8,7 @@ from utils.helpers import clrscr, premes
 
 
 class Delete:
-    def __init__(self, database:Database, args):
+    def __init__(self, database: Database, args):
         self.db = database
         self.__data__ = args
 

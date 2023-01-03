@@ -1,13 +1,13 @@
 export default class ErrorDialog {
-    private base:HTMLDivElement;
-    private cover:HTMLDivElement;
-    private isDestroyed:boolean;
-    private static fadeOutInterval = 1000; // 3 seconds
-    private no_close_btn:boolean;
+    private base: HTMLDivElement;
+    private cover: HTMLDivElement;
+    private isDestroyed: boolean;
+    private static fadeOutInterval: number = 1000; // 3 seconds
+    private no_close_btn: boolean;
 
     constructor() {
         this.base = document.createElement("div");
-        this.cover = document.createElement("div");    
+        this.cover = document.createElement("div");
         this.isDestroyed = false;
         this.no_close_btn = false;
 
@@ -42,7 +42,7 @@ export default class ErrorDialog {
         this.cover.style.opacity = "0.4";
     }
 
-    private remove() {
+    private remove(): void {
         this.base.remove();
         this.cover.remove();
         this.isDestroyed = true;
@@ -51,12 +51,12 @@ export default class ErrorDialog {
     /**
      * No Close Button
      */
-    public no_rm() {
+    public no_rm(): void {
         this.no_close_btn = true;
     }
 
-    private addCloseBtn():void {
-        const btn:HTMLButtonElement = document.createElement("button");
+    private addCloseBtn(): void {
+        const btn: HTMLButtonElement = document.createElement("button");
         btn.style.position = "absolute";
         btn.style.bottom = "10px";
         btn.style.left = "50%";
@@ -76,12 +76,12 @@ export default class ErrorDialog {
         this.base.appendChild(btn);
     }
 
-    set msg(msg:string|number|boolean) {
-        if(this.isDestroyed) 
+    set msg(msg: string | number | boolean) {
+        if (this.isDestroyed)
             throw new TypeError("Cannot append new message. Please, reinitialize the object.");
 
-        const p:HTMLParagraphElement = document.createElement("p");
-       
+        const p: HTMLParagraphElement = document.createElement("p");
+
         p.style.margin = "0";
         p.style.padding = "4px";
         p.style.boxSizing = "border-box";
@@ -90,7 +90,7 @@ export default class ErrorDialog {
         p.style.whiteSpace = "normal";
         p.style.overflowY = "scroll";
         p.style.color = "var(--text-color)";
-        
+
         p.appendChild(document.createTextNode(String(msg)));
 
         this.base.append(p);
@@ -101,26 +101,26 @@ export default class ErrorDialog {
      * 
      * 1000 = 1 second
      */
-    show(interval:number = 0):void {
-        if(! this.no_close_btn) {
+    show(interval: number = 0): void {
+        if (!this.no_close_btn) {
             this.addCloseBtn();
-        }        
-        
+        }
+
         document.body.appendChild(this.cover);
         document.body.appendChild(this.base);
-        
-        if(interval == 0) {
+
+        if (interval == 0) {
             return;
         }
 
-        let last:number, current_time:number;  
+        let last: number, current_time: number;
         last = new Date().getTime();
-        
-        let ival = window.setInterval(() => {
+
+        let ival: ReturnType<typeof window.setInterval> = window.setInterval(() => {
             current_time = new Date().getTime();
-            
-            
-            if(this.isDestroyed) {
+
+
+            if (this.isDestroyed) {
                 /**
                  * Prevent Reaching the interval
                  * if the close button has been clicked.
@@ -128,32 +128,32 @@ export default class ErrorDialog {
                  * */
                 clearInterval(ival);
             }
-            
-            if(! this.isDestroyed && (current_time - last) >= interval) {
+
+            if (!this.isDestroyed && (current_time - last) >= interval) {
                 // close dialog
-                
+
                 this.fadeOut(this.remove.bind(this));
                 clearInterval(ival);
             }
         }, 10);
     }
 
-    private fadeOut(callback?:Function) {
+    private fadeOut(callback?: Function): void {
         /**
          * Fade out animation
          */
-        let initial_time:number = new Date().getTime();
-        let opa:number;
+        let initial_time: number = new Date().getTime();
+        let opa: number;
 
         let ival = window.setInterval(() => {
             opa = (1 - (((new Date().getTime() - initial_time) / ErrorDialog.fadeOutInterval)))
-            if(opa >= 0) {
+            if (opa >= 0) {
                 this.base.style.opacity = String(opa.toFixed(4));
             } else {
                 this.base.style.opacity = "0";
-                (callback || function(){})();
-                clearInterval(ival);    
-            }            
+                (callback || function () { })();
+                clearInterval(ival);
+            }
         }, 1);
     }
 }

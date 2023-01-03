@@ -20,7 +20,7 @@ class Checks:
 
     @staticmethod
     def start():
-        
+
         print("\nDriver check: Started")
 
         # Check for Fatal Problems
@@ -40,12 +40,12 @@ class Checks:
             print("\n* Database Structure Check: Not Avaialable\n")
 
         sample1 = {
-            "name":random_letters(),
-            "color":random_letters(5)
+            "name": random_letters(),
+            "color": random_letters(5)
         }
         sample2 = {
-            "name":random_letters(),
-            "color":random_letters(5)
+            "name": random_letters(),
+            "color": random_letters(5)
         }
 
         id = None
@@ -57,8 +57,8 @@ class Checks:
             id = int(id)
         except BaseException as BE:
             err.append({
-                "mode":"insert",
-                "error":BE
+                "mode": "insert",
+                "error": BE
             })
 
         # Get Check
@@ -71,8 +71,8 @@ class Checks:
 
         except BaseException as BE:
             err.append({
-                "mode":"get",
-                "error":BE
+                "mode": "get",
+                "error": BE
             })
 
         # Update Check
@@ -87,12 +87,13 @@ class Checks:
             item = db.get(id)
 
             if not sample2["name"] == item["name"] and not sample2["color"] == item["color"]:
-                raise Exception("Check MariaDB.update and MariaDB.get method: Failed")
+                raise Exception(
+                    "Check MariaDB.update and MariaDB.get method: Failed")
 
         except BaseException as BE:
             err.append({
-                "mode":"update",
-                "error":BE
+                "mode": "update",
+                "error": BE
             })
 
         # Delete Check
@@ -113,12 +114,13 @@ class Checks:
             item2 = db.get(id)
 
             if set(item1) == set(item2):
-                raise Exception("Check MariaDB.delete and MariaDB.get method: Failed")
+                raise Exception(
+                    "Check MariaDB.delete and MariaDB.get method: Failed")
 
         except BaseException as BE:
             err.append({
-                "mode":"delete",
-                "error":BE
+                "mode": "delete",
+                "error": BE
             })
 
         # Reset to initial State
@@ -145,7 +147,7 @@ class Checks:
             exit(0)
 
         print("Status: Ready")
-        #sleep(1.0)
+        # sleep(1.0)
 
     @staticmethod
     def call_driver():
@@ -160,11 +162,11 @@ class Checks:
         elif Checks.driver_set == "hosted_php_api":
             from drivers.hosted_php_api import Hosted_PHP_API
             return Hosted_PHP_API
-        
+
         elif Checks.driver_set == "jsondb":
             from drivers.jsondb import JSONDB
             return JSONDB
-        
+
         else:
             #raise Exception("Driver not found")
             print(f"Driver not found: {Checks.driver_set}")

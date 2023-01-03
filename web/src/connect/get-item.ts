@@ -3,16 +3,16 @@
  * */
 import conn from './config';
 
-export default (id:CatInterface['id']):Promise<CatInterface> => {
-    
+export default (id: CatInterface['id']): Promise<CatInterface> => {
+
     return new Promise<CatInterface>((resolve, reject) => {
-        let base_url:string = conn['host'];
-        
+        let base_url: string = conn['host'];
+
         fetch(`${base_url}?id=${id}`, {
-            "method":"GET",
-            "cache":"no-cache"
+            "method": "GET",
+            "cache": "no-cache"
         }).then((res) => res.json())
-        .then(resolve)
-        .catch(reject);
+            .then(resolve)
+            .catch(reject);
     });
 }
